@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet build:*)",
+      "Bash(dotnet test:*)",
+      "Bash(dotnet --list-sdks:*)",
+      "Bash(find:*)",
+      "Bash(git -C /Users/jas88/Developer/Github/TypeGuesser log --oneline -20)",
+      "Bash(mkdir:*)",
+      "Bash(git -C /Users/jas88/Developer/Github/TypeGuesser log --all --oneline --grep=\"thread\" --grep=\"lock\" --grep=\"concurrent\" --grep=\"pool\" -i)",
+      "Bash(git -C /Users/jas88/Developer/Github/TypeGuesser branch:*)",
+      "Bash(git -C /Users/jas88/Developer/Github/TypeGuesser log --oneline --all --grep=\"2.0\" --grep=\"v2\" -i)",
+      "Bash(git -C /Users/jas88/Developer/Github/TypeGuesser diff main --stat)",
+      "Bash(git -C /Users/jas88/Developer/Github/TypeGuesser log feature/zero-alloc-thread-safe-v2 --oneline -15)",
+      "Bash(git -C /Users/jas88/Developer/Github/TypeGuesser diff main...feature/zero-alloc-thread-safe-v2 --stat)",
+      "Bash(git -C /Users/jas88/Developer/Github/TypeGuesser checkout feature/zero-alloc-thread-safe-v2)",
+      "Bash(git -C /Users/jas88/Developer/Github/TypeGuesser log --all --oneline --grep=\"Math.Log10\" --grep=\"allocation\" --grep=\"zero\" -i)",
+      "Bash(dotnet sln:*)",
+      "Bash(timeout 120 dotnet run:*)",
+      "Bash(dotnet --list-runtimes:*)",
+      "Bash(cat:*)",
+      "Bash(DOTNET_ROLL_FORWARD=Major dotnet test:*)"
+    ]
+  },
+  "enabledMcpjsonServers": [
+    "github",
+    "playwright",
+    "code-index"
+  ]
+}
