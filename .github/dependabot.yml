@@ -3,13 +3,12 @@ updates:
 - package-ecosystem: "github-actions"
   directory: "/"
   schedule:
-    interval: daily
-  reviewers:
-  - jas88
+    interval: weekly
 - package-ecosystem: nuget
   directory: "/"
   schedule:
-    interval: daily
-  open-pull-requests-limit: 10
-  reviewers:
-  - jas88
+    interval: weekly
+- package-ecosystem: dotnet-sdk
+  directory: "/"
+  schedule:
+    interval: weekly
