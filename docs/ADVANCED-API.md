@@ -565,4 +565,3 @@ var type = result.CSharpType;
 
 - [Standard API Documentation](./API.md)
 - [Performance Benchmarks](./BENCHMARKS.md)
-- [Architecture Decision Records](./ADR/)
