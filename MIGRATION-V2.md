@@ -45,7 +45,7 @@ TypeGuesser v2.0 offers three migration levels depending on your performance nee
 Simply upgrade your NuGet package to v2.0:
 
 ```bash
-dotnet add package HIC.TypeGuesser --version 2.0.0
+dotnet add package TypeGuesser --version 2.0.0
 ```
 
 **No code changes required!** Your existing code automatically benefits from:

@@ -1,8 +1,8 @@
 # Type Guesser
 
-[![Build, test and package](https://github.com/HicServices/TypeGuesser/actions/workflows/dotnet.yml/badge.svg)](https://github.com/HicServices/TypeGuesser/actions/workflows/dotnet.yml)
+[![Build, test and package](https://github.com/jas88/TypeGuesser/actions/workflows/dotnet.yml/badge.svg)](https://github.com/jas88/TypeGuesser/actions/workflows/dotnet.yml)
 [![Coverage Status](https://coveralls.io/repos/github/HicServices/TypeGuesser/badge.svg?branch=main)](https://coveralls.io/github/HicServices/TypeGuesser?branch=main)
-[![NuGet Badge](https://buildstats.info/nuget/HIC.TypeGuesser)](https://buildstats.info/nuget/HIC.TypeGuesser)
+[![NuGet Badge](https://buildstats.info/nuget/TypeGuesser)](https://buildstats.info/nuget/TypeGuesser)
 
 Guess the C# Types for untyped strings e.g. `"12.123"`.
 
@@ -26,7 +26,7 @@ TypeGuesser v2.0 delivers significant performance improvements and thread-safety
 
 See [MIGRATION-V2.md](MIGRATION-V2.md) for upgrade guide and [docs/](docs/) for detailed documentation.
 
-- [Nuget Package](https://www.nuget.org/packages/HIC.TypeGuesser/)
+- [Nuget Package](https://www.nuget.org/packages/TypeGuesser/)
 - [License MIT](./LICENSE)
 
 ## Quick Start
@@ -49,7 +49,7 @@ The resulting guess in this case would be:
 |   `guess.Width` | 7 |
 
 
-Guesser also handles adjusting it's guess based on multiple input strings e.g.
+Guesser also handles adjusting its guess based on multiple input strings e.g.
 
 
 ```csharp
@@ -164,7 +164,7 @@ Guess: String
 Guesses are never revised back up again (once you accept a `Decimal` you never get `Int` again but you might end up at `String`)
 
 ### Zero Prefixes
-If an input string is a number that starts with zero e.g. "01" then the estimate will be changed to `System.String`.  This is intended behaviour since some codes e.g. CHI / Barcodes have valid zero prefixes.  If this is to be accurately preserved in the database then it must be stored as string (See `TestGuesser_PreeceedingZeroes`).  This also applies to values such as "-01"
+If an input string is a number that starts with zero e.g. "01" then the estimate will be changed to `System.String`.  This is intended behaviour since some codes e.g. CHI / Barcodes have valid zero prefixes.  If this is to be accurately preserved in the database then it must be stored as string (See `TestGuesser_PrecedingZeroes`).  This also applies to values such as "-01"
 
 ### Whitespace
 Leading and trailing whitespace is ignored for the purposes of determining Type.  E.g. " 0.1" is a valid `System.Decimal`.  However it is recorded for the maximum Length required if we later fallback to `System.String` (See Test `TestGuesser_Whitespace`).

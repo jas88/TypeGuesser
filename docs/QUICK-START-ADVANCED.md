@@ -5,7 +5,7 @@ This guide shows you how to use TypeGuesser's Advanced API for maximum performan
 ## Installation
 
 ```bash
-dotnet add package HIC.TypeGuesser
+dotnet add package TypeGuesser
 ```
 
 ## Basic Usage
