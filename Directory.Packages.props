@@ -1,7 +1,7 @@
 <Project>
   <ItemGroup>
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
     <PackageVersion Include="NUnit" Version="4.4.0" />
     <PackageVersion Include="NUnit.Analyzers" Version="4.6.0" />
     <PackageVersion Include="NUnit3TestAdapter" Version="5.0.0" />
