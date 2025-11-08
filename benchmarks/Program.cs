@@ -88,7 +88,7 @@ internal static class Program
 
             PrintBenchmarkInfo();
 
-            var summary = BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args, config);
+            BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args, config);
 
             Console.WriteLine("\n╔════════════════════════════════════════════════════════════════╗");
             Console.WriteLine("║                    Benchmarks Complete!                        ║");

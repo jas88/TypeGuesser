@@ -317,54 +317,56 @@ public class ThreadSafetyBenchmarks
     [Benchmark(Description = "Scenario: Producer-consumer pattern")]
     public DatabaseTypeRequest[] ProducerConsumer()
     {
-        var channel = new BlockingCollection<int>(boundedCapacity: 1000);
-        var results = new ConcurrentBag<DatabaseTypeRequest>();
-
-        // Producer task
-        var producer = Task.Run(() =>
+        using (var channel = new BlockingCollection<int>(boundedCapacity: 1000))
         {
-            for (var t = 0; t < ThreadCount; t++)
+            var results = new ConcurrentBag<DatabaseTypeRequest>();
+
+            // Producer task
+            var producer = Task.Run(() =>
             {
-                foreach (var value in _partitionedIntegers[t])
+                for (var t = 0; t < ThreadCount; t++)
                 {
-                    channel.Add(value);
+                    foreach (var value in _partitionedIntegers[t])
+                    {
+                        channel.Add(value);
+                    }
                 }
-            }
-            channel.CompleteAdding();
-        });
+                channel.CompleteAdding();
+            });
 
-        // Consumer tasks
-        var consumers = Enumerable.Range(0, ThreadCount / 2).Select(_ => Task.Run(() =>
-        {
-            var guesser = new Guesser();
-            var count = 0;
-            var batchSize = 1000;
-
-            foreach (var value in channel.GetConsumingEnumerable())
+            // Consumer tasks
+            var consumers = Enumerable.Range(0, ThreadCount / 2).Select(_ => Task.Run(() =>
             {
-                guesser.AdjustToCompensateForValue(value);
-                count++;
+                var guesser = new Guesser();
+                var count = 0;
+                var batchSize = 1000;
 
-                // Emit result every batchSize items
-                if (count >= batchSize)
+                foreach (var value in channel.GetConsumingEnumerable())
+                {
+                    guesser.AdjustToCompensateForValue(value);
+                    count++;
+
+                    // Emit result every batchSize items
+                    if (count >= batchSize)
+                    {
+                        results.Add(guesser.Guess);
+                        guesser = new Guesser();
+                        count = 0;
+                    }
+                }
+
+                // Emit final result
+                if (count > 0)
                 {
                     results.Add(guesser.Guess);
-                    guesser = new Guesser();
-                    count = 0;
                 }
-            }
+            })).ToArray();
 
-            // Emit final result
-            if (count > 0)
-            {
-                results.Add(guesser.Guess);
-            }
-        })).ToArray();
+            Task.WaitAll(consumers);
+            producer.Wait();
 
-        Task.WaitAll(consumers);
-        producer.Wait();
-
-        return results.ToArray();
+            return results.ToArray();
+        }
     }
 
     #endregion

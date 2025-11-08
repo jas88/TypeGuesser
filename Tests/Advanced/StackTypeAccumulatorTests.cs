@@ -210,7 +210,7 @@ public class StackTypeAccumulatorTests
     {
         Assert.Throws<ArgumentNullException>(() =>
         {
-            var accumulator = new StackTypeAccumulator(null!);
+            new StackTypeAccumulator(null!);
         });
     }
 
