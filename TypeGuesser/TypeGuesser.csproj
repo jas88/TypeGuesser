@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<PackageId>HIC.TypeGuesser</PackageId>
+		<PackageId>TypeGuesser</PackageId>
 		<Authors>Health Informatics Centre - University of Dundee</Authors>
 		<Company>Health Informatics Centre - University of Dundee</Company>
 		<PackageProjectUrl>https://github.com/HicServices/TypeGuesser</PackageProjectUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Description>Guess the C# Types for a untyped strings e.g. "12.123"</Description>
-		<TargetFrameworks>net8.0</TargetFrameworks>
+		<TargetFrameworks>net9.0</TargetFrameworks>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<IsTrimmable>true</IsTrimmable>
@@ -22,6 +22,10 @@
 	<ItemGroup>
 		<None Include="..\README.md" Pack="true" PackagePath="\" />
 		<Compile Include="..\SharedAssemblyInfo.cs" Link="SharedAssemblyInfo.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.ObjectPool" />
 	</ItemGroup>
 
 	<ItemGroup>
