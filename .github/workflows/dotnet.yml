@@ -5,15 +5,42 @@ on: push
 jobs:
   package:
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-dotnet@v4
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
       with:
-        dotnet-version: 8.0.x
+        languages: csharp
+        queries: +security-and-quality
     - name: Test
       run: |
         dotnet test --nologo --results-directory testresults --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=lcov
         mv testresults/*/coverage.info lcov.info
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+      with:
+        category: "/language:csharp"
+        upload: false
+        output: sarif-results
+
+    - name: filter-sarif
+      uses: advanced-security/filter-sarif@v1
+      with:
+        patterns: |
+          +**/*
+          -**/*.g.cs
+        input: sarif-results/csharp.sarif
+        output: sarif-results/csharp.sarif
+
+    - name: Upload SARIF
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: sarif-results/csharp.sarif
     - name: Coveralls
       uses: coverallsapp/github-action@v2.3.6
       with:

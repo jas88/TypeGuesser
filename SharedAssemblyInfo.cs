@@ -3,12 +3,12 @@ using System.Resources;
 
 [assembly: NeutralResourcesLanguage("en-GB")]
 
-[assembly: AssemblyCompany("Health Informatics Centre, University of Dundee")]
+[assembly: AssemblyCompany("James A Sutherland and Health Informatics Centre, University of Dundee")]
 [assembly: AssemblyProduct("TypeGuesser")]
-[assembly: AssemblyCopyright("Copyright (c) 2018 - 2024")]
+[assembly: AssemblyCopyright("Copyright (c) 2018 - 2025")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: AssemblyVersion("1.2.7")]
-[assembly: AssemblyFileVersion("1.2.7")]
-[assembly: AssemblyInformationalVersion("1.2.7")]
+[assembly: AssemblyVersion("2.0.0")]
+[assembly: AssemblyFileVersion("2.0.0")]
+[assembly: AssemblyInformationalVersion("2.0.0")]
