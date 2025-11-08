@@ -460,4 +460,3 @@ IEnumerable<TypeGuessResult> results;  // ✅ OK
 - Read the [full Advanced API documentation](./ADVANCED-API.md)
 - See [Performance Benchmarks](./BENCHMARKS.md)
 - Check out the [Standard API documentation](./API.md)
-- Review [Architecture Decision Records](./ADR/)
