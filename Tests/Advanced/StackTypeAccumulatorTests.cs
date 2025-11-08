@@ -134,7 +134,7 @@ public class StackTypeAccumulatorTests
         var result = accumulator.GetResult();
 
         Assert.That(result.CSharpType, Is.EqualTo(typeof(string)));
-        Assert.That(result.Width, Is.EqualTo(13)); // length of "not a number"
+        Assert.That(result.Width, Is.EqualTo(12)); // length of "not a number"
     }
 
     [Test]
