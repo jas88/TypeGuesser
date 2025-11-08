@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git ls-tree:*)",
+      "Bash(git cherry-pick:*)",
+      "Bash(git remote set-url:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(/tmp/combined_dotnet.yml)"
+    ],
+    "deny": [],
+    "ask": []
+  },
+  "enabledMcpjsonServers": [
+    "github",
+    "playwright",
+    "code-index"
+  ]
+}
