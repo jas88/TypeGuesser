@@ -169,24 +169,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Initial port of content from [FAnsiSql](https://github.com/HicServices/FAnsiSql)
+- Initial port of content from [FAnsiSql](https://github.com/jas88/FAnsiSql)
 
-[Unreleased]: https://github.com/HicServices/TypeGuesser/compare/v2.0.0...main
-[2.0.0]: https://github.com/HicServices/TypeGuesser/compare/v1.2.7...v2.0.0
-[1.2.7]: https://github.com/HicServices/TypeGuesser/compare/v1.2.6...v1.2.7
-[1.2.6]: https://github.com/HicServices/TypeGuesser/compare/v1.2.5...v1.2.6
-[1.2.5]: https://github.com/HicServices/TypeGuesser/compare/v1.2.4...v1.2.5
-[1.2.4]: https://github.com/HicServices/TypeGuesser/compare/v1.2.3...v1.2.4
-[1.2.3]: https://github.com/HicServices/TypeGuesser/compare/v1.2.2...v1.2.3
-[1.2.2]: https://github.com/HicServices/TypeGuesser/compare/v1.2.1...v1.2.2
-[1.2.1]: https://github.com/HicServices/TypeGuesser/compare/v1.2.0...v1.2.1
-[1.2.0]: https://github.com/HicServices/TypeGuesser/compare/1.1.0...v1.2.0
-[1.1.0]: https://github.com/HicServices/TypeGuesser/compare/1.0.3...1.1.0
-[1.0.3]: https://github.com/HicServices/TypeGuesser/compare/1.0.2...1.0.3
-[1.0.2]: https://github.com/HicServices/TypeGuesser/compare/1.0.1...1.0.2
-[1.0.1]: https://github.com/HicServices/TypeGuesser/compare/0.0.5...1.0.1
-[0.0.5]: https://github.com/HicServices/TypeGuesser/compare/0.0.4...0.0.5
-[0.0.4]: https://github.com/HicServices/TypeGuesser/compare/0.0.3...0.0.4
-[0.0.3]: https://github.com/HicServices/TypeGuesser/compare/0.0.2...0.0.3
-[0.0.2]: https://github.com/HicServices/TypeGuesser/compare/0.0.1...0.0.2
-[0.0.1]: https://github.com/HicServices/TypeGuesser/compare/88b9b5d6622673eadc13c342f95c2e69ef760995...0.0.1
+[Unreleased]: https://github.com/jas88/TypeGuesser/compare/v2.0.0...main
+[2.0.0]: https://github.com/jas88/TypeGuesser/compare/v1.2.7...v2.0.0
+[1.2.7]: https://github.com/jas88/TypeGuesser/compare/v1.2.6...v1.2.7
+[1.2.6]: https://github.com/jas88/TypeGuesser/compare/v1.2.5...v1.2.6
+[1.2.5]: https://github.com/jas88/TypeGuesser/compare/v1.2.4...v1.2.5
+[1.2.4]: https://github.com/jas88/TypeGuesser/compare/v1.2.3...v1.2.4
+[1.2.3]: https://github.com/jas88/TypeGuesser/compare/v1.2.2...v1.2.3
+[1.2.2]: https://github.com/jas88/TypeGuesser/compare/v1.2.1...v1.2.2
+[1.2.1]: https://github.com/jas88/TypeGuesser/compare/v1.2.0...v1.2.1
+[1.2.0]: https://github.com/jas88/TypeGuesser/compare/1.1.0...v1.2.0
+[1.1.0]: https://github.com/jas88/TypeGuesser/compare/1.0.3...1.1.0
+[1.0.3]: https://github.com/jas88/TypeGuesser/compare/1.0.2...1.0.3
+[1.0.2]: https://github.com/jas88/TypeGuesser/compare/1.0.1...1.0.2
+[1.0.1]: https://github.com/jas88/TypeGuesser/compare/0.0.5...1.0.1
+[0.0.5]: https://github.com/jas88/TypeGuesser/compare/0.0.4...0.0.5
+[0.0.4]: https://github.com/jas88/TypeGuesser/compare/0.0.3...0.0.4
+[0.0.3]: https://github.com/jas88/TypeGuesser/compare/0.0.2...0.0.3
+[0.0.2]: https://github.com/jas88/TypeGuesser/compare/0.0.1...0.0.2
+[0.0.1]: https://github.com/jas88/TypeGuesser/compare/88b9b5d6622673eadc13c342f95c2e69ef760995...0.0.1
