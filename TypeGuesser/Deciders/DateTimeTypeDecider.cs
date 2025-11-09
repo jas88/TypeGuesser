@@ -8,14 +8,10 @@ namespace TypeGuesser.Deciders;
 /// <summary>
 /// Guesses whether strings are <see cref="DateTime"/> and handles parsing approved strings according to the <see cref="Culture"/>
 /// </summary>
-/// <remarks>
-/// Creates a new instance for detecting/parsing <see cref="DateTime"/> strings according to the <paramref name="cultureInfo"/>
-/// </remarks>
-/// <param name="cultureInfo"></param>
-public class DateTimeTypeDecider(CultureInfo cultureInfo) : DecideTypesForStrings<DateTime>(cultureInfo, TypeCompatibilityGroup.Exclusive, typeof(DateTime))
+public class DateTimeTypeDecider : DecideTypesForStrings<DateTime>
 {
-    private readonly TimeSpanTypeDecider _timeSpanTypeDecider = new(cultureInfo);
-    private readonly DecimalTypeDecider _decimalChecker = new(cultureInfo);
+    private readonly TimeSpanTypeDecider _timeSpanTypeDecider;
+    private readonly DecimalTypeDecider _decimalChecker;
 
     /// <summary>
     /// Array of all supported DateTime formats in which the Month appears before the Day e.g. e.g. "MMM-dd-yy" ("Sep-16-19")
@@ -32,11 +28,25 @@ public class DateTimeTypeDecider(CultureInfo cultureInfo) : DecideTypesForString
     /// </summary>
     public static readonly string[] TimeFormats;
 
-    private string[] _dateFormatToUse =
-        cultureInfo.DateTimeFormat.ShortDatePattern.IndexOf('M') > cultureInfo.DateTimeFormat.ShortDatePattern.IndexOf('d')
+    private string[] _dateFormatToUse;
+    private CultureInfo _culture;
+
+    /// <summary>
+    /// Creates a new instance for detecting/parsing <see cref="DateTime"/> strings according to the <paramref name="cultureInfo"/>
+    /// </summary>
+    /// <param name="cultureInfo">The culture to use for parsing. If null, <see cref="CultureInfo.CurrentCulture"/> is used.</param>
+    public DateTimeTypeDecider(CultureInfo cultureInfo) : base(cultureInfo ?? CultureInfo.CurrentCulture, TypeCompatibilityGroup.Exclusive, typeof(DateTime))
+    {
+        // Use CurrentCulture if null is passed
+        cultureInfo ??= CultureInfo.CurrentCulture;
+
+        _timeSpanTypeDecider = new(cultureInfo);
+        _decimalChecker = new(cultureInfo);
+        _dateFormatToUse = cultureInfo.DateTimeFormat.ShortDatePattern.IndexOf('M') > cultureInfo.DateTimeFormat.ShortDatePattern.IndexOf('d')
             ? DateFormatsDM
             : DateFormatsMD;
-    private CultureInfo _culture = cultureInfo;
+        _culture = cultureInfo;
+    }
 
     /// <summary>
     /// Setting this to false will prevent <see cref="GuessDateFormat(IEnumerable{string})"/> changing the <see cref="Culture"/> e.g. when
@@ -61,41 +71,48 @@ public class DateTimeTypeDecider(CultureInfo cultureInfo) : DecideTypesForString
 
     static DateTimeTypeDecider()
     {
-        var dateFormatsMd = new List<string>();
-        var dateFormatsDm = new List<string>();
-        var timeFormats = new List<string>();
-
         //all dates on their own
-        foreach (var y in YearFormats)
-            foreach (var m in MonthFormats)
-                foreach (var d in DayFormats)
-                    foreach (var dateSeparator in DateSeparators)
-                    {
-                        dateFormatsMd.Add(string.Join(dateSeparator, m, d, y));
-                        dateFormatsMd.Add(string.Join(dateSeparator, y, m, d));
+        var dateFormatsMd = (from y in YearFormats
+                            from m in MonthFormats
+                            from d in DayFormats
+                            from dateSeparator in DateSeparators
+                            from format in new[] {
+                                string.Join(dateSeparator, m, d, y),
+                                string.Join(dateSeparator, y, m, d)
+                            }
+                            select format).ToArray();
 
-                        dateFormatsDm.Add(string.Join(dateSeparator, d, m, y));
-                        dateFormatsMd.Add(string.Join(dateSeparator, y, m, d));
-                    }
+        var dateFormatsDm = (from y in YearFormats
+                            from m in MonthFormats
+                            from d in DayFormats
+                            from dateSeparator in DateSeparators
+                            from format in new[] {
+                                string.Join(dateSeparator, d, m, y),
+                                string.Join(dateSeparator, y, m, d)
+                            }
+                            select format).ToArray();
 
         //then all the times
-        foreach (var timeSeparator in TimeSeparators)
-            foreach (var suffix in Suffixes)
-                foreach (var h in HourFormats)
-                    foreach (var m in MinuteFormats)
-                    {
-                        timeFormats.Add(string.Join(timeSeparator, h, m));
-                        timeFormats.Add($"{string.Join(timeSeparator, h, m)} {suffix}");
+        var timeFormats = (from timeSeparator in TimeSeparators
+                          from suffix in Suffixes
+                          from h in HourFormats
+                          from m in MinuteFormats
+                          from format in new[] {
+                              string.Join(timeSeparator, h, m),
+                              $"{string.Join(timeSeparator, h, m)} {suffix}"
+                          }.Concat(
+                              from s in SecondFormats
+                              from fmt in new[] {
+                                  string.Join(timeSeparator, h, m, s),
+                                  $"{string.Join(timeSeparator, h, m, s)} {suffix}"
+                              }
+                              select fmt
+                          )
+                          select format).ToArray();
 
-                        foreach (var s in SecondFormats)
-                        {
-                            timeFormats.Add(string.Join(timeSeparator, h, m, s));
-                            timeFormats.Add($"{string.Join(timeSeparator, h, m, s)} {suffix}");
-                        }
-                    }
-        DateFormatsDM = [.. dateFormatsDm];
-        DateFormatsMD = [.. dateFormatsMd];
-        TimeFormats = [.. timeFormats];
+        DateFormatsDM = dateFormatsDm;
+        DateFormatsMD = dateFormatsMd;
+        TimeFormats = timeFormats;
     }
 
     private static readonly string[] YearFormats = [
@@ -165,7 +182,7 @@ public class DateTimeTypeDecider(CultureInfo cultureInfo) : DecideTypesForString
 
         // otherwise parse a value using any of the valid culture formats
         if (!TryBruteParse(value, out var dt))
-            throw new FormatException(string.Format(SR.DateTimeTypeDecider_ParseImpl_Could_not_parse___0___to_a_valid_DateTime, value.ToString()));
+            throw new FormatException(ErrorFormatters.DateTimeParseError(new string(value)));
 
         return dt;
     }
@@ -227,14 +244,8 @@ public class DateTimeTypeDecider(CultureInfo cultureInfo) : DecideTypesForString
         if (_timeSpanTypeDecider.IsAcceptableAsType(candidateString, sizeRecord))
             return false;
 
-        try
-        {
-            return TryBruteParse(candidateString, out _);
-        }
-        catch (Exception)
-        {
-            return false;
-        }
+        // TryBruteParse already handles all exceptions internally and returns false on failure
+        return TryBruteParse(candidateString, out _);
     }
 
     private bool TryBruteParse(ReadOnlySpan<char> s, out DateTime dt)

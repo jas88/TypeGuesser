@@ -7,7 +7,7 @@ namespace TypeGuesser;
 /// Records the number of decimal places required to represent a given decimal.  This can class can represent a int (in which case <see cref="NumbersAfterDecimalPlace"/> will be 0) or
 /// decimal.  If the origin of the class is not numerical then a <see cref="DecimalSize"/> might still exist but it should be <see cref="IsEmpty"/>.
 /// </summary>
-public class DecimalSize
+public class DecimalSize : IEquatable<DecimalSize>
 {
     /// <summary>
     /// The maximum number of digits that should be allowed before the decimal point (e.g. <see cref="Precision"/> - <see cref="Scale"/>)
@@ -129,23 +129,22 @@ public class DecimalSize
     #region Equality
 
     /// <summary>
-    /// Property based equality
+    /// Determines whether the specified DecimalSize is equal to the current DecimalSize.
     /// </summary>
-    /// <param name="other"></param>
-    /// <returns></returns>
-    private bool Equals(DecimalSize other)
+    /// <param name="other">The DecimalSize to compare with the current DecimalSize.</param>
+    /// <returns>true if the specified DecimalSize is equal to the current DecimalSize; otherwise, false.</returns>
+    public bool Equals(DecimalSize? other)
     {
-        return NumbersBeforeDecimalPlace == other.NumbersBeforeDecimalPlace && NumbersAfterDecimalPlace == other.NumbersAfterDecimalPlace;
+        if (other is null) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return NumbersBeforeDecimalPlace == other.NumbersBeforeDecimalPlace &&
+               NumbersAfterDecimalPlace == other.NumbersAfterDecimalPlace;
     }
 
     /// <inheritdoc/>
     public override bool Equals(object? obj)
     {
-        if (obj is null) return false;
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != GetType()) return false;
-
-        return Equals((DecimalSize)obj);
+        return obj is DecimalSize other && Equals(other);
     }
 
     /// <inheritdoc/>

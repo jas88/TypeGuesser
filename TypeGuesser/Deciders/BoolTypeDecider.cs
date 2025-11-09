@@ -41,7 +41,7 @@ public sealed class BoolTypeDecider(CultureInfo culture):DecideTypesForStrings<b
             5 => candidateString.Equals("false",StringComparison.OrdinalIgnoreCase) ? false : null,
             _ => null
         };
-        return b ?? throw new Exception("Invalid bool");
+        return b ?? throw new FormatException("Invalid bool");
     }
 
     private static ReadOnlySpan<char> StripWhitespace(ReadOnlySpan<char> candidateString)

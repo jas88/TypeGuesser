@@ -7,7 +7,7 @@ namespace TypeGuesser;
 /// Example usage of the new pooled builder infrastructure.
 /// This is not part of the public API but serves as documentation.
 /// </summary>
-internal static class PooledBuilderExample
+public static class PooledBuilderExample
 {
     /// <summary>
     /// Example: Using the pooled builder for zero-allocation processing of hard-typed values

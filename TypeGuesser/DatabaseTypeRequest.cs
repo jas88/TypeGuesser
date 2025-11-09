@@ -44,7 +44,24 @@ public class DatabaseTypeRequest : IDataTypeSize
     /// </summary>
     public int? Width
     {
-        get => _maxWidthForStrings.HasValue ? Math.Max(_maxWidthForStrings.Value, Size.ToStringLength()) : null;
+        get
+        {
+            // If explicit width is set, compare with size length
+            if (_maxWidthForStrings.HasValue)
+            {
+                var sizeLength = Size.ToStringLength();
+                return sizeLength > 0 ? Math.Max(_maxWidthForStrings.Value, sizeLength) : _maxWidthForStrings.Value;
+            }
+
+            // No explicit width - return size length only if non-zero AND type is numeric
+            if (CSharpType == typeof(decimal) || CSharpType == typeof(int))
+            {
+                var sizeLengthOnly = Size.ToStringLength();
+                return sizeLengthOnly > 0 ? sizeLengthOnly : null;
+            }
+
+            return null;
+        }
         set => _maxWidthForStrings = value;
     }
 
@@ -135,23 +152,30 @@ public class DatabaseTypeRequest : IDataTypeSize
     /// <returns></returns>
     public static DatabaseTypeRequest Max(DatabaseTypeRequest first, DatabaseTypeRequest second)
     {
-        //if types differ
-        if (PreferenceOrder.IndexOf(first.CSharpType) < PreferenceOrder.IndexOf(second.CSharpType))
+        // Validate both types are supported
+        var firstIndex = PreferenceOrder.IndexOf(first.CSharpType);
+        var secondIndex = PreferenceOrder.IndexOf(second.CSharpType);
+
+        if (firstIndex == -1 || secondIndex == -1)
         {
-            second.Unicode = first.Unicode || second.Unicode;
-            return second;
+            throw new NotSupportedException(ErrorFormatters.CannotCombineTypes(first.CSharpType, second.CSharpType));
         }
 
-        if (PreferenceOrder.IndexOf(first.CSharpType) > PreferenceOrder.IndexOf(second.CSharpType))
+        // If types differ, return the one with LOWER index (higher preference)
+        // Lower index = earlier in preference order = more restrictive = higher preference
+        if (firstIndex < secondIndex)
         {
             first.Unicode = first.Unicode || second.Unicode;
             return first;
         }
 
-        if (!(first.CSharpType == second.CSharpType))
-            throw new NotSupportedException(string.Format(SR.DatabaseTypeRequest_Max_Could_not_combine_Types___0___and___1___because_they_were_of_differing_Types_and_neither_Type_appeared_in_the_PreferenceOrder, first.CSharpType, second.CSharpType));
+        if (firstIndex > secondIndex)
+        {
+            second.Unicode = first.Unicode || second.Unicode;
+            return second;
+        }
 
-        //Types are the same, so max the sub elements (width, DecimalSize etc)
+        // Types are the same, check if one instance is already large enough
         var newMaxWidthIfStrings = first.Width;
 
         //if first doesn't have a max string width
@@ -160,13 +184,33 @@ public class DatabaseTypeRequest : IDataTypeSize
         else if (second.Width != null)
             newMaxWidthIfStrings = Math.Max(newMaxWidthIfStrings.Value, second.Width.Value); //else use the max of the two
 
-        //types are the same
+        var combinedSize = DecimalSize.Combine(first.Size, second.Size);
+        var combinedUnicode = first.Unicode || second.Unicode;
+
+        // Check if first is already large enough
+        if (first.Width.GetValueOrDefault() >= newMaxWidthIfStrings.GetValueOrDefault() &&
+            first.Size.NumbersBeforeDecimalPlace >= combinedSize.NumbersBeforeDecimalPlace &&
+            first.Size.NumbersAfterDecimalPlace >= combinedSize.NumbersAfterDecimalPlace &&
+            first.Unicode == combinedUnicode)
+        {
+            return first;
+        }
+
+        // Check if second is already large enough
+        if (second.Width.GetValueOrDefault() >= newMaxWidthIfStrings.GetValueOrDefault() &&
+            second.Size.NumbersBeforeDecimalPlace >= combinedSize.NumbersBeforeDecimalPlace &&
+            second.Size.NumbersAfterDecimalPlace >= combinedSize.NumbersAfterDecimalPlace &&
+            second.Unicode == combinedUnicode)
+        {
+            return second;
+        }
+
+        //types are the same, need to create new combined instance
         return new DatabaseTypeRequest(
                 first.CSharpType,
                 newMaxWidthIfStrings,
-                DecimalSize.Combine(first.Size, second.Size)
+                combinedSize
             )
-        { Unicode = first.Unicode || second.Unicode };
-
+        { Unicode = combinedUnicode };
     }
 }
