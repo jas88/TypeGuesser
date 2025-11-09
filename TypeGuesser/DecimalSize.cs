@@ -144,7 +144,10 @@ public class DecimalSize : IEquatable<DecimalSize>
     /// <inheritdoc/>
     public override bool Equals(object? obj)
     {
-        return obj is DecimalSize other && Equals(other);
+        if (obj is null) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        // Use GetType() comparison to handle subclasses correctly
+        return obj.GetType() == GetType() && Equals((DecimalSize)obj);
     }
 
     /// <inheritdoc/>

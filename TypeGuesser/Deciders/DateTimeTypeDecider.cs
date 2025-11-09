@@ -205,7 +205,9 @@ public class DateTimeTypeDecider : DecideTypesForStrings<DateTime>
         if (!AllowCultureGuessing)
             return;
 
-        foreach (var sSample in samples.Where(static sSample => !string.IsNullOrWhiteSpace(sSample)))
+        var nonEmptySamples = samples.Where(static s => !string.IsNullOrWhiteSpace(s));
+
+        foreach (var sSample in nonEmptySamples)
         {
             var sample = sSample.AsSpan();
             total++;
