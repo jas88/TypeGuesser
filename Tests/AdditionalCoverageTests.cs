@@ -57,7 +57,7 @@ namespace TypeGuesser.Tests
         public void Guesser_Dispose_MultipleCalls_Safe()
         {
             // Test that multiple dispose calls are safe
-            var guesser = new Guesser();
+            using var guesser = new Guesser();
             guesser.AdjustToCompensateForValue("test");
 
             guesser.Dispose();

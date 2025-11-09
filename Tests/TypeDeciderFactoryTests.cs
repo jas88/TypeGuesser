@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using NUnit.Framework;
 using TypeGuesser.Deciders;
 
@@ -93,12 +94,8 @@ namespace TypeGuesser.Tests
         public void Dictionary_AllDecidersHaveSettingsSet()
         {
             // Act & Assert
-            foreach (var kvp in _factory.Dictionary)
-            {
-                var decider = kvp.Value;
-                Assert.That(decider.Settings, Is.Not.Null);
-                Assert.That(decider.Settings, Is.EqualTo(_factory.Settings));
-            }
+            Assert.That(_factory.Dictionary.Values.All(decider =>
+                decider.Settings != null && decider.Settings.Equals(_factory.Settings)), Is.True);
         }
 
         [Test]
@@ -268,14 +265,10 @@ namespace TypeGuesser.Tests
 
             // Act - try to find a type that maps to NeverGuessTheseTypeDecider
             Type? neverGuessedType = null;
-            foreach (var kvp in _factory.Dictionary)
-            {
-                if (kvp.Value is NeverGuessTheseTypeDecider)
-                {
-                    neverGuessedType = kvp.Key;
-                    break;
-                }
-            }
+            neverGuessedType = _factory.Dictionary
+                .Where(kvp => kvp.Value is NeverGuessTheseTypeDecider)
+                .Select(kvp => kvp.Key)
+                .FirstOrDefault();
 
             if (neverGuessedType != null)
             {
