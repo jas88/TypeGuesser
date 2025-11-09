@@ -168,7 +168,7 @@ namespace TypeGuesser.Tests
             var deserializedException = System.Text.Json.JsonSerializer.Deserialize<MixedTypingException>(serializedException);
 
             // Assert
-            Assert.That(deserializedException.Message, Is.EqualTo(originalException.Message));
+            Assert.That(deserializedException!.Message, Is.EqualTo(originalException.Message));
         }
 
         [Test]

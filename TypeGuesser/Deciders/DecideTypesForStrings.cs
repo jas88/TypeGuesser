@@ -79,9 +79,10 @@ public abstract class DecideTypesForStrings<T>:IDecideTypesForStrings
         {
             return ParseImpl(value);
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex is FormatException or ArgumentException or OverflowException or NotSupportedException)
         {
-            throw new FormatException(ErrorFormatters.StringParseError(value.ToString(), GetType()),ex);
+            // Wrap parsing exceptions with additional context
+            throw new FormatException(ErrorFormatters.StringParseError(new string(value), GetType()),ex);
         }
     }
 

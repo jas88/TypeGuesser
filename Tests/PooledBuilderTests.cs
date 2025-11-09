@@ -33,7 +33,7 @@ namespace TypeGuesser.Tests
         public void Constructor_WithNullCulture_UsesCurrentCulture()
         {
             // Act
-            var builder = new PooledBuilder(null);
+            var builder = new PooledBuilder(null!);
 
             // Assert
             Assert.That(builder.Culture, Is.EqualTo(CultureInfo.CurrentCulture));
@@ -79,7 +79,7 @@ namespace TypeGuesser.Tests
         public void SetCulture_WithNullCulture_UsesCurrentCulture()
         {
             // Act
-            _builder.SetCulture(null);
+            _builder.SetCulture(null!);
 
             // Assert
             Assert.That(_builder.Culture, Is.EqualTo(CultureInfo.CurrentCulture));

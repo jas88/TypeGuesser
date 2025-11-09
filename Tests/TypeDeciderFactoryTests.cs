@@ -29,7 +29,7 @@ namespace TypeGuesser.Tests
         public void Constructor_WithNullCulture_UsesCurrentCulture()
         {
             // Act
-            var factory = new TypeDeciderFactory(null);
+            var factory = new TypeDeciderFactory(null!);
 
             // Assert
             Assert.That(factory.Dictionary.Count, Is.GreaterThan(0));
@@ -130,7 +130,7 @@ namespace TypeGuesser.Tests
         public void Create_WithNullType_ThrowsArgumentNullException()
         {
             // Act & Assert
-            Assert.Throws<ArgumentNullException>(() => _factory.Create(null));
+            Assert.Throws<ArgumentNullException>(() => _factory.Create(null!));
         }
 
         [Test]
@@ -267,7 +267,7 @@ namespace TypeGuesser.Tests
             // We can't easily predict which types without looking at the implementation
 
             // Act - try to find a type that maps to NeverGuessTheseTypeDecider
-            Type neverGuessedType = null;
+            Type? neverGuessedType = null;
             foreach (var kvp in _factory.Dictionary)
             {
                 if (kvp.Value is NeverGuessTheseTypeDecider)

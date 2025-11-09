@@ -10,7 +10,7 @@ namespace TypeGuesser.Tests
         public void Constructor_WithNullType_UsesStringAsDefault()
         {
             // Act
-            var result = new TypeGuessResult(null);
+            var result = new TypeGuessResult(null!);
 
             // Assert
             Assert.That(result.CSharpType, Is.EqualTo(typeof(string)));

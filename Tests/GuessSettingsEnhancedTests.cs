@@ -267,7 +267,7 @@ namespace TypeGuesser.Tests
             var deserialized = System.Text.Json.JsonSerializer.Deserialize<GuessSettings>(serialized);
 
             // Assert
-            Assert.That(deserialized.CharCanBeBoolean, Is.EqualTo(original.CharCanBeBoolean));
+            Assert.That(deserialized!.CharCanBeBoolean, Is.EqualTo(original.CharCanBeBoolean));
             Assert.That(deserialized.ExplicitDateFormats, Is.EqualTo(original.ExplicitDateFormats));
         }
 
