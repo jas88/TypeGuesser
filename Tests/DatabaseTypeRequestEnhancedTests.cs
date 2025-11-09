@@ -167,17 +167,20 @@ namespace TypeGuesser.Tests
             var request = new DatabaseTypeRequest(typeof(string));
 
             // Act & Assert
-            Assert.That(request.Equals(null), Is.False);
+            Assert.That(request, Is.Not.Null);
+            Assert.That(request.Equals((object?)null), Is.False);
         }
 
         [Test]
         public void Equals_WithSameReference_ReturnsTrue()
         {
             // Arrange
-            var request = new DatabaseTypeRequest(typeof(string));
+            var request1 = new DatabaseTypeRequest(typeof(string));
+            var request2 = request1; // Same reference
 
             // Act & Assert
-            Assert.That(request.Equals(request), Is.True);
+            Assert.That(request1.Equals(request2), Is.True);
+            Assert.That(ReferenceEquals(request1, request2), Is.True);
         }
 
         [Test]

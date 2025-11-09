@@ -71,7 +71,7 @@ namespace TypeGuesser.Tests
         public void Guesser_DisposedAccess_ThrowsObjectDisposedException()
         {
             // Test accessing methods after dispose
-            var guesser = new Guesser();
+            using var guesser = new Guesser();
             guesser.AdjustToCompensateForValue("test");
             guesser.Dispose();
 
@@ -91,14 +91,12 @@ namespace TypeGuesser.Tests
 
             // Reset for next test
             guesser.Dispose();
-            var newGuesser = new Guesser();
+            using var newGuesser = new Guesser();
 
             // Test decimal parsing
             newGuesser.AdjustToCompensateForValue(12.34m);
             var decimalResult = newGuesser.Parse("56.78");
             Assert.That(decimalResult, Is.EqualTo(56.78m));
-
-            newGuesser.Dispose();
         }
 
         [Test]
@@ -108,7 +106,7 @@ namespace TypeGuesser.Tests
             using var guesser = new Guesser();
             guesser.AdjustToCompensateForValue(42); // int type
 
-            var table = new DataTable();
+            using var table = new DataTable();
             var stringColumn = table.Columns.Add("StringCol", typeof(string));
             var objectColumn = table.Columns.Add("ObjectCol", typeof(object));
             var intColumn = table.Columns.Add("IntCol", typeof(int));
@@ -126,11 +124,9 @@ namespace TypeGuesser.Tests
         {
             // Test the ExtraLengthPerNonAsciiCharacter property
             const int extraLength = 3;
-            var guesser = new Guesser { ExtraLengthPerNonAsciiCharacter = extraLength };
+            using var guesser = new Guesser { ExtraLengthPerNonAsciiCharacter = extraLength };
 
             Assert.That(guesser.ExtraLengthPerNonAsciiCharacter, Is.EqualTo(extraLength));
-
-            guesser.Dispose();
         }
 
         [Test]
@@ -220,12 +216,12 @@ namespace TypeGuesser.Tests
         public void MixedTyping_VariousScenarios_ThrowMixedTypingException()
         {
             // Test various mixed typing scenarios
-            var scenarios = new[]
+            var scenarios = new object[]
             {
-                (object)"string", (object)42,
-                (object)true, (object)"test",
-                (object)12.34m, (object)false,
-                (object)DateTime.Now, (object)"date"
+                "string", 42,
+                true, "test",
+                12.34m, false,
+                DateTime.Now, "date"
             };
 
             for (int i = 0; i < scenarios.Length; i += 2)

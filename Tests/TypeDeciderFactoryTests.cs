@@ -231,7 +231,7 @@ namespace TypeGuesser.Tests
             // Assert
             var intDecider = factory.Create(typeof(int)) as IntTypeDecider;
             Assert.That(intDecider, Is.Not.Null);
-            Assert.That(intDecider.Culture, Is.EqualTo(frenchCulture));
+            Assert.That(intDecider!.Culture, Is.EqualTo(frenchCulture));
         }
 
         [Test]

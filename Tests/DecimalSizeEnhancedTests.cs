@@ -325,17 +325,20 @@ namespace TypeGuesser.Tests
             var size = new DecimalSize(5, 3);
 
             // Act & Assert
-            Assert.That(size.Equals(null), Is.False);
+            Assert.That(size, Is.Not.Null);
+            Assert.That(size.Equals((object?)null), Is.False);
         }
 
         [Test]
         public void Equals_WithSameReference_ReturnsTrue()
         {
             // Arrange
-            var size = new DecimalSize(5, 3);
+            var size1 = new DecimalSize(5, 3);
+            var size2 = size1; // Same reference
 
             // Act & Assert
-            Assert.That(size.Equals(size), Is.True);
+            Assert.That(size1.Equals(size2), Is.True);
+            Assert.That(ReferenceEquals(size1, size2), Is.True);
         }
 
         [Test]
