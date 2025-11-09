@@ -2,6 +2,7 @@ using System;
 using System.Data;
 using System.Globalization;
 using NUnit.Framework;
+using System.Linq;
 
 namespace TypeGuesser.Tests
 {
@@ -21,9 +22,8 @@ namespace TypeGuesser.Tests
                 new CultureInfo("ja-JP")
             };
 
-            foreach (var culture in cultures)
+            foreach (var factory in cultures.Select(culture => Guesser.GetSharedFactory(culture)))
             {
-                var factory = Guesser.GetSharedFactory(culture);
                 Assert.That(factory, Is.Not.Null);
                 Assert.That(factory.Settings, Is.Not.Null);
             }
