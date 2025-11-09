@@ -190,9 +190,9 @@ public sealed class Guesser : IDisposable
     /// <param name="request">The request to use for priming</param>
     private void PrimeBuilderWithType(DatabaseTypeRequest request)
     {
-        // For now, we'll just track the initial request and let the builder handle type evolution.
-        // The actual type will be set when first value is processed.
-        // This maintains backward compatibility where the constructor sets an initial type hint.
+        // Set the initial type hint without processing values
+        // This maintains backward compatibility where the constructor sets an initial type preference
+        _builder.SetInitialTypeHint(request.CSharpType);
     }
 
     /// <summary>

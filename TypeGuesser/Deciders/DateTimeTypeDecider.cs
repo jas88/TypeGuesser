@@ -12,10 +12,10 @@ namespace TypeGuesser.Deciders;
 /// Creates a new instance for detecting/parsing <see cref="DateTime"/> strings according to the <paramref name="cultureInfo"/>
 /// </remarks>
 /// <param name="cultureInfo"></param>
-public class DateTimeTypeDecider(CultureInfo cultureInfo) : DecideTypesForStrings<DateTime>(cultureInfo, TypeCompatibilityGroup.Exclusive, typeof(DateTime))
+public class DateTimeTypeDecider : DecideTypesForStrings<DateTime>
 {
-    private readonly TimeSpanTypeDecider _timeSpanTypeDecider = new(cultureInfo);
-    private readonly DecimalTypeDecider _decimalChecker = new(cultureInfo);
+    private readonly TimeSpanTypeDecider _timeSpanTypeDecider;
+    private readonly DecimalTypeDecider _decimalChecker;
 
     /// <summary>
     /// Array of all supported DateTime formats in which the Month appears before the Day e.g. e.g. "MMM-dd-yy" ("Sep-16-19")
@@ -32,11 +32,25 @@ public class DateTimeTypeDecider(CultureInfo cultureInfo) : DecideTypesForString
     /// </summary>
     public static readonly string[] TimeFormats;
 
-    private string[] _dateFormatToUse =
-        cultureInfo.DateTimeFormat.ShortDatePattern.IndexOf('M') > cultureInfo.DateTimeFormat.ShortDatePattern.IndexOf('d')
+    private string[] _dateFormatToUse;
+    private CultureInfo _culture;
+
+    /// <summary>
+    /// Creates a new instance for detecting/parsing <see cref="DateTime"/> strings according to the <paramref name="cultureInfo"/>
+    /// </summary>
+    /// <param name="cultureInfo">The culture to use for parsing. If null, <see cref="CultureInfo.CurrentCulture"/> is used.</param>
+    public DateTimeTypeDecider(CultureInfo cultureInfo) : base(cultureInfo ?? CultureInfo.CurrentCulture, TypeCompatibilityGroup.Exclusive, typeof(DateTime))
+    {
+        // Use CurrentCulture if null is passed
+        cultureInfo ??= CultureInfo.CurrentCulture;
+
+        _timeSpanTypeDecider = new(cultureInfo);
+        _decimalChecker = new(cultureInfo);
+        _dateFormatToUse = cultureInfo.DateTimeFormat.ShortDatePattern.IndexOf('M') > cultureInfo.DateTimeFormat.ShortDatePattern.IndexOf('d')
             ? DateFormatsDM
             : DateFormatsMD;
-    private CultureInfo _culture = cultureInfo;
+        _culture = cultureInfo;
+    }
 
     /// <summary>
     /// Setting this to false will prevent <see cref="GuessDateFormat(IEnumerable{string})"/> changing the <see cref="Culture"/> e.g. when

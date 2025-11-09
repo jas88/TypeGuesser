@@ -39,8 +39,9 @@ namespace TypeGuesser.Tests
             });
 
             // The exception message should contain the resource string
-            Assert.That(ex.Message, Does.Contain("Could not parse"));
-            Assert.That(ex.Message, Does.Contain("to a valid DateTime"));
+            // The base class wraps the error in a more generic parse error message
+            Assert.That(ex.Message, Does.Contain("Could not parse string value"));
+            Assert.That(ex.Message, Does.Contain("with Decider Type:DateTimeTypeDecider"));
         }
 
         [Test]
@@ -51,7 +52,7 @@ namespace TypeGuesser.Tests
             var unsupportedType = typeof(ResourceStringTests); // Use this test class as unsupported type
 
             // Act & Assert
-            var ex = Assert.Throws<Exception>(() => factory.Create(unsupportedType));
+            var ex = Assert.Throws<TypeNotSupportedException>(() => factory.Create(unsupportedType));
             Assert.That(ex.Message, Does.Contain("does not have an associated IDecideTypesForStrings"));
         }
 
@@ -66,8 +67,8 @@ namespace TypeGuesser.Tests
 
             // Assert - Adding int after string should throw with resource message
             var ex = Assert.Throws<MixedTypingException>(() => guesser.AdjustToCompensateForValue(42));
-            Assert.That(ex.Message, Does.Contain("Guesser does not support being passed hard typed objects"));
-            Assert.That(ex.Message, Does.Contain("mixed with untyped objects"));
+            Assert.That(ex.Message, Does.Contain("Cannot process hard-typed int value after processing string values"));
+            Assert.That(ex.Message, Does.Contain("must be used with either strings OR hard-typed objects"));
         }
 
         [Test]
@@ -81,8 +82,8 @@ namespace TypeGuesser.Tests
 
             // Assert - Adding string after int should throw with resource message
             var ex = Assert.Throws<MixedTypingException>(() => guesser.AdjustToCompensateForValue("string_value"));
-            Assert.That(ex.Message, Does.Contain("Guesser does not support being passed hard typed objects"));
-            Assert.That(ex.Message, Does.Contain("mixed with untyped objects"));
+            Assert.That(ex.Message, Does.Contain("Cannot process string values after processing hard-typed objects"));
+            Assert.That(ex.Message, Does.Contain("must be used with either strings OR hard-typed objects"));
         }
 
         [Test]
@@ -98,14 +99,14 @@ namespace TypeGuesser.Tests
 
             // Test 2: TypeDeciderFactory error
             var factory = new TypeDeciderFactory(CultureInfo.InvariantCulture);
-            var ex2 = Assert.Throws<Exception>(() => factory.Create(typeof(ResourceStringTests)));
+            var ex2 = Assert.Throws<TypeNotSupportedException>(() => factory.Create(typeof(ResourceStringTests)));
             Assert.That(ex2.Message, Does.Contain("DataType TypeGuesser.Tests.ResourceStringTests does not have an associated IDecideTypesForStrings"));
 
             // Test 3: Mixed typing error
             using var guesser = new Guesser();
             guesser.AdjustToCompensateForValue("test");
             var ex3 = Assert.Throws<MixedTypingException>(() => guesser.AdjustToCompensateForValue(123));
-            Assert.That(ex3.Message, Does.Contain("we were previously passed a 'System.String' type"));
+            Assert.That(ex3.Message, Does.Contain("Cannot process hard-typed int value after processing string values"));
         }
 
         [Test]
@@ -133,7 +134,7 @@ namespace TypeGuesser.Tests
             var factory = new TypeDeciderFactory(frenchCulture);
 
             // The error message should still be in English regardless of factory culture
-            var ex = Assert.Throws<Exception>(() => factory.Create(typeof(ResourceStringTests)));
+            var ex = Assert.Throws<TypeNotSupportedException>(() => factory.Create(typeof(ResourceStringTests)));
             Assert.That(ex.Message, Does.Contain("DataType TypeGuesser.Tests.ResourceStringTests does not have an associated IDecideTypesForStrings"));
         }
 
@@ -205,10 +206,8 @@ namespace TypeGuesser.Tests
 
             // Verify error message contains all expected components
             var message = ex.Message;
-            Assert.That(message, Does.Contain("Guesser does not support being passed hard typed objects"));
-            Assert.That(message, Does.Contain("mixed with untyped objects"));
-            Assert.That(message, Does.Contain("which is of Type 'System.Int32'"));
-            Assert.That(message, Does.Contain("we were previously passed a 'System.String' type"));
+            Assert.That(message, Does.Contain("Cannot process hard-typed int value after processing string values"));
+            Assert.That(message, Does.Contain("must be used with either strings OR hard-typed objects"));
         }
     }
 }

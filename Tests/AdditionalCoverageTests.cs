@@ -254,7 +254,7 @@ namespace TypeGuesser.Tests
 
             foreach (var type in unsupportedTypes)
             {
-                Assert.Throws<Exception>(() => factory.Create(type));
+                Assert.Catch<Exception>(() => factory.Create(type));
             }
         }
 

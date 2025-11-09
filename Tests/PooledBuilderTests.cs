@@ -42,14 +42,19 @@ namespace TypeGuesser.Tests
         [Test]
         public void Reset_RestoresInitialState()
         {
-            // Arrange
+            // Arrange - process some values to change state
             _builder.ProcessIntZeroAlloc(42);
-            _builder.ProcessString("test");
+            _builder.ProcessIntZeroAlloc(100);
 
-            // Act
+            // Verify state was changed
+            var resultBeforeReset = _builder.Build();
+            Assert.That(resultBeforeReset.ValueCount, Is.GreaterThan(0));
+            Assert.That(resultBeforeReset.CSharpType, Is.EqualTo(typeof(int)));
+
+            // Act - reset the builder
             _builder.Reset();
 
-            // Assert
+            // Assert - verify state is restored to initial
             var result = _builder.Build();
             Assert.That(result.CSharpType, Is.EqualTo(typeof(bool))); // First in preference order
             Assert.That(result.ValueCount, Is.EqualTo(0));

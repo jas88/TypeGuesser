@@ -96,6 +96,22 @@ public sealed class PooledBuilder
     }
 
     /// <summary>
+    /// Sets the initial type hint without processing any values.
+    /// Used when constructing a Guesser with a specific DatabaseTypeRequest.
+    /// </summary>
+    /// <param name="type">The type to set as the initial guess</param>
+    public void SetInitialTypeHint(Type type)
+    {
+        lock (_lock)
+        {
+            if (DatabaseTypeRequest.PreferenceOrder.Contains(type))
+            {
+                _currentType = type;
+            }
+        }
+    }
+
+    /// <summary>
     /// Updates the culture and reinitializes the type decider factory.
     /// </summary>
     /// <param name="culture">The new culture to use</param>
@@ -292,35 +308,36 @@ public sealed class PooledBuilder
                 return;
             }
 
-            // Try to validate against current type
-            var tempRequest = new DatabaseTypeRequest(_currentType)
+            // Loop until we find a compatible type, instead of recursion to avoid double-counting
+            while (_currentType != typeof(string))
             {
-                Width = _maxWidth,
-                Unicode = _requiresUnicode
-            };
-            tempRequest.Size.IncreaseTo(_digitsBeforeDecimal, _digitsAfterDecimal);
-
-            var decider = _typeDeciders.Dictionary[_currentType];
-            if (decider.IsAcceptableAsType(value, tempRequest))
-            {
-                _validTypesSeen = decider.CompatibilityGroup;
-
-                // Update sizes from the decider's modifications
-                _digitsBeforeDecimal = tempRequest.Size.NumbersBeforeDecimalPlace;
-                _digitsAfterDecimal = tempRequest.Size.NumbersAfterDecimalPlace;
-
-                if (_currentType == typeof(DateTime))
+                // Try to validate against current type
+                var tempRequest = new DatabaseTypeRequest(_currentType)
                 {
-                    _maxWidth = Math.Max(_maxWidth ?? 0, Guesser.MinimumLengthRequiredForDateStringRepresentation);
+                    Width = _maxWidth,
+                    Unicode = _requiresUnicode
+                };
+                tempRequest.Size.IncreaseTo(_digitsBeforeDecimal, _digitsAfterDecimal);
+
+                var decider = _typeDeciders.Dictionary[_currentType];
+                if (decider.IsAcceptableAsType(value, tempRequest))
+                {
+                    _validTypesSeen = decider.CompatibilityGroup;
+
+                    // Update sizes from the decider's modifications
+                    _digitsBeforeDecimal = tempRequest.Size.NumbersBeforeDecimalPlace;
+                    _digitsAfterDecimal = tempRequest.Size.NumbersAfterDecimalPlace;
+
+                    if (_currentType == typeof(DateTime))
+                    {
+                        _maxWidth = Math.Max(_maxWidth ?? 0, Guesser.MinimumLengthRequiredForDateStringRepresentation);
+                    }
+                    return;
                 }
-                return;
+
+                // Not compatible - fall back to next type
+                ChangeEstimateToNext();
             }
-
-            // Not compatible - fall back to next type
-            ChangeEstimateToNext();
-
-            // Retry with new type
-            ProcessString(value);
         }
     }
 

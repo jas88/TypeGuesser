@@ -28,6 +28,9 @@ public class TypeDeciderFactory
     /// <param name="culture"></param>
     public TypeDeciderFactory(CultureInfo culture)
     {
+        // Use CurrentCulture if null is passed
+        culture ??= CultureInfo.CurrentCulture;
+
         Settings = GuessSettingsFactory.Create();
 
         var deciders = new IDecideTypesForStrings[]
@@ -66,8 +69,8 @@ public class TypeDeciderFactory
     /// </summary>
     /// <param name="forDataType"></param>
     /// <returns></returns>
-    public bool IsSupported(Type forDataType)
+    public bool IsSupported(Type? forDataType)
     {
-        return Dictionary.ContainsKey(forDataType);
+        return forDataType != null && Dictionary.ContainsKey(forDataType);
     }
 }

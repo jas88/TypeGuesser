@@ -1,4 +1,6 @@
-﻿namespace TypeGuesser;
+﻿using System;
+
+namespace TypeGuesser;
 
 /// <summary>
 /// Controls guess decisions where the choice is ambiguous e.g. is "T" and "F" True / False or just a string.  Use
@@ -44,5 +46,57 @@ public class GuessSettings
     {
         CharCanBeBoolean = true;
         ExplicitDateFormats = null;
+    }
+
+    /// <summary>
+    /// Value-based equality comparison
+    /// </summary>
+    public override bool Equals(object? obj)
+    {
+        if (obj is not GuessSettings other)
+            return false;
+
+        if (ReferenceEquals(this, other))
+            return true;
+
+        if (CharCanBeBoolean != other.CharCanBeBoolean)
+            return false;
+
+        // Compare ExplicitDateFormats arrays
+        if (ExplicitDateFormats == null && other.ExplicitDateFormats == null)
+            return true;
+
+        if (ExplicitDateFormats == null || other.ExplicitDateFormats == null)
+            return false;
+
+        if (ExplicitDateFormats.Length != other.ExplicitDateFormats.Length)
+            return false;
+
+        for (int i = 0; i < ExplicitDateFormats.Length; i++)
+        {
+            if (ExplicitDateFormats[i] != other.ExplicitDateFormats[i])
+                return false;
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Value-based hash code
+    /// </summary>
+    public override int GetHashCode()
+    {
+        var hash = new HashCode();
+        hash.Add(CharCanBeBoolean);
+
+        if (ExplicitDateFormats != null)
+        {
+            foreach (var format in ExplicitDateFormats)
+            {
+                hash.Add(format);
+            }
+        }
+
+        return hash.ToHashCode();
     }
 }

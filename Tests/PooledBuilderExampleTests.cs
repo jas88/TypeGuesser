@@ -68,7 +68,7 @@ namespace TypeGuesser.Tests
 
             // Assert - Numeric strings are parsed as int type
             Assert.That(result.CSharpType, Is.EqualTo(typeof(int)));
-            Assert.That(result.ValueCount, Is.EqualTo(4)); // Actual value count
+            Assert.That(result.ValueCount, Is.EqualTo(3)); // Actual value count
             Assert.That(result.NullCount, Is.EqualTo(0));
             Assert.That(result.Width, Is.EqualTo(3)); // All are 3 digits
         }

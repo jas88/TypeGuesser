@@ -5,4 +5,4 @@ namespace TypeGuesser;
 /// <summary>
 /// Thrown when a given Type is not supported by TypeGuesser
 /// </summary>
-internal sealed class TypeNotSupportedException(Type t) : Exception(t.FullName);
+public sealed class TypeNotSupportedException(Type t) : Exception($"DataType {t} does not have an associated IDecideTypesForStrings");

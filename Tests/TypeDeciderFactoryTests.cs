@@ -116,12 +116,14 @@ namespace TypeGuesser.Tests
         [Test]
         public void Create_WithUnsupportedType_ThrowsException()
         {
-            // Arrange
-            var unsupportedType = typeof(Guid);
+            // Arrange - Use a truly unsupported type (Guid is now supported)
+            var unsupportedType = typeof(object);
 
             // Act & Assert
-            var ex = Assert.Throws<Exception>(() => _factory.Create(unsupportedType));
-            Assert.That(ex.Message, Does.Contain("System.Guid"));
+            var ex = Assert.Catch(() => _factory.Create(unsupportedType));
+            Assert.That(ex, Is.Not.Null);
+            Assert.That(ex.GetType().Name, Is.EqualTo("TypeNotSupportedException"));
+            Assert.That(ex.Message, Does.Contain("DataType System.Object"));
         }
 
         [Test]
@@ -165,8 +167,8 @@ namespace TypeGuesser.Tests
         [Test]
         public void IsSupported_WithUnsupportedType_ReturnsFalse()
         {
-            // Arrange
-            var unsupportedTypes = new[] { typeof(Guid), typeof(object), typeof(TypeDeciderFactoryTests) };
+            // Arrange - use truly unsupported types (Guid is now supported via NeverGuessTheseTypeDecider)
+            var unsupportedTypes = new[] { typeof(object), typeof(TypeDeciderFactoryTests), typeof(Exception) };
 
             // Act & Assert
             foreach (var type in unsupportedTypes)
