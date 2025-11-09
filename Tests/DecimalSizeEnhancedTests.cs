@@ -376,9 +376,10 @@ namespace TypeGuesser.Tests
         {
             // Arrange
             var size = new DecimalSize(5, 3);
+            var differentTypeObject = new object();
 
             // Act & Assert
-            Assert.That(size.Equals("not a DecimalSize"), Is.False);
+            Assert.That(size.Equals(differentTypeObject), Is.False);
         }
 
         [Test]
