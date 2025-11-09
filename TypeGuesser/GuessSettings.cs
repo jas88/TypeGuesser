@@ -37,8 +37,12 @@ public class GuessSettings
         copyInto.ExplicitDateFormats = ExplicitDateFormats;
     }
 
-    internal GuessSettings()
+    /// <summary>
+    /// Creates a new instance with default values
+    /// </summary>
+    public GuessSettings()
     {
-
+        CharCanBeBoolean = true;
+        ExplicitDateFormats = null;
     }
 }

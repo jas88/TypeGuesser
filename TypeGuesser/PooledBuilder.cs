@@ -156,8 +156,7 @@ public sealed class PooledBuilder
             // Check for mixing hard type with strings
             if (_validTypesSeen != TypeCompatibilityGroup.None || _currentType == typeof(string))
             {
-                throw new MixedTypingException(
-                    "Cannot process hard-typed int value after processing string values. Guesser instances must be used with either strings OR hard-typed objects, not mixed with untyped objects.");
+                throw new MixedTypingException(ErrorFormatters.MixedTypingIntAfterString());
             }
 
             _valueCount++;
@@ -196,8 +195,7 @@ public sealed class PooledBuilder
             // Check for mixing hard type with strings
             if (_validTypesSeen != TypeCompatibilityGroup.None || _currentType == typeof(string))
             {
-                throw new MixedTypingException(
-                    "Cannot process hard-typed decimal value after processing string values. Guesser instances must be used with either strings OR hard-typed objects, not mixed with untyped objects.");
+                throw new MixedTypingException(ErrorFormatters.MixedTypingDecimalAfterString());
             }
 
             _valueCount++;
@@ -239,8 +237,7 @@ public sealed class PooledBuilder
             // Check for mixing hard type with strings
             if (_validTypesSeen != TypeCompatibilityGroup.None || _currentType == typeof(string))
             {
-                throw new MixedTypingException(
-                    "Cannot process hard-typed bool value after processing string values. Guesser instances must be used with either strings OR hard-typed objects, not mixed with untyped objects.");
+                throw new MixedTypingException(ErrorFormatters.MixedTypingBoolAfterString());
             }
 
             _valueCount++;
@@ -365,8 +362,7 @@ public sealed class PooledBuilder
             // Check for mixed typing
             if (_validTypesSeen != TypeCompatibilityGroup.None || _currentType == typeof(string))
             {
-                throw new MixedTypingException(
-                    $"Cannot process hard-typed {value.GetType()} value after processing string values. Guesser instances must be used with either strings OR hard-typed objects, not mixed with untyped objects.");
+                throw new MixedTypingException(ErrorFormatters.MixedTypingGenericTypeAfterString(value.GetType()));
             }
 
             _valueCount++;

@@ -43,7 +43,7 @@ public abstract class DecideTypesForStrings<T>:IDecideTypesForStrings
         CompatibilityGroup = compatibilityGroup;
 
         if (typesSupported.Length == 0)
-            throw new ArgumentException(SR.DecideTypesForStrings_DecideTypesForStrings_DecideTypesForStrings_abstract_base_was_not_passed_any_typesSupported_by_implementing_derived_class);
+            throw new ArgumentException(ErrorFormatters.AbstractBaseError());
 
         TypesSupported = [.. typesSupported];
     }
@@ -81,7 +81,7 @@ public abstract class DecideTypesForStrings<T>:IDecideTypesForStrings
         }
         catch (Exception ex)
         {
-            throw new FormatException(string.Format(SR.DecideTypesForStrings_Parse_Could_not_parse_string_value___0___with_Decider_Type__1_,value.ToString(),GetType().Name),ex);
+            throw new FormatException(ErrorFormatters.StringParseError(value.ToString(), GetType()),ex);
         }
     }
 

@@ -278,7 +278,7 @@ public sealed class Guesser : IDisposable
 
         var factory = GetSharedFactory(_builder.Culture);
         if (!factory.IsSupported(currentEstimate))
-            throw new NotSupportedException(string.Format(SR.Guesser_ThrowIfNotSupported_No_Type_Decider_exists_for_Type__0_, currentEstimate));
+            throw new NotSupportedException(ErrorFormatters.UnsupportedType(currentEstimate));
     }
 
     /// <summary>

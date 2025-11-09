@@ -149,7 +149,7 @@ public class DatabaseTypeRequest : IDataTypeSize
         }
 
         if (!(first.CSharpType == second.CSharpType))
-            throw new NotSupportedException(string.Format(SR.DatabaseTypeRequest_Max_Could_not_combine_Types___0___and___1___because_they_were_of_differing_Types_and_neither_Type_appeared_in_the_PreferenceOrder, first.CSharpType, second.CSharpType));
+            throw new NotSupportedException(ErrorFormatters.CannotCombineTypes(first.CSharpType, second.CSharpType));
 
         //Types are the same, so max the sub elements (width, DecimalSize etc)
         var newMaxWidthIfStrings = first.Width;

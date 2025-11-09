@@ -165,7 +165,7 @@ public class DateTimeTypeDecider(CultureInfo cultureInfo) : DecideTypesForString
 
         // otherwise parse a value using any of the valid culture formats
         if (!TryBruteParse(value, out var dt))
-            throw new FormatException(string.Format(SR.DateTimeTypeDecider_ParseImpl_Could_not_parse___0___to_a_valid_DateTime, value.ToString()));
+            throw new FormatException(ErrorFormatters.DateTimeParseError(value.ToString()));
 
         return dt;
     }
