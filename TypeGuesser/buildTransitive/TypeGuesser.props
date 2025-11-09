@@ -1,0 +1,7 @@
+<Project>
+  <PropertyGroup>
+    <!-- TypeGuesser is fully compatible with AOT and trimming -->
+    <TypeGuesser_IsAotCompatible>true</TypeGuesser_IsAotCompatible>
+    <TypeGuesser_IsTrimmable>true</TypeGuesser_IsTrimmable>
+  </PropertyGroup>
+</Project>
