@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.1] - TBD
+
+### Fixed
+
+- Fixed backslash date separator escape level in `DateTimeTypeDecider` (Issue #15)
+  - Changed `DateSeparators` array from `"\\\\"` (2 backslashes at runtime) to `"\\"` (1 backslash at runtime)
+  - Fixes parsing failures for dates like `"Wed\5\19"` with format `"ddd\M\d"`
+  - Resolves ~20 failing tests in FAnsiSql test suite related to backslash separator parsing
+  - Added comprehensive test coverage in `DateTimeTypeDeciderTests.cs`
+
 ## [2.0.0] - 2025-11-08
 
 ### Added

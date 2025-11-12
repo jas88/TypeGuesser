@@ -136,7 +136,7 @@ public class DateTimeTypeDecider : DecideTypesForStrings<DateTime>
     ];
 
     private static readonly string[] DateSeparators = [
-        "\\\\",
+        "\\",
         "/",
         "-",
         "."
