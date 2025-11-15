@@ -6,6 +6,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.1] - 2025-11-15
+
+### Added
+
+- **AOT/Trim Metadata Exposure**: NuGet package consumers can now detect TypeGuesser's capabilities
+  - New `buildTransitive/TypeGuesser.props` automatically imported into consuming projects
+  - Exposes `TypeGuesser_IsAotCompatible` and `TypeGuesser_IsTrimmable` MSBuild properties
+  - Enables consumers to make informed build configuration decisions
+- **Comprehensive Test Coverage**: Expanded test suite from ~100 to 377 tests
+  - New `DatabaseTypeRequestEnhancedTests.cs` (366 tests) - Database type request validation
+  - New `DecimalSizeEnhancedTests.cs` (426 tests) - Decimal precision/scale handling
+  - New `ErrorFormattersTests.cs` (115 tests) - Error message formatting
+  - New `ExceptionHandlingTests.cs` (214 tests) - Exception handling scenarios
+  - New `GuessSettingsEnhancedTests.cs` (288 tests) - Settings configuration
+  - New `PooledBuilderTests.cs` & `PooledBuilderExampleTests.cs` (466 tests) - Object pooling
+  - New `ResourceStringTests.cs` (213 tests) - Resource string validation
+  - New `TypeDeciderFactoryTests.cs` (299 tests) - Factory pattern validation
+  - New `TypeGuessResultTests.cs` (301 tests) - Result object validation
+  - New `AdditionalCoverageTests.cs` - General coverage improvements
+
+### Fixed
+
+- **CodeQL Security Alerts**: Resolved all outstanding CodeQL warnings
+  - Fixed equality pattern in `DecimalSize.Equals(object)` to handle subclasses correctly
+  - Refactored LINQ query in `DateTimeTypeDecider` to satisfy CodeQL recommendations
+- **Build Quality**: Achieved 0 warnings, 0 errors across entire solution
+
+### Changed
+
+- **Dependencies**: Updated `Microsoft.Extensions.ObjectPool` from 9.0.0 to 9.0.10
+- **CI/CD**: Combined CodeQL and build workflows into unified pipeline with `contents:write` permission
+- **Packaging**: Marked benchmarks project as `IsPackable=false` to prevent accidental packaging
+
 ## [2.0.0] - 2025-11-08
 
 ### Added
