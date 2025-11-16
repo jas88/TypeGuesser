@@ -148,8 +148,8 @@ namespace TypeGuesser.Tests
         [Test]
         public void DatabaseTypeRequest_Max_WithUnsupportedTypes_ThrowsNotSupportedException()
         {
-            // Arrange
-            var request1 = new DatabaseTypeRequest(typeof(Guid));
+            // Arrange - use a truly unsupported type
+            var request1 = new DatabaseTypeRequest(typeof(System.Drawing.Color));
             var request2 = new DatabaseTypeRequest(typeof(DateTime));
 
             // Act & Assert

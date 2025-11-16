@@ -10,7 +10,7 @@ namespace TypeGuesser.Deciders;
 /// Creates a new instance for recognizing whole numbers in string values
 /// </remarks>
 /// <param name="culture"></param>
-public sealed class IntTypeDecider(CultureInfo culture) : DecideTypesForStrings<int>(culture,TypeCompatibilityGroup.Numerical, typeof(short) , typeof(int), typeof(byte))
+public sealed class IntTypeDecider(CultureInfo culture) : DecideTypesForStrings<int>(culture,TypeCompatibilityGroup.Numerical, typeof(byte), typeof(short), typeof(int))
 {
     /// <inheritdoc/>
     protected override IDecideTypesForStrings CloneImpl(CultureInfo newCulture)

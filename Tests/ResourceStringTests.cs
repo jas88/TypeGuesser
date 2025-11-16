@@ -91,11 +91,11 @@ namespace TypeGuesser.Tests
         {
             // This test ensures all resource strings are accessible and formatted correctly
 
-            // Test 1: DatabaseTypeRequest.Max error
-            var request1 = new DatabaseTypeRequest(typeof(Guid));
+            // Test 1: DatabaseTypeRequest.Max error - use truly unsupported type
+            var request1 = new DatabaseTypeRequest(typeof(System.Drawing.Color));
             var request2 = new DatabaseTypeRequest(typeof(TimeSpan));
             var ex1 = Assert.Throws<NotSupportedException>(() => DatabaseTypeRequest.Max(request1, request2));
-            Assert.That(ex1.Message, Does.Contain("Could not combine Types 'System.Guid' and 'System.TimeSpan'"));
+            Assert.That(ex1.Message, Does.Contain("Could not combine Types 'System.Drawing.Color' and 'System.TimeSpan'"));
 
             // Test 2: TypeDeciderFactory error
             var factory = new TypeDeciderFactory(CultureInfo.InvariantCulture);

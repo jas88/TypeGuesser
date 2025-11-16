@@ -451,7 +451,7 @@ public sealed class PooledBuilder
 
     private void ChangeEstimateToNext()
     {
-        var current = DatabaseTypeRequest.PreferenceOrder.IndexOf(_currentType);
+        var current = DatabaseTypeRequest.PreferenceOrderIndex[_currentType];
 
         if (_validTypesSeen == TypeCompatibilityGroup.None)
         {

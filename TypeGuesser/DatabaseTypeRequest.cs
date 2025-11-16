@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Frozen;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace TypeGuesser;
 
@@ -9,21 +11,36 @@ namespace TypeGuesser;
 /// </summary>
 public class DatabaseTypeRequest : IDataTypeSize
 {
-    /// <summary>
-    /// Any input string of unknown Type will be assignable to one of the following C# data types.  The order denotes system wide which
-    /// data types to try  converting the string into in order of preference.  For the implementation of this see <see cref="Guesser"/>.
-    /// </summary>
-    public static readonly ReadOnlyCollection<Type> PreferenceOrder = new(new[]
-    {
+    private static readonly Type[] _preferenceOrderArray =
+    [
         typeof(bool),
         typeof(int),
         typeof(decimal),
+        typeof(long),     // SQL bigint
 
         typeof(TimeSpan),
         typeof(DateTime), //ironically Convert.ToDateTime likes int and floats as valid dates -- nuts
 
+        typeof(byte),     // SQL tinyint - less common, more specific
+        typeof(short),    // SQL smallint - less common, more specific
+        typeof(Guid),     // SQL uniqueidentifier - never guessed from strings
+        typeof(byte[]),   // SQL varbinary - never guessed from strings
+
         typeof(string)
-    });
+    ];
+
+    /// <summary>
+    /// Any input string of unknown Type will be assignable to one of the following C# data types.  The order denotes system wide which
+    /// data types to try  converting the string into in order of preference.  For the implementation of this see <see cref="Guesser"/>.
+    /// </summary>
+    public static readonly ReadOnlyCollection<Type> PreferenceOrder = new(_preferenceOrderArray);
+
+    /// <summary>
+    /// Fast O(1) lookup for type index in PreferenceOrder.
+    /// </summary>
+    public static readonly FrozenDictionary<Type, int> PreferenceOrderIndex =
+        _preferenceOrderArray.Select((type, index) => new { type, index })
+            .ToFrozenDictionary(x => x.type, x => x.index);
 
     private int? _maxWidthForStrings;
 

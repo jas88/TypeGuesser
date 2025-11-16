@@ -312,7 +312,7 @@ namespace TypeGuesser.Tests
         {
             // Arrange
             var request1 = new DatabaseTypeRequest(typeof(DateTime), 100);
-            var request2 = new DatabaseTypeRequest(typeof(Guid), 200);
+            var request2 = new DatabaseTypeRequest(typeof(System.Drawing.Color), 200); // Truly unsupported type
 
             // Act & Assert
             var ex = Assert.Throws<NotSupportedException>(() => DatabaseTypeRequest.Max(request1, request2));
@@ -322,14 +322,65 @@ namespace TypeGuesser.Tests
         [Test]
         public void PreferenceOrder_ContainsExpectedTypes()
         {
-            // Assert
-            Assert.That(DatabaseTypeRequest.PreferenceOrder.Count, Is.EqualTo(6));
-            Assert.That(DatabaseTypeRequest.PreferenceOrder[0], Is.EqualTo(typeof(bool)));
-            Assert.That(DatabaseTypeRequest.PreferenceOrder[1], Is.EqualTo(typeof(int)));
-            Assert.That(DatabaseTypeRequest.PreferenceOrder[2], Is.EqualTo(typeof(decimal)));
-            Assert.That(DatabaseTypeRequest.PreferenceOrder[3], Is.EqualTo(typeof(TimeSpan)));
-            Assert.That(DatabaseTypeRequest.PreferenceOrder[4], Is.EqualTo(typeof(DateTime)));
-            Assert.That(DatabaseTypeRequest.PreferenceOrder[5], Is.EqualTo(typeof(string)));
+            // Assert - verify the exact sequence of types
+            var expectedOrder = new[]
+            {
+                typeof(bool),
+                typeof(int),
+                typeof(decimal),
+                typeof(long),
+                typeof(TimeSpan),
+                typeof(DateTime),
+                typeof(byte),
+                typeof(short),
+                typeof(Guid),
+                typeof(byte[]),
+                typeof(string)
+            };
+
+            Assert.That(DatabaseTypeRequest.PreferenceOrder, Is.EqualTo(expectedOrder).AsCollection);
+        }
+
+        [Test]
+        public void PreferenceOrderIndex_MatchesPreferenceOrder()
+        {
+            // Assert - verify that PreferenceOrderIndex contains exactly the same types as PreferenceOrder
+            Assert.That(DatabaseTypeRequest.PreferenceOrderIndex.Count, Is.EqualTo(DatabaseTypeRequest.PreferenceOrder.Count));
+
+            for (var i = 0; i < DatabaseTypeRequest.PreferenceOrder.Count; i++)
+            {
+                var type = DatabaseTypeRequest.PreferenceOrder[i];
+                Assert.That(DatabaseTypeRequest.PreferenceOrderIndex.ContainsKey(type), Is.True,
+                    $"PreferenceOrderIndex missing type: {type.Name}");
+                Assert.That(DatabaseTypeRequest.PreferenceOrderIndex[type], Is.EqualTo(i),
+                    $"PreferenceOrderIndex has wrong index for type: {type.Name}");
+            }
+        }
+
+        [Test]
+        public void PreferenceOrder_ContainsAllCommonSqlTypes()
+        {
+            // Assert - verify all common SQL types are represented
+            var expectedTypes = new[]
+            {
+                typeof(bool),      // SQL bit, boolean
+                typeof(byte),      // SQL tinyint
+                typeof(short),     // SQL smallint
+                typeof(int),       // SQL int
+                typeof(long),      // SQL bigint
+                typeof(decimal),   // SQL decimal, numeric, money
+                typeof(TimeSpan),  // SQL time
+                typeof(DateTime),  // SQL datetime, datetime2, date, timestamp
+                typeof(Guid),      // SQL uniqueidentifier, uuid
+                typeof(byte[]),    // SQL varbinary, binary, image, blob
+                typeof(string)     // SQL varchar, nvarchar, char, text
+            };
+
+            foreach (var expectedType in expectedTypes)
+            {
+                Assert.That(DatabaseTypeRequest.PreferenceOrder, Does.Contain(expectedType),
+                    $"PreferenceOrder missing common SQL type: {expectedType.Name}");
+            }
         }
 
         [Test]
