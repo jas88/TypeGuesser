@@ -12,12 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **DatabaseTypeRequest.Equals()**: Now uses type-specific equality semantics (Issue #19)
   - **decimal**: Compares only `CSharpType` and `Size` (precision/scale) - ignores `Width` and `Unicode`
-  - **string**: Compares `CSharpType`, `Width`, and `Unicode` - ignores `Size`
-  - **byte[]**: Compares `CSharpType` and `Width` - ignores `Size` and `Unicode`
+  - **string**: Compares `CSharpType`, explicit width (`_maxWidthForStrings`), and `Unicode` - ignores `Size`
+  - **byte[]**: Compares `CSharpType` and explicit width (`_maxWidthForStrings`) - ignores `Size` and `Unicode`
   - **Other types** (bool, int, long, DateTime, TimeSpan, Guid, etc.): Compares only `CSharpType`
   - Fixes round-trip equality when comparing guesser-created and SQL reverse-engineered types
-  - `GetHashCode()` updated to match new equality semantics for consistency
-  - Added 17 comprehensive tests covering all type-specific equality cases
+  - Compares backing field `_maxWidthForStrings` instead of computed `Width` property to avoid Size interference
+  - `GetHashCode()` updated to match new equality semantics for consistency and null-safety
+  - Added 19 comprehensive tests covering all type-specific equality cases and edge cases
 
 ## [2.0.1] - 2025-11-15
 

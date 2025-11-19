@@ -182,7 +182,7 @@ public class DatabaseTypeRequest : IDataTypeSize
         }
 
         // For all other types, only hash the type
-        return CSharpType.GetHashCode();
+        return HashCode.Combine(CSharpType);
     }
 
     /// <summary>
