@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [2.0.2] - 2025-11-19
+## [2.0.3] - 2025-11-19
 
 ### Fixed
 
@@ -19,6 +19,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Compares backing field `_maxWidthForStrings` instead of computed `Width` property to avoid Size interference
   - `GetHashCode()` updated to match new equality semantics for consistency
   - Added 19 comprehensive tests covering all type-specific equality cases and edge cases
+
+## [2.0.2] - 2025-11-16
+
+### Added
+
+- **PreferenceOrder Enhancements**: Added missing SQL types to `PreferenceOrder`
+  - Added `byte` (SQL tinyint), `short` (SQL smallint), `long` (SQL bigint)
+  - Added `Guid` (SQL uniqueidentifier/uuid) and `byte[]` (SQL varbinary)
+  - These types were supported by type deciders but missing from `PreferenceOrder`
+  - Fixes `SetInitialTypeHint()` ignoring these types
+
+### Changed
+
+- **Performance Optimization**: Added `PreferenceOrderIndex` for O(1) type index lookups
+  - New `FrozenDictionary<Type, int>` provides constant-time lookups
+  - Replaced `PreferenceOrder.IndexOf()` calls with `PreferenceOrderIndex[]` access
+  - Maintains same ordering semantics with better performance
+
+### Fixed
+
+- **Test Updates**: Updated tests to use `System.Drawing.Color` as truly unsupported type
+  - `Guid` is now supported, so tests expecting it to fail needed updating
+  - Added `PreferenceOrderIndex_MatchesPreferenceOrder` test
+  - Added `PreferenceOrder_ContainsAllCommonSqlTypes` test
 
 ## [2.0.1] - 2025-11-15
 
@@ -218,7 +242,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial port of content from [FAnsiSql](https://github.com/jas88/FAnsiSql)
 
-[Unreleased]: https://github.com/jas88/TypeGuesser/compare/v2.0.0...main
+[Unreleased]: https://github.com/jas88/TypeGuesser/compare/v2.0.3...main
+[2.0.3]: https://github.com/jas88/TypeGuesser/compare/v2.0.2...v2.0.3
+[2.0.2]: https://github.com/jas88/TypeGuesser/compare/v2.0.1...v2.0.2
+[2.0.1]: https://github.com/jas88/TypeGuesser/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/jas88/TypeGuesser/compare/v1.2.7...v2.0.0
 [1.2.7]: https://github.com/jas88/TypeGuesser/compare/v1.2.6...v1.2.7
 [1.2.6]: https://github.com/jas88/TypeGuesser/compare/v1.2.5...v1.2.6
