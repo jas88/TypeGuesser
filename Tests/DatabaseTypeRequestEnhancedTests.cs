@@ -600,6 +600,47 @@ namespace TypeGuesser.Tests
             Assert.That(fromSQL.GetHashCode(), Is.EqualTo(fromGuesser.GetHashCode()));
         }
 
+        [Test]
+        public void Equals_String_WithSameWidthButDifferentSize_AreEqual()
+        {
+            // This tests the Copilot-identified edge case:
+            // Two strings with same _maxWidthForStrings but different Size should be equal
+            // because Width property computes Math.Max(_maxWidthForStrings, Size.ToStringLength())
+
+            // Arrange - both have _maxWidthForStrings=10, but different Size values
+            var request1 = new DatabaseTypeRequest(typeof(string), 10, new DecimalSize(20, 0));
+            var request2 = new DatabaseTypeRequest(typeof(string), 10, new DecimalSize(0, 0));
+
+            // Verify the Width property values are different due to Size
+            Assert.That(request1.Width, Is.EqualTo(20), "Width should include Size length");
+            Assert.That(request2.Width, Is.EqualTo(10), "Width should be just the explicit value");
+
+            // Act & Assert - they should still be equal because we compare _maxWidthForStrings, not Width
+            Assert.That(request1, Is.EqualTo(request2),
+                "Strings with same _maxWidthForStrings should be equal even if Size differs");
+            Assert.That(request1.GetHashCode(), Is.EqualTo(request2.GetHashCode()));
+        }
+
+        [Test]
+        public void Equals_ByteArray_WithSameWidthButDifferentSize_AreEqual()
+        {
+            // This tests the Copilot-identified edge case for byte arrays:
+            // Two byte[] with same _maxWidthForStrings but different Size should be equal
+
+            // Arrange
+            var request1 = new DatabaseTypeRequest(typeof(byte[]), 1000, new DecimalSize(20, 0));
+            var request2 = new DatabaseTypeRequest(typeof(byte[]), 1000, new DecimalSize(0, 0));
+
+            // Verify the Width property values are different due to Size
+            Assert.That(request1.Width, Is.EqualTo(1000), "Width should be max of explicit and Size");
+            Assert.That(request2.Width, Is.EqualTo(1000), "Width should be just the explicit value");
+
+            // Act & Assert
+            Assert.That(request1, Is.EqualTo(request2),
+                "byte[] with same _maxWidthForStrings should be equal even if Size differs");
+            Assert.That(request1.GetHashCode(), Is.EqualTo(request2.GetHashCode()));
+        }
+
         #endregion
     }
 }

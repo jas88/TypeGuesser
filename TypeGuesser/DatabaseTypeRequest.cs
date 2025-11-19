@@ -112,9 +112,9 @@ public class DatabaseTypeRequest : IDataTypeSize
     #region Equality
     /// <summary>
     /// Property based equality. Compares only the properties relevant to each type:
-    /// - string: CSharpType, Width, Unicode
+    /// - string: CSharpType, _maxWidthForStrings, Unicode
     /// - decimal: CSharpType, Size (precision/scale)
-    /// - byte[]: CSharpType, Width
+    /// - byte[]: CSharpType, _maxWidthForStrings
     /// - All other types (bool, int, long, DateTime, TimeSpan, Guid, etc.): CSharpType only
     /// </summary>
     /// <param name="other"></param>
@@ -125,10 +125,11 @@ public class DatabaseTypeRequest : IDataTypeSize
 
         var underlyingType = Nullable.GetUnderlyingType(CSharpType) ?? CSharpType;
 
-        // String: Compare Width and Unicode (Size is irrelevant for varchar/nvarchar)
+        // String: Compare _maxWidthForStrings and Unicode (Size is irrelevant for varchar/nvarchar)
+        // Note: We compare the backing field, not the Width property, because Width includes Size.ToStringLength()
         if (underlyingType == typeof(string))
         {
-            return Width == other.Width && Unicode == other.Unicode;
+            return _maxWidthForStrings == other._maxWidthForStrings && Unicode == other.Unicode;
         }
 
         // Decimal: Compare Size only (Width/Unicode are irrelevant for decimal(p,s))
@@ -137,10 +138,11 @@ public class DatabaseTypeRequest : IDataTypeSize
             return Equals(Size, other.Size);
         }
 
-        // byte[]: Compare Width only (Unicode/Size are irrelevant for varbinary(n))
+        // byte[]: Compare _maxWidthForStrings only (Unicode/Size are irrelevant for varbinary(n))
+        // Note: We compare the backing field, not the Width property, because Width includes Size.ToStringLength()
         if (underlyingType == typeof(byte[]))
         {
-            return Width == other.Width;
+            return _maxWidthForStrings == other._maxWidthForStrings;
         }
 
         // All other types (bool, byte, short, int, long, float, double, DateTime, TimeSpan, Guid):
@@ -166,7 +168,7 @@ public class DatabaseTypeRequest : IDataTypeSize
         // Hash code must match Equals() logic
         if (underlyingType == typeof(string))
         {
-            return HashCode.Combine(CSharpType, Width, Unicode);
+            return HashCode.Combine(CSharpType, _maxWidthForStrings, Unicode);
         }
 
         if (underlyingType == typeof(decimal))
@@ -176,7 +178,7 @@ public class DatabaseTypeRequest : IDataTypeSize
 
         if (underlyingType == typeof(byte[]))
         {
-            return HashCode.Combine(CSharpType, Width);
+            return HashCode.Combine(CSharpType, _maxWidthForStrings);
         }
 
         // For all other types, only hash the type
