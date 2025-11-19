@@ -111,13 +111,41 @@ public class DatabaseTypeRequest : IDataTypeSize
 
     #region Equality
     /// <summary>
-    /// Property based equality
+    /// Property based equality. Compares only the properties relevant to each type:
+    /// - string: CSharpType, Width, Unicode
+    /// - decimal: CSharpType, Size (precision/scale)
+    /// - byte[]: CSharpType, Width
+    /// - All other types (bool, int, long, DateTime, TimeSpan, Guid, etc.): CSharpType only
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
     private bool Equals(DatabaseTypeRequest other)
     {
-        return CSharpType == other.CSharpType && Width == other.Width && Equals(Size, other.Size) && Unicode == other.Unicode;
+        if (CSharpType != other.CSharpType) return false;
+
+        var underlyingType = Nullable.GetUnderlyingType(CSharpType) ?? CSharpType;
+
+        // String: Compare Width and Unicode (Size is irrelevant for varchar/nvarchar)
+        if (underlyingType == typeof(string))
+        {
+            return Width == other.Width && Unicode == other.Unicode;
+        }
+
+        // Decimal: Compare Size only (Width/Unicode are irrelevant for decimal(p,s))
+        if (underlyingType == typeof(decimal))
+        {
+            return Equals(Size, other.Size);
+        }
+
+        // byte[]: Compare Width only (Unicode/Size are irrelevant for varbinary(n))
+        if (underlyingType == typeof(byte[]))
+        {
+            return Width == other.Width;
+        }
+
+        // All other types (bool, byte, short, int, long, float, double, DateTime, TimeSpan, Guid):
+        // Type alone is sufficient - these have fixed SQL storage
+        return true;
     }
 
     /// <inheritdoc/>
@@ -133,7 +161,26 @@ public class DatabaseTypeRequest : IDataTypeSize
     /// <inheritdoc/>
     public override int GetHashCode()
     {
-        return HashCode.Combine(CSharpType, Width, Size, Unicode);
+        var underlyingType = Nullable.GetUnderlyingType(CSharpType) ?? CSharpType;
+
+        // Hash code must match Equals() logic
+        if (underlyingType == typeof(string))
+        {
+            return HashCode.Combine(CSharpType, Width, Unicode);
+        }
+
+        if (underlyingType == typeof(decimal))
+        {
+            return HashCode.Combine(CSharpType, Size);
+        }
+
+        if (underlyingType == typeof(byte[]))
+        {
+            return HashCode.Combine(CSharpType, Width);
+        }
+
+        // For all other types, only hash the type
+        return CSharpType.GetHashCode();
     }
 
     /// <summary>
