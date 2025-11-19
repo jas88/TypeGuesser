@@ -413,5 +413,235 @@ namespace TypeGuesser.Tests
             // Assert
             Assert.That(result, Is.SameAs(largeRequest));
         }
+
+        #region Type-Specific Equality Tests (Issue #19)
+
+        [Test]
+        public void Equals_Decimal_IgnoresWidth()
+        {
+            // Arrange - same decimal type and Size, different Width
+            var request1 = new DatabaseTypeRequest(typeof(decimal), 100, new DecimalSize(5, 2));
+            var request2 = new DatabaseTypeRequest(typeof(decimal), null, new DecimalSize(5, 2));
+
+            // Act & Assert
+            Assert.That(request1, Is.EqualTo(request2), "Decimals with same Size but different Width should be equal");
+            Assert.That(request1.GetHashCode(), Is.EqualTo(request2.GetHashCode()), "Hash codes must match for equal decimals");
+        }
+
+        [Test]
+        public void Equals_Decimal_IgnoresUnicode()
+        {
+            // Arrange - same decimal type and Size, different Unicode
+            var request1 = new DatabaseTypeRequest(typeof(decimal), null, new DecimalSize(4, 1)) { Unicode = true };
+            var request2 = new DatabaseTypeRequest(typeof(decimal), null, new DecimalSize(4, 1)) { Unicode = false };
+
+            // Act & Assert
+            Assert.That(request1, Is.EqualTo(request2), "Decimals with same Size but different Unicode should be equal");
+            Assert.That(request1.GetHashCode(), Is.EqualTo(request2.GetHashCode()), "Hash codes must match for equal decimals");
+        }
+
+        [Test]
+        public void Equals_Decimal_ComparesSizeCorrectly()
+        {
+            // Arrange - same decimal type, different Size
+            var request1 = new DatabaseTypeRequest(typeof(decimal), null, new DecimalSize(5, 2));
+            var request2 = new DatabaseTypeRequest(typeof(decimal), null, new DecimalSize(4, 1));
+
+            // Act & Assert
+            Assert.That(request1, Is.Not.EqualTo(request2), "Decimals with different Size should not be equal");
+        }
+
+        [Test]
+        public void Equals_NullableDecimal_IgnoresWidthAndUnicode()
+        {
+            // Arrange - nullable decimal
+            var request1 = new DatabaseTypeRequest(typeof(decimal?), 100, new DecimalSize(5, 2)) { Unicode = true };
+            var request2 = new DatabaseTypeRequest(typeof(decimal?), null, new DecimalSize(5, 2)) { Unicode = false };
+
+            // Act & Assert
+            Assert.That(request1, Is.EqualTo(request2), "Nullable decimals with same Size but different Width/Unicode should be equal");
+            Assert.That(request1.GetHashCode(), Is.EqualTo(request2.GetHashCode()));
+        }
+
+        [Test]
+        public void Equals_DateTime_IgnoresAllPropertiesExceptType()
+        {
+            // Arrange - same DateTime type, different Width, Size, Unicode
+            var request1 = new DatabaseTypeRequest(typeof(DateTime), 100, new DecimalSize(5, 2)) { Unicode = true };
+            var request2 = new DatabaseTypeRequest(typeof(DateTime), 200, new DecimalSize(8, 4)) { Unicode = false };
+
+            // Act & Assert
+            Assert.That(request1, Is.EqualTo(request2), "DateTimes with same type should be equal regardless of Width/Size/Unicode");
+            Assert.That(request1.GetHashCode(), Is.EqualTo(request2.GetHashCode()));
+        }
+
+        [Test]
+        public void Equals_TimeSpan_IgnoresAllPropertiesExceptType()
+        {
+            // Arrange
+            var request1 = new DatabaseTypeRequest(typeof(TimeSpan), 50, new DecimalSize(3, 1)) { Unicode = true };
+            var request2 = new DatabaseTypeRequest(typeof(TimeSpan), null, new DecimalSize(0, 0)) { Unicode = false };
+
+            // Act & Assert
+            Assert.That(request1, Is.EqualTo(request2));
+            Assert.That(request1.GetHashCode(), Is.EqualTo(request2.GetHashCode()));
+        }
+
+        [Test]
+        public void Equals_Int_IgnoresAllPropertiesExceptType()
+        {
+            // Arrange
+            var request1 = new DatabaseTypeRequest(typeof(int), 100, new DecimalSize(5, 2)) { Unicode = true };
+            var request2 = new DatabaseTypeRequest(typeof(int), null, new DecimalSize(0, 0)) { Unicode = false };
+
+            // Act & Assert
+            Assert.That(request1, Is.EqualTo(request2));
+            Assert.That(request1.GetHashCode(), Is.EqualTo(request2.GetHashCode()));
+        }
+
+        [Test]
+        public void Equals_Bool_IgnoresAllPropertiesExceptType()
+        {
+            // Arrange
+            var request1 = new DatabaseTypeRequest(typeof(bool), 1) { Unicode = true };
+            var request2 = new DatabaseTypeRequest(typeof(bool), 10) { Unicode = false };
+
+            // Act & Assert
+            Assert.That(request1, Is.EqualTo(request2));
+            Assert.That(request1.GetHashCode(), Is.EqualTo(request2.GetHashCode()));
+        }
+
+        [Test]
+        public void Equals_Guid_IgnoresAllPropertiesExceptType()
+        {
+            // Arrange
+            var request1 = new DatabaseTypeRequest(typeof(Guid), 36) { Unicode = true };
+            var request2 = new DatabaseTypeRequest(typeof(Guid), null) { Unicode = false };
+
+            // Act & Assert
+            Assert.That(request1, Is.EqualTo(request2));
+            Assert.That(request1.GetHashCode(), Is.EqualTo(request2.GetHashCode()));
+        }
+
+        [Test]
+        public void Equals_ByteArray_ComparesWidthOnly()
+        {
+            // Arrange - same Width
+            var request1 = new DatabaseTypeRequest(typeof(byte[]), 1000, new DecimalSize(5, 2)) { Unicode = true };
+            var request2 = new DatabaseTypeRequest(typeof(byte[]), 1000, new DecimalSize(0, 0)) { Unicode = false };
+
+            // Act & Assert
+            Assert.That(request1, Is.EqualTo(request2), "byte[] with same Width should be equal (Size/Unicode ignored)");
+            Assert.That(request1.GetHashCode(), Is.EqualTo(request2.GetHashCode()));
+        }
+
+        [Test]
+        public void Equals_ByteArray_DifferentWidth_NotEqual()
+        {
+            // Arrange - different Width
+            var request1 = new DatabaseTypeRequest(typeof(byte[]), 1000);
+            var request2 = new DatabaseTypeRequest(typeof(byte[]), 2000);
+
+            // Act & Assert
+            Assert.That(request1, Is.Not.EqualTo(request2), "byte[] with different Width should not be equal");
+        }
+
+        [Test]
+        public void Equals_String_ComparesWidthAndUnicode()
+        {
+            // Arrange - same Width and Unicode
+            var request1 = new DatabaseTypeRequest(typeof(string), 100, new DecimalSize(5, 2)) { Unicode = true };
+            var request2 = new DatabaseTypeRequest(typeof(string), 100, new DecimalSize(0, 0)) { Unicode = true };
+
+            // Act & Assert
+            Assert.That(request1, Is.EqualTo(request2), "Strings with same Width/Unicode should be equal (Size ignored)");
+            Assert.That(request1.GetHashCode(), Is.EqualTo(request2.GetHashCode()));
+        }
+
+        [Test]
+        public void Equals_String_DifferentWidth_NotEqual()
+        {
+            // Arrange
+            var request1 = new DatabaseTypeRequest(typeof(string), 100) { Unicode = true };
+            var request2 = new DatabaseTypeRequest(typeof(string), 200) { Unicode = true };
+
+            // Act & Assert
+            Assert.That(request1, Is.Not.EqualTo(request2), "Strings with different Width should not be equal");
+        }
+
+        [Test]
+        public void Equals_String_DifferentUnicode_NotEqual()
+        {
+            // Arrange
+            var request1 = new DatabaseTypeRequest(typeof(string), 100) { Unicode = true };
+            var request2 = new DatabaseTypeRequest(typeof(string), 100) { Unicode = false };
+
+            // Act & Assert
+            Assert.That(request1, Is.Not.EqualTo(request2), "Strings with different Unicode should not be equal");
+        }
+
+        [Test]
+        public void Equals_RoundTrip_DecimalFromGuesserAndSQL()
+        {
+            // This test simulates the scenario from issue #19:
+            // Guesser creates a DatabaseTypeRequest with Width set
+            // SQL reverse-engineering creates one with Width=null
+            // They should be equal if Size matches
+
+            // Arrange - simulate guesser-created (with Width)
+            var fromGuesser = new DatabaseTypeRequest(typeof(decimal), 4, new DecimalSize(4, 1));
+
+            // Simulate SQL reverse-engineered (without Width)
+            var fromSQL = new DatabaseTypeRequest(typeof(decimal), null, new DecimalSize(4, 1));
+
+            // Act & Assert
+            Assert.That(fromSQL, Is.EqualTo(fromGuesser),
+                "Round-trip: Decimal from SQL and Guesser should be equal when Size matches");
+            Assert.That(fromSQL.GetHashCode(), Is.EqualTo(fromGuesser.GetHashCode()));
+        }
+
+        [Test]
+        public void Equals_String_WithSameWidthButDifferentSize_AreEqual()
+        {
+            // This tests the Copilot-identified edge case:
+            // Two strings with same _maxWidthForStrings but different Size should be equal
+            // because Width property computes Math.Max(_maxWidthForStrings, Size.ToStringLength())
+
+            // Arrange - both have _maxWidthForStrings=10, but different Size values
+            var request1 = new DatabaseTypeRequest(typeof(string), 10, new DecimalSize(20, 0));
+            var request2 = new DatabaseTypeRequest(typeof(string), 10, new DecimalSize(0, 0));
+
+            // Verify the Width property values are different due to Size
+            Assert.That(request1.Width, Is.EqualTo(20), "Width should include Size length");
+            Assert.That(request2.Width, Is.EqualTo(10), "Width should be just the explicit value");
+
+            // Act & Assert - they should still be equal because we compare _maxWidthForStrings, not Width
+            Assert.That(request1, Is.EqualTo(request2),
+                "Strings with same _maxWidthForStrings should be equal even if Size differs");
+            Assert.That(request1.GetHashCode(), Is.EqualTo(request2.GetHashCode()));
+        }
+
+        [Test]
+        public void Equals_ByteArray_WithSameWidthButDifferentSize_AreEqual()
+        {
+            // This tests the Copilot-identified edge case for byte arrays:
+            // Two byte[] with same _maxWidthForStrings but different Size should be equal
+
+            // Arrange
+            var request1 = new DatabaseTypeRequest(typeof(byte[]), 1000, new DecimalSize(20, 0));
+            var request2 = new DatabaseTypeRequest(typeof(byte[]), 1000, new DecimalSize(0, 0));
+
+            // Verify the Width property values are the same (1000) despite different Size values,
+            // because Width returns Math.Max(_maxWidthForStrings, Size.ToStringLength())
+            Assert.That(request1.Width, Is.EqualTo(1000), "Width should be max of explicit and Size");
+            Assert.That(request2.Width, Is.EqualTo(1000), "Width should be just the explicit value");
+
+            // Act & Assert
+            Assert.That(request1, Is.EqualTo(request2),
+                "byte[] with same _maxWidthForStrings should be equal even if Size differs");
+            Assert.That(request1.GetHashCode(), Is.EqualTo(request2.GetHashCode()));
+        }
+
+        #endregion
     }
 }
