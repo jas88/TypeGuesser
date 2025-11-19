@@ -334,3 +334,4 @@ Visual Studio 2017/
 .claude/
 *.claude
 .claude-*
+data/
