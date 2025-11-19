@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.2] - 2025-11-19
+
 ### Fixed
 
 - **DatabaseTypeRequest.Equals()**: Now uses type-specific equality semantics (Issue #19)
@@ -15,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Other types** (bool, int, long, DateTime, TimeSpan, Guid, etc.): Compares only `CSharpType`
   - Fixes round-trip equality when comparing guesser-created and SQL reverse-engineered types
   - `GetHashCode()` updated to match new equality semantics for consistency
+  - Added 17 comprehensive tests covering all type-specific equality cases
 
 ## [2.0.1] - 2025-11-15
 
