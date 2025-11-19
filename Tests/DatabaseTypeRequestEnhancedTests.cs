@@ -631,7 +631,8 @@ namespace TypeGuesser.Tests
             var request1 = new DatabaseTypeRequest(typeof(byte[]), 1000, new DecimalSize(20, 0));
             var request2 = new DatabaseTypeRequest(typeof(byte[]), 1000, new DecimalSize(0, 0));
 
-            // Verify the Width property values are different due to Size
+            // Verify the Width property values are the same (1000) despite different Size values,
+            // because Width returns Math.Max(_maxWidthForStrings, Size.ToStringLength())
             Assert.That(request1.Width, Is.EqualTo(1000), "Width should be max of explicit and Size");
             Assert.That(request2.Width, Is.EqualTo(1000), "Width should be just the explicit value");
 

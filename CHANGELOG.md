@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Other types** (bool, int, long, DateTime, TimeSpan, Guid, etc.): Compares only `CSharpType`
   - Fixes round-trip equality when comparing guesser-created and SQL reverse-engineered types
   - Compares backing field `_maxWidthForStrings` instead of computed `Width` property to avoid Size interference
-  - `GetHashCode()` updated to match new equality semantics for consistency and null-safety
+  - `GetHashCode()` updated to match new equality semantics for consistency
   - Added 19 comprehensive tests covering all type-specific equality cases and edge cases
 
 ## [2.0.1] - 2025-11-15
