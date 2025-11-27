@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<IsLibraryProject>true</IsLibraryProject>
 		<PackageId>TypeGuesser</PackageId>
 		<Authors>Health Informatics Centre - University of Dundee</Authors>
 		<Company>Health Informatics Centre - University of Dundee</Company>

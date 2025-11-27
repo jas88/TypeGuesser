@@ -11,7 +11,11 @@ jobs:
       security-events: write
     steps:
     - uses: actions/checkout@v5
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
     - uses: actions/setup-dotnet@v5
+    - name: Check and update Directory.Build.props
+      run: ./scripts/generate-build-props.sh
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v4
       with:
