@@ -14,9 +14,19 @@
     - Nov 2028: .NET 11, 12, 13 supported (min=11, max=13) - .NET 10 goes EOL
   -->
   <PropertyGroup>
-    <!-- _MinimumNonEolSupportedNetCoreTargetFramework doesn't exist in SDK, hardcode to 8 (LTS until Nov 2026) -->
-    <_MinSupportedMajor>8</_MinSupportedMajor>
     <_MaxSupportedMajor>$(NETCoreAppMaximumVersion.Replace('.0', ''))</_MaxSupportedMajor>
+  </PropertyGroup>
+
+  <!-- _MinimumNonEolSupportedNetCoreTargetFramework doesn't exist in SDK, set conditionally -->
+  <!-- .NET 8 LTS until Nov 2026, .NET 10 LTS until Nov 2028 -->
+  <PropertyGroup Condition="'$(_MaxSupportedMajor)' == '9' or '$(_MaxSupportedMajor)' == '10'">
+    <_MinSupportedMajor>8</_MinSupportedMajor>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(_MaxSupportedMajor)' == '11' or '$(_MaxSupportedMajor)' == '12'">
+    <_MinSupportedMajor>10</_MinSupportedMajor>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(_MaxSupportedMajor)' == '13'">
+    <_MinSupportedMajor>11</_MinSupportedMajor>
   </PropertyGroup>
 
   <!-- .NET 9 SDK (min=8, max=9) -->
