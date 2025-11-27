@@ -19,7 +19,6 @@ jobs:
         queries: +security-and-quality
     - name: Test
       run: |
-        dotnet build --nologo src/TypeGuesser/TypeGuesser.csproj -c Release
         dotnet test --nologo -c Release --results-directory testresults --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=lcov
         mv testresults/*/coverage.info lcov.info
     - name: Perform CodeQL Analysis
@@ -48,7 +47,7 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         path-to-lcov: lcov.info
     - name: Pack Nuget
-      run: dotnet pack --nologo src/TypeGuesser/TypeGuesser.csproj -o dist -c Release --no-build --include-source -p:IncludeSymbols=true -p:DebugType=full -p:SymbolPackageFormat=snupkg
+      run: dotnet pack --nologo src/TypeGuesser/TypeGuesser.csproj -o dist -c Release --include-source -p:IncludeSymbols=true -p:DebugType=full -p:SymbolPackageFormat=snupkg
     - name: Store created nupkg files
       uses: actions/upload-artifact@v5
       with:

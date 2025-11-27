@@ -14,7 +14,8 @@
     - Nov 2028: .NET 11, 12, 13 supported (min=11, max=13) - .NET 10 goes EOL
   -->
   <PropertyGroup>
-    <_MinSupportedMajor>$(_MinimumNonEolSupportedNetCoreTargetFramework.Replace('net', '').Replace('.0', ''))</_MinSupportedMajor>
+    <!-- _MinimumNonEolSupportedNetCoreTargetFramework doesn't exist in SDK, hardcode to 8 (LTS until Nov 2026) -->
+    <_MinSupportedMajor>8</_MinSupportedMajor>
     <_MaxSupportedMajor>$(NETCoreAppMaximumVersion.Replace('.0', ''))</_MaxSupportedMajor>
   </PropertyGroup>
 

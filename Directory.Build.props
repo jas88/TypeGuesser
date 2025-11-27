@@ -5,7 +5,10 @@
     <Company>James A Sutherland and Health Informatics Centre, University of Dundee</Company>
     <Product>TypeGuesser</Product>
     <Copyright>Copyright (c) 2018 - 2025</Copyright>
-    <!-- Default to latest .NET for restore - will be overridden by src/Directory.Build.targets for library multi-targeting -->
-    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+
+  <!-- Non-library projects target single latest framework -->
+  <PropertyGroup Condition="'$(IsLibraryProject)' != 'true'">
+    <TargetFrameworks>net10.0</TargetFrameworks>
   </PropertyGroup>
 </Project>
