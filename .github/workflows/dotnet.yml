@@ -10,7 +10,7 @@ jobs:
       contents: write
       security-events: write
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
     - uses: actions/setup-dotnet@v5
@@ -46,7 +46,7 @@ jobs:
       with:
         sarif_file: sarif-results/csharp.sarif
     - name: Coveralls
-      uses: coverallsapp/github-action@v2.3.6
+      uses: coverallsapp/github-action@v2.3.7
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         path-to-lcov: lcov.info
