@@ -70,4 +70,4 @@ jobs:
       if: contains(github.ref,'refs/tags/')
       run: |
         cd dist
-        dotnet nuget push --nologo *[0-9].nupkg -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_API_KEY }} --skip-duplicate
+        dotnet nuget push *[0-9].nupkg -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_API_KEY }} --skip-duplicate
