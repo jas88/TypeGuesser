@@ -11,7 +11,11 @@ jobs:
       security-events: write
     steps:
     - uses: actions/checkout@v6
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
     - uses: actions/setup-dotnet@v5
+    - name: Check and update Directory.Build.props
+      run: ./scripts/generate-build-props.sh
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v4
       with:
@@ -19,7 +23,7 @@ jobs:
         queries: +security-and-quality
     - name: Test
       run: |
-        dotnet test --nologo --results-directory testresults --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=lcov
+        dotnet test --nologo -c Release --results-directory testresults --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=lcov
         mv testresults/*/coverage.info lcov.info
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v4
@@ -47,7 +51,7 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         path-to-lcov: lcov.info
     - name: Pack Nuget
-      run: dotnet pack TypeGuesser/TypeGuesser.csproj -o dist -c Release --include-source -p:IncludeSymbols=true -p:DebugType=full -p:SymbolPackageFormat=snupkg -p:PackageVersion=$(fgrep AssemblyFileVersion SharedAssemblyInfo.cs |cut -d'"' -f2)
+      run: dotnet pack --nologo src/TypeGuesser/TypeGuesser.csproj -o dist -c Release --include-source -p:IncludeSymbols=true -p:DebugType=full -p:SymbolPackageFormat=snupkg
     - name: Store created nupkg files
       uses: actions/upload-artifact@v5
       with:
@@ -66,4 +70,4 @@ jobs:
       if: contains(github.ref,'refs/tags/')
       run: |
         cd dist
-        dotnet nuget push *[0-9].nupkg -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_API_KEY }} --skip-duplicate
+        dotnet nuget push --nologo *[0-9].nupkg -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_API_KEY }} --skip-duplicate

@@ -2,5 +2,14 @@
   <PropertyGroup>
     <Nullable>enable</Nullable>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <Company>James A Sutherland and Health Informatics Centre, University of Dundee</Company>
+    <Product>TypeGuesser</Product>
+    <Copyright>Copyright (c) 2018 - 2025</Copyright>
+  </PropertyGroup>
+
+  <!-- MinVer configuration for automatic versioning from git tags -->
+  <PropertyGroup>
+    <MinVerTagPrefix>v</MinVerTagPrefix>
+    <MinVerMinimumMajorMinor>2.0</MinVerMinimumMajorMinor>
   </PropertyGroup>
 </Project>

@@ -6,6 +6,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.4] - 2025-11-27
+
+### Changed
+
+- **Repository Structure**: Reorganized project layout
+  - Library projects moved to `src/` directory
+  - Test projects moved to `tests/` directory
+  - Solution file updated to reflect new structure
+- **Target Frameworks**: Implemented dynamic multi-targeting for non-EOL .NET versions
+  - Library projects now target all non-EOL .NET versions using `Directory.Build.targets`
+  - With .NET 10 SDK: targets net8.0, net9.0, and net10.0
+  - Target frameworks automatically adjust as .NET versions reach EOL
+  - Test and benchmark projects target latest .NET version only (net10.0)
+- **Version Management**: Migrated to MinVer for automated semantic versioning from git tags
+  - Removed `SharedAssemblyInfo.cs` (version info now managed by MinVer)
+  - Assembly metadata moved to `Directory.Build.props`
+  - CI/CD workflows updated to use MinVer
+- **Build Configuration**: Centralized build configuration in MSBuild targets files
+  - `Directory.Build.targets`: Root-level target framework definitions
+  - `tests/Directory.Build.targets`: Test-specific framework override
+  - Target frameworks no longer hardcoded in `.csproj` files
+
 ## [2.0.3] - 2025-11-19
 
 ### Fixed
@@ -242,7 +264,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial port of content from [FAnsiSql](https://github.com/jas88/FAnsiSql)
 
-[Unreleased]: https://github.com/jas88/TypeGuesser/compare/v2.0.3...main
+[Unreleased]: https://github.com/jas88/TypeGuesser/compare/v2.0.4...main
+[2.0.4]: https://github.com/jas88/TypeGuesser/compare/v2.0.3...v2.0.4
 [2.0.3]: https://github.com/jas88/TypeGuesser/compare/v2.0.2...v2.0.3
 [2.0.2]: https://github.com/jas88/TypeGuesser/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/jas88/TypeGuesser/compare/v2.0.0...v2.0.1
