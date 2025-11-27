@@ -1,32 +1,32 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
+		<IsLibraryProject>true</IsLibraryProject>
 		<PackageId>TypeGuesser</PackageId>
 		<Authors>Health Informatics Centre - University of Dundee</Authors>
 		<Company>Health Informatics Centre - University of Dundee</Company>
 		<PackageProjectUrl>https://github.com/HicServices/TypeGuesser</PackageProjectUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Description>Guess the C# Types for a untyped strings e.g. "12.123"</Description>
-		<TargetFrameworks>net9.0</TargetFrameworks>
-		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<IsTrimmable>true</IsTrimmable>
 		<IsAotCompatible>true</IsAotCompatible>
 		<RepositoryUrl>https://github.com/HicServices/TypeGuesser/</RepositoryUrl>
 		<NeutralLanguage>en-GB</NeutralLanguage>
-		<IsAotCompatible>true</IsAotCompatible>
-		<IsTrimmable>true</IsTrimmable>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Include="..\README.md" Pack="true" PackagePath="\" />
+		<None Include="..\..\README.md" Pack="true" PackagePath="\" />
 		<None Include="buildTransitive\TypeGuesser.props" Pack="true" PackagePath="buildTransitive\" />
-		<Compile Include="..\SharedAssemblyInfo.cs" Link="SharedAssemblyInfo.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.ObjectPool" />
+		<PackageReference Include="MinVer">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 	</ItemGroup>
 
 	
