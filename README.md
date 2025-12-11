@@ -1,7 +1,7 @@
 # Type Guesser
 
 [![Build, test and package](https://github.com/jas88/TypeGuesser/actions/workflows/dotnet.yml/badge.svg)](https://github.com/jas88/TypeGuesser/actions/workflows/dotnet.yml)
-[![Coverage Status](https://coveralls.io/repos/github/HicServices/TypeGuesser/badge.svg?branch=main)](https://coveralls.io/github/HicServices/TypeGuesser?branch=main)
+[![codecov](https://codecov.io/gh/jas88/TypeGuesser/graph/badge.svg)](https://codecov.io/gh/jas88/TypeGuesser)
 [![NuGet Badge](https://buildstats.info/nuget/TypeGuesser)](https://buildstats.info/nuget/TypeGuesser)
 
 Guess the C# Types for untyped strings e.g. `"12.123"`.
