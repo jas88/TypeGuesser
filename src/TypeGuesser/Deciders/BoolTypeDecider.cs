@@ -13,32 +13,32 @@ namespace TypeGuesser.Deciders;
 public sealed class BoolTypeDecider(CultureInfo culture):DecideTypesForStrings<bool>(culture,TypeCompatibilityGroup.Numerical,typeof(bool))
 {
     /// <inheritdoc/>
-    protected override IDecideTypesForStrings CloneImpl(CultureInfo newCulture)
+    protected override IDecideTypesForStrings CloneCore(CultureInfo culture)
     {
-        return new BoolTypeDecider(newCulture);
+        return new BoolTypeDecider(culture);
     }
 
     /// <inheritdoc />
-    protected override object? ParseImpl(ReadOnlySpan<char> candidateString)
+    protected override object? ParseCore(ReadOnlySpan<char> value)
     {
-        if (bool.TryParse(candidateString, out var sysResult)) return sysResult;
+        if (bool.TryParse(value, out var sysResult)) return sysResult;
 
-        candidateString = StripWhitespace(candidateString);
+        value = StripWhitespace(value);
 
-        bool? b = candidateString.Length switch
+        bool? b = value.Length switch
         {
-            1 => "1tTyYjJ0fFnN".IndexOf(candidateString[0]) != -1 ? "0fFnN".IndexOf(candidateString[0]) == -1 : null,
-            2 => candidateString.Equals("ja",StringComparison.OrdinalIgnoreCase) ? true :
+            1 => "1tTyYjJ0fFnN".Contains(value[0]) ? !"0fFnN".Contains(value[0]) : null,
+            2 => value.Equals("ja",StringComparison.OrdinalIgnoreCase) ? true :
             (
-                candidateString.Equals("no",StringComparison.OrdinalIgnoreCase) ||
-                candidateString.Equals("-1",StringComparison.OrdinalIgnoreCase)
+                value.Equals("no",StringComparison.OrdinalIgnoreCase) ||
+                value.Equals("-1",StringComparison.OrdinalIgnoreCase)
             ) ? false : null,
-            3 => candidateString.Equals("yes",StringComparison.OrdinalIgnoreCase) ||
-                candidateString.Equals(".t.",StringComparison.OrdinalIgnoreCase) ? true :
-                candidateString.Equals(".f.",StringComparison.OrdinalIgnoreCase) ? false : null,
-            4 => candidateString.Equals("true",StringComparison.OrdinalIgnoreCase) ? true :
-                candidateString.Equals("nein",StringComparison.OrdinalIgnoreCase) ? false : null,
-            5 => candidateString.Equals("false",StringComparison.OrdinalIgnoreCase) ? false : null,
+            3 => value.Equals("yes",StringComparison.OrdinalIgnoreCase) ||
+                value.Equals(".t.",StringComparison.OrdinalIgnoreCase) ? true :
+                value.Equals(".f.",StringComparison.OrdinalIgnoreCase) ? false : null,
+            4 => value.Equals("true",StringComparison.OrdinalIgnoreCase) ? true :
+                value.Equals("nein",StringComparison.OrdinalIgnoreCase) ? false : null,
+            5 => value.Equals("false",StringComparison.OrdinalIgnoreCase) ? false : null,
             _ => null
         };
         return b ?? throw new FormatException("Invalid bool");
@@ -54,7 +54,7 @@ public sealed class BoolTypeDecider(CultureInfo culture):DecideTypesForStrings<b
     }
 
     /// <inheritdoc/>
-    protected override bool IsAcceptableAsTypeImpl(ReadOnlySpan<char> candidateString,IDataTypeSize? size)
+    protected override bool IsAcceptableAsTypeCore(ReadOnlySpan<char> candidateString,IDataTypeSize? size)
     {
         var strippedString = StripWhitespace(candidateString);
 
@@ -64,7 +64,7 @@ public sealed class BoolTypeDecider(CultureInfo culture):DecideTypesForStrings<b
 
         return bool.TryParse(candidateString, out _) || candidateString.Length switch
         {
-            1 => "1tTyYjJ0fFnN".IndexOf(candidateString[0]) != -1,
+            1 => "1tTyYjJ0fFnN".Contains(candidateString[0]),
             2 => candidateString.Equals("ja",StringComparison.OrdinalIgnoreCase) ||
                  candidateString.Equals("no",StringComparison.OrdinalIgnoreCase) ||
                  candidateString.Equals("-1",StringComparison.OrdinalIgnoreCase),

@@ -61,10 +61,7 @@ internal static class TypeGuesserBuilderPool
     /// </remarks>
     internal static void Return(PooledBuilder builder)
     {
-        if (builder == null)
-        {
-            throw new ArgumentNullException(nameof(builder));
-        }
+        ArgumentNullException.ThrowIfNull(builder);
 
         _pool.Return(builder);
     }

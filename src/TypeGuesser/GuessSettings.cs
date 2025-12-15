@@ -17,7 +17,7 @@ public class GuessSettings
     /// <summary>
     /// Optional, when set dates must be in one of these formats and any string in this format will be picked as a date.
     /// </summary>
-    public string[]? ExplicitDateFormats { get; set; } = null;
+    public string[]? ExplicitDateFormats { get; set; }
 
 
     /// <summary>
@@ -44,8 +44,6 @@ public class GuessSettings
     /// </summary>
     public GuessSettings()
     {
-        CharCanBeBoolean = true;
-        ExplicitDateFormats = null;
     }
 
     /// <summary>

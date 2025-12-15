@@ -14,6 +14,12 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         submodules: recursive
+    - name: Verify build-standards submodule
+      run: |
+        if [ ! -f "build-standards/Directory.Build.props.shared" ]; then
+          echo "::error::build-standards submodule not initialized. Check 'submodules: recursive' in checkout."
+          exit 1
+        fi
     - uses: actions/setup-dotnet@v5
     - name: Check and update Directory.Build.props
       run: ./scripts/generate-build-props.sh

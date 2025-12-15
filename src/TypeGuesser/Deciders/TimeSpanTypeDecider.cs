@@ -13,13 +13,13 @@ namespace TypeGuesser.Deciders;
 public sealed class TimeSpanTypeDecider(CultureInfo culture) : DecideTypesForStrings<TimeSpan>(culture, TypeCompatibilityGroup.Exclusive, typeof(TimeSpan))
 {
     /// <inheritdoc/>
-    protected override IDecideTypesForStrings CloneImpl(CultureInfo newCulture) => new TimeSpanTypeDecider(newCulture);
+    protected override IDecideTypesForStrings CloneCore(CultureInfo culture) => new TimeSpanTypeDecider(culture);
 
     /// <inheritdoc/>
-    protected override object ParseImpl(ReadOnlySpan<char> value) => DateTime.Parse(value).TimeOfDay;
+    protected override object ParseCore(ReadOnlySpan<char> value) => DateTime.Parse(value, Culture).TimeOfDay;
 
     /// <inheritdoc/>
-    protected override bool IsAcceptableAsTypeImpl(ReadOnlySpan<char> candidateString, IDataTypeSize? sizeRecord)
+    protected override bool IsAcceptableAsTypeCore(ReadOnlySpan<char> candidateString, IDataTypeSize? size)
     {
         try
         {
