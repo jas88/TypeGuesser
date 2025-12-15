@@ -61,7 +61,7 @@ jobs:
     - name: Pack Nuget
       run: dotnet pack --nologo src/TypeGuesser/TypeGuesser.csproj -o dist -c Release --include-source -p:IncludeSymbols=true -p:DebugType=full -p:SymbolPackageFormat=snupkg
     - name: Store created nupkg files
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         path: dist/*.nupkg
         retention-days: 1
