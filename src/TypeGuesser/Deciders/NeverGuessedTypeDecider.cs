@@ -13,13 +13,13 @@ namespace TypeGuesser.Deciders;
 public sealed class NeverGuessTheseTypeDecider(CultureInfo culture) : DecideTypesForStrings<object>(culture,TypeCompatibilityGroup.Exclusive, typeof(byte[]), typeof(Guid))
 {
     /// <inheritdoc/>
-    protected override IDecideTypesForStrings CloneImpl(CultureInfo newCulture) => new NeverGuessTheseTypeDecider(newCulture);
+    protected override IDecideTypesForStrings CloneCore(CultureInfo culture) => new NeverGuessTheseTypeDecider(culture);
 
     /// <inheritdoc/>
-    protected override object ParseImpl(ReadOnlySpan<char> _) => throw new NotSupportedException();
+    protected override object ParseCore(ReadOnlySpan<char> value) => throw new NotSupportedException();
 
     /// <inheritdoc/>
-    protected override bool IsAcceptableAsTypeImpl(ReadOnlySpan<char> candidateString, IDataTypeSize? sizeRecord) =>
+    protected override bool IsAcceptableAsTypeCore(ReadOnlySpan<char> candidateString, IDataTypeSize? size) =>
         //strings should never be interpreted as byte arrays
         false;
 }

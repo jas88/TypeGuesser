@@ -13,6 +13,13 @@ jobs:
     - uses: actions/checkout@v6
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
+        submodules: recursive
+    - name: Verify build-standards submodule
+      run: |
+        if [ ! -f "build-standards/Directory.Build.props.shared" ]; then
+          echo "::error::build-standards submodule not initialized. Check 'submodules: recursive' in checkout."
+          exit 1
+        fi
     - uses: actions/setup-dotnet@v5
     - name: Check and update Directory.Build.props
       run: ./scripts/generate-build-props.sh
@@ -45,11 +52,12 @@ jobs:
       uses: github/codeql-action/upload-sarif@v4
       with:
         sarif_file: sarif-results/csharp.sarif
-    - name: Coveralls
-      uses: coverallsapp/github-action@v2.3.7
+    - name: Codecov
+      uses: codecov/codecov-action@v5
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        path-to-lcov: lcov.info
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: lcov.info
+        fail_ci_if_error: false
     - name: Pack Nuget
       run: dotnet pack --nologo src/TypeGuesser/TypeGuesser.csproj -o dist -c Release --include-source -p:IncludeSymbols=true -p:DebugType=full -p:SymbolPackageFormat=snupkg
     - name: Store created nupkg files

@@ -25,16 +25,16 @@ public sealed class DecimalTypeDecider : DecideTypesForStrings<decimal>
     }
 
     /// <inheritdoc/>
-    protected override IDecideTypesForStrings CloneImpl(CultureInfo culture)
+    protected override IDecideTypesForStrings CloneCore(CultureInfo culture)
     {
         return new DecimalTypeDecider(culture);
     }
 
     /// <inheritdoc />
-    protected override object ParseImpl(ReadOnlySpan<char> value) => decimal.Parse(value, NumberStyles.Any, Culture.NumberFormat);
+    protected override object ParseCore(ReadOnlySpan<char> value) => decimal.Parse(value, NumberStyles.Any, Culture.NumberFormat);
 
     /// <inheritdoc/>
-    protected override bool IsAcceptableAsTypeImpl(ReadOnlySpan<char> candidateString, IDataTypeSize? sizeRecord)
+    protected override bool IsAcceptableAsTypeCore(ReadOnlySpan<char> candidateString, IDataTypeSize? size)
     {
         candidateString = TrimTrailingZeros(candidateString);
 
@@ -45,7 +45,7 @@ public sealed class DecimalTypeDecider : DecideTypesForStrings<decimal>
             return false;
 
         var dec = (SqlDecimal) t;
-        sizeRecord?.Size.IncreaseTo(dec.Precision - dec.Scale,dec.Scale);
+        size?.Size.IncreaseTo(dec.Precision - dec.Scale,dec.Scale);
 
         return true;
     }

@@ -1,15 +1,18 @@
 <Project>
+  <!-- Import shared build standards -->
+  <Import Project="build-standards/Directory.Build.props.shared" />
+
+  <!-- Repository-specific settings -->
   <PropertyGroup>
-    <Nullable>enable</Nullable>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <Company>James A Sutherland and Health Informatics Centre, University of Dundee</Company>
     <Product>TypeGuesser</Product>
     <Copyright>Copyright (c) 2018 - 2025</Copyright>
+    <Description>A library for automatic type detection from strings with special support for database types</Description>
   </PropertyGroup>
 
   <!-- MinVer configuration for automatic versioning from git tags -->
   <PropertyGroup>
-    <MinVerTagPrefix>v</MinVerTagPrefix>
     <MinVerMinimumMajorMinor>2.0</MinVerMinimumMajorMinor>
   </PropertyGroup>
 </Project>

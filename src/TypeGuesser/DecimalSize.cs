@@ -12,12 +12,12 @@ public class DecimalSize : IEquatable<DecimalSize>
     /// <summary>
     /// The maximum number of digits that should be allowed before the decimal point (e.g. <see cref="Precision"/> - <see cref="Scale"/>)
     /// </summary>
-    public int NumbersBeforeDecimalPlace;
+    public int NumbersBeforeDecimalPlace { get; set; }
 
     /// <summary>
     /// The number of digits that should be allowed after the decimal point (i.e. the <see cref="Scale"/>)
     /// </summary>
-    public int NumbersAfterDecimalPlace;
+    public int NumbersAfterDecimalPlace { get; set; }
 
     /// <summary>
     /// Creates a new empty instance

@@ -168,13 +168,13 @@ public class DateTimeTypeDecider : DecideTypesForStrings<DateTime>
     ];
 
     /// <inheritdoc/>
-    protected override IDecideTypesForStrings CloneImpl(CultureInfo overrideCulture)
+    protected override IDecideTypesForStrings CloneCore(CultureInfo culture)
     {
-        return new DateTimeTypeDecider(overrideCulture);
+        return new DateTimeTypeDecider(culture);
     }
 
     /// <inheritdoc/>
-    protected override object ParseImpl(ReadOnlySpan<char> value)
+    protected override object ParseCore(ReadOnlySpan<char> value)
     {
         // if user has specified a specific format that we are to use, use it
         if (Settings.ExplicitDateFormats != null)
@@ -235,15 +235,15 @@ public class DateTimeTypeDecider : DecideTypesForStrings<DateTime>
     }
 
     /// <inheritdoc/>
-    protected override bool IsAcceptableAsTypeImpl(ReadOnlySpan<char> candidateString, IDataTypeSize? sizeRecord)
+    protected override bool IsAcceptableAsTypeCore(ReadOnlySpan<char> candidateString, IDataTypeSize? size)
     {
         //if it's a float then it isn't a date is it! thanks C# for thinking 1.1 is the first of January
-        if (_decimalChecker.IsAcceptableAsType(candidateString, sizeRecord))
+        if (_decimalChecker.IsAcceptableAsType(candidateString, size))
             return false;
 
         //likewise if it is just the Time portion of the date then we have a column with mixed dates and times which SQL will not deal with well in the end database (e.g. it will set the
         //date portion of times to today's date which will be very confusing
-        if (_timeSpanTypeDecider.IsAcceptableAsType(candidateString, sizeRecord))
+        if (_timeSpanTypeDecider.IsAcceptableAsType(candidateString, size))
             return false;
 
         // TryBruteParse already handles all exceptions internally and returns false on failure

@@ -52,7 +52,7 @@ public abstract class DecideTypesForStrings<T>:IDecideTypesForStrings
     public virtual bool IsAcceptableAsType(ReadOnlySpan<char> candidateString,IDataTypeSize? size)
     {
         //we must preserve leading zeroes if it's not actually 0 -- if they have 010101 then we have to use string but if they have just 0 we can use decimal
-        return !IDecideTypesForStrings.ZeroPrefixedNumber.IsMatch(candidateString) && IsAcceptableAsTypeImpl(candidateString,size);
+        return !IDecideTypesForStrings.ZeroPrefixedNumber.IsMatch(candidateString) && IsAcceptableAsTypeCore(candidateString,size);
     }
 
     /// <summary>
@@ -77,7 +77,7 @@ public abstract class DecideTypesForStrings<T>:IDecideTypesForStrings
 
         try
         {
-            return ParseImpl(value);
+            return ParseCore(value);
         }
         catch (Exception ex) when (ex is FormatException or ArgumentException or OverflowException or NotSupportedException)
         {
@@ -89,7 +89,7 @@ public abstract class DecideTypesForStrings<T>:IDecideTypesForStrings
     /// <inheritdoc/>
     public IDecideTypesForStrings Clone()
     {
-        var clone = CloneImpl(Culture);
+        var clone = CloneCore(Culture);
         clone.Settings = Settings.Clone();
         return clone;
     }
@@ -99,14 +99,14 @@ public abstract class DecideTypesForStrings<T>:IDecideTypesForStrings
     /// </summary>
     /// <param name="culture"></param>
     /// <returns></returns>
-    protected abstract IDecideTypesForStrings CloneImpl(CultureInfo culture);
+    protected abstract IDecideTypesForStrings CloneCore(CultureInfo culture);
 
     /// <summary>
     /// Parses <paramref name="value"/> into Type T (of this decider).
     /// </summary>
     /// <param name="value"></param>
     /// <returns></returns>
-    protected abstract object? ParseImpl(ReadOnlySpan<char> value);
+    protected abstract object? ParseCore(ReadOnlySpan<char> value);
 
     /// <summary>
     /// Returns true if the given <paramref name="candidateString"/> is compatible with the T Type of this decider.  This is the preferred method of overriding IsAcceptable.
@@ -114,5 +114,5 @@ public abstract class DecideTypesForStrings<T>:IDecideTypesForStrings
     /// <param name="candidateString"></param>
     /// <param name="size"></param>
     /// <returns></returns>
-    protected abstract bool IsAcceptableAsTypeImpl(ReadOnlySpan<char> candidateString,IDataTypeSize? size);
+    protected abstract bool IsAcceptableAsTypeCore(ReadOnlySpan<char> candidateString,IDataTypeSize? size);
 }

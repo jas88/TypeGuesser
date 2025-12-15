@@ -13,23 +13,23 @@ namespace TypeGuesser.Deciders;
 public sealed class IntTypeDecider(CultureInfo culture) : DecideTypesForStrings<int>(culture,TypeCompatibilityGroup.Numerical, typeof(byte), typeof(short), typeof(int))
 {
     /// <inheritdoc/>
-    protected override IDecideTypesForStrings CloneImpl(CultureInfo newCulture)
+    protected override IDecideTypesForStrings CloneCore(CultureInfo culture)
     {
-        return new IntTypeDecider(newCulture);
+        return new IntTypeDecider(culture);
     }
 
     /// <inheritdoc />
-    protected override object ParseImpl(ReadOnlySpan<char> value) => int.Parse(value, NumberStyles.Any, Culture.NumberFormat);
+    protected override object ParseCore(ReadOnlySpan<char> value) => int.Parse(value, NumberStyles.Any, Culture.NumberFormat);
 
     /// <inheritdoc/>
-    protected override bool IsAcceptableAsTypeImpl(ReadOnlySpan<char> candidateString, IDataTypeSize? sizeRecord)
+    protected override bool IsAcceptableAsTypeCore(ReadOnlySpan<char> candidateString, IDataTypeSize? size)
     {
         if(IsExplicitDate(candidateString))
             return false;
 
         if (!int.TryParse(candidateString, NumberStyles.Any, Culture.NumberFormat, out var i)) return false;
 
-        sizeRecord?.Size.IncreaseTo(i.ToString().Trim('-').Length,0);
+        size?.Size.IncreaseTo(i.ToString(CultureInfo.InvariantCulture).Trim('-').Length,0);
         return true;
     }
 }
