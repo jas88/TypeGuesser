@@ -6,5 +6,8 @@
   <!-- Auto-generated based on SDK version by scripts/generate-build-props.sh -->
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
+    <!-- Microsoft Testing Platform (replaces VSTest) -->
+    <EnableNUnitRunner>true</EnableNUnitRunner>
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
 </Project>
