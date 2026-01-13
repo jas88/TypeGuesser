@@ -7,9 +7,15 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="NUnit3TestAdapter"><IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-<PrivateAssets>all</PrivateAssets>
-</PackageReference>
+    <PackageReference Include="NUnit3TestAdapter">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <!-- Microsoft Testing Platform packages -->
+    <PackageReference Include="Microsoft.Testing.Platform.MSBuild" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Testing.Extensions.Telemetry" PrivateAssets="all" />
+    <!-- Explicit DependencyModel to resolve version conflict with NUnit3TestAdapter -->
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\TypeGuesser\TypeGuesser.csproj" />

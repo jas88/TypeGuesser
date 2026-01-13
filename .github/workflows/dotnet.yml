@@ -29,9 +29,7 @@ jobs:
         languages: csharp
         queries: +security-and-quality
     - name: Test
-      run: |
-        dotnet test --nologo -c Release --results-directory testresults --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=lcov
-        mv testresults/*/coverage.info lcov.info
+      run: dotnet test -c Release --results-directory testresults --coverage --coverage-output-format cobertura --coverage-output coverage.cobertura.xml
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v4
       with:
@@ -56,7 +54,8 @@ jobs:
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: lcov.info
+        directory: testresults
+        files: coverage.cobertura.xml
         fail_ci_if_error: false
     - name: Pack Nuget
       run: dotnet pack --nologo src/TypeGuesser/TypeGuesser.csproj -o dist -c Release --include-source -p:IncludeSymbols=true -p:DebugType=full -p:SymbolPackageFormat=snupkg
