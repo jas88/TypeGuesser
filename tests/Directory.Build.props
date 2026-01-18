@@ -7,10 +7,4 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
-
-  <!-- Microsoft Testing Platform (MTP) configuration -->
-  <PropertyGroup>
-    <EnableNUnitRunner>true</EnableNUnitRunner>
-    <OutputType>Exe</OutputType>
-  </PropertyGroup>
 </Project>
