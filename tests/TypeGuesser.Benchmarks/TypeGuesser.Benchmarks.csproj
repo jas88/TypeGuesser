@@ -7,6 +7,9 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <ServerGarbageCollection>true</ServerGarbageCollection>
     <IsPackable>false</IsPackable>
+    <!-- Not a test project - exclude from test runner -->
+    <IsTestProject>false</IsTestProject>
+    <EnableNUnitRunner>false</EnableNUnitRunner>
   </PropertyGroup>
 
   <ItemGroup>

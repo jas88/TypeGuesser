@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Workaround for https://github.com/microsoft/codecoverage/issues/203 -->
+<!-- Use dynamic instrumentation to avoid BadImageFormatException (exit 134) on .NET 10 + NUnit -->
+<!-- Note: macOS arm64 produces empty coverage with dynamic instrumentation -->
+<Configuration>
+  <CodeCoverage>
+    <EnableStaticManagedInstrumentation>false</EnableStaticManagedInstrumentation>
+    <EnableStaticNativeInstrumentation>false</EnableStaticNativeInstrumentation>
+    <EnableDynamicManagedInstrumentation>true</EnableDynamicManagedInstrumentation>
+    <EnableDynamicNativeInstrumentation>false</EnableDynamicNativeInstrumentation>
+  </CodeCoverage>
+</Configuration>
