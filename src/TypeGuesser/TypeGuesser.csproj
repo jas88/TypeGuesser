@@ -21,6 +21,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+  	<PackageReference Include="DotNet.ReproducibleBuilds" />
 		<PackageReference Include="Microsoft.Extensions.ObjectPool" />
 	</ItemGroup>
 
