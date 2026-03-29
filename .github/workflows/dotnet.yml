@@ -51,7 +51,7 @@ jobs:
       with:
         sarif_file: sarif-results/csharp.sarif
     - name: Codecov
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v6
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         directory: testresults
