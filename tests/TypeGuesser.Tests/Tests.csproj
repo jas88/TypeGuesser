@@ -18,6 +18,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyModel" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
     <ProjectReference Include="..\..\src\TypeGuesser\TypeGuesser.csproj" />
   </ItemGroup>
 </Project>
