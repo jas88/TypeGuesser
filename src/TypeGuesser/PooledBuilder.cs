@@ -112,6 +112,35 @@ public sealed class PooledBuilder
     }
 
     /// <summary>
+    /// Sets the initial width, decimal size and Unicode flag without processing any values.
+    /// Used when constructing a Guesser with a specific DatabaseTypeRequest.
+    /// </summary>
+    /// <remarks>
+    /// <para>The result of <see cref="Build"/> is then at least as wide as <paramref name="size"/>: values processed afterwards can
+    /// widen the width and decimal size but never shrink them, and a Unicode flag stays set.  A negative width is not a width and
+    /// is ignored.</para>
+    /// <para>This is not a value seen: it does not change <see cref="TypeGuessResult.ValueCount"/>,
+    /// <see cref="TypeGuessResult.NullCount"/>, the current type, the mixed typing checks or which values are accepted.</para>
+    /// </remarks>
+    /// <param name="size">The width, decimal size and Unicode flag to start from, e.g. a <see cref="DatabaseTypeRequest"/></param>
+    public void SetInitialSize(IDataTypeSize size)
+    {
+        ArgumentNullException.ThrowIfNull(size);
+
+        lock (_lock)
+        {
+            if (size.Width is int width && width >= 0)
+            {
+                _maxWidth = Math.Max(_maxWidth ?? 0, width);
+            }
+
+            _digitsBeforeDecimal = Math.Max(_digitsBeforeDecimal, size.Size.NumbersBeforeDecimalPlace);
+            _digitsAfterDecimal = Math.Max(_digitsAfterDecimal, size.Size.NumbersAfterDecimalPlace);
+            _requiresUnicode |= size.Unicode;
+        }
+    }
+
+    /// <summary>
     /// Updates the culture and reinitializes the type decider factory.
     /// </summary>
     /// <param name="culture">The new culture to use</param>
@@ -189,10 +218,10 @@ public sealed class PooledBuilder
                     $"Cannot process int value when already primed with type {_currentType}. Guesser instances must be used with either strings OR hard-typed objects, not mixed with untyped objects.");
             }
 
-            // Calculate digits without ToString() - zero allocation approach
+            // Calculate digits without ToString() - zero allocation approach.  An int needs no digits after the decimal point,
+            // but any set by SetInitialSize are kept
             var digits = value == 0 ? 1 : (int)Math.Floor(Math.Log10(Math.Abs((double)value))) + 1;
             _digitsBeforeDecimal = Math.Max(_digitsBeforeDecimal, digits);
-            _digitsAfterDecimal = 0;
 
             // Update width for string representation
             var stringLength = digits + (value < 0 ? 1 : 0);

@@ -94,7 +94,7 @@ var guess = guesser.Guess;
 
 ### Guesser(DatabaseTypeRequest)
 
-Creates a new `Guesser` primed with an initial type hint.
+Creates a new `Guesser` primed with the given request, e.g. the type of an existing database column. Until values are seen, `Guess` has the request's `CSharpType` (if it is in `DatabaseTypeRequest.PreferenceOrder`), `Width`, decimal `Size` and `Unicode` flag. Values seen afterwards can widen the width and decimal size but never shrink them below the request, and a Unicode request stays Unicode. The request is not counted as a value seen, and its width, decimal size and Unicode flag do not change which values are accepted.
 
 ```csharp
 public Guesser(DatabaseTypeRequest request)
@@ -102,22 +102,22 @@ public Guesser(DatabaseTypeRequest request)
 
 **Parameters:**
 
-- `request` (`DatabaseTypeRequest`) - Initial type configuration
+- `request` (`DatabaseTypeRequest`) - The type to start from
 
 **Example:**
 
 ```csharp
-// Start with decimal type hint
-var request = new DatabaseTypeRequest(typeof(decimal))
-{
-    Size = new DecimalSize { Precision = 10, Scale = 2 }
-};
+// Start from a decimal(10,2) column: 8 digits before the decimal point and 2 after
+var request = new DatabaseTypeRequest(typeof(decimal), null, new DecimalSize(8, 2));
 
 var guesser = new Guesser(request);
+// guesser.Guess.Size.Precision => 10, guesser.Guess.Size.Scale => 2
+
 guesser.AdjustToCompensateForValue(123.45m);
 
 var guess = guesser.Guess;
 // guess.CSharpType => typeof(decimal)
+// guess.Size.Precision => 10, guess.Size.Scale => 2 (123.45 fits, so the guess is not shrunk)
 ```
 
 **Throws:**

@@ -221,5 +221,137 @@ namespace TypeGuesser.Tests
             var ex = Assert.Throws<MixedTypingException>(() => _builder.ProcessString("test".AsSpan()));
             Assert.That(ex.Message, Does.Contain("Cannot process string values"));
         }
+
+        [Test]
+        public void SetInitialSize_SetsWidthDecimalSizeAndUnicode()
+        {
+            // Act
+            _builder.SetInitialSize(new DatabaseTypeRequest(typeof(string), 10, new DecimalSize(2, 3)) { Unicode = true });
+
+            // Assert
+            var result = _builder.Build();
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Width, Is.EqualTo(10));
+                Assert.That(result.DigitsBeforeDecimal, Is.EqualTo(2));
+                Assert.That(result.DigitsAfterDecimal, Is.EqualTo(3));
+                Assert.That(result.RequiresUnicode, Is.True);
+            });
+        }
+
+        [Test]
+        public void SetInitialSize_IsNotAValueSeen()
+        {
+            // Act
+            _builder.SetInitialSize(new DatabaseTypeRequest(typeof(decimal), 11, new DecimalSize(5, 5)) { Unicode = true });
+
+            // Assert - the type and the counts are unchanged...
+            var result = _builder.Build();
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.CSharpType, Is.EqualTo(typeof(bool))); // First in preference order
+                Assert.That(result.ValueCount, Is.EqualTo(0));
+                Assert.That(result.NullCount, Is.EqualTo(0));
+            });
+
+            // ...and so are the mixed typing checks: a hard typed value is still accepted as the first value
+            Assert.DoesNotThrow(() => _builder.Process(42));
+            Assert.That(_builder.Build().ValueCount, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void SetInitialSize_ValuesAreCountedAsWithoutIt()
+        {
+            // Arrange
+            var unprimed = new PooledBuilder(CultureInfo.InvariantCulture);
+            _builder.SetInitialSize(new DatabaseTypeRequest(typeof(string), 10) { Unicode = true });
+
+            // Act
+            foreach (var builder in new[] { _builder, unprimed })
+            {
+                builder.Process(null);
+                builder.Process(DBNull.Value);
+                builder.Process("abc");
+                builder.Process("   ");
+                builder.Process("12");
+            }
+
+            // Assert
+            var primed = _builder.Build();
+            var expected = unprimed.Build();
+            Assert.Multiple(() =>
+            {
+                Assert.That(primed.ValueCount, Is.EqualTo(expected.ValueCount));
+                Assert.That(primed.NullCount, Is.EqualTo(expected.NullCount));
+                Assert.That(primed.CSharpType, Is.EqualTo(expected.CSharpType));
+            });
+        }
+
+        [Test]
+        public void SetInitialSize_NegativeWidth_IsIgnored()
+        {
+            // Act - e.g. FAnsiSql requests a width of -1 for types that have no string length
+            _builder.SetInitialSize(new DatabaseTypeRequest(typeof(int), -1));
+
+            // Assert
+            Assert.That(_builder.Build().Width, Is.Null);
+        }
+
+        [Test]
+        public void SetInitialSize_DoesNotShrinkWhatWasAlreadySeen()
+        {
+            // Arrange
+            _builder.ProcessString("abcdefghijklmno".AsSpan());
+
+            // Act
+            _builder.SetInitialSize(new DatabaseTypeRequest(typeof(string), 10));
+
+            // Assert
+            Assert.That(_builder.Build().Width, Is.EqualTo(15));
+        }
+
+        [Test]
+        public void SetInitialSize_IsClearedByReset()
+        {
+            // Arrange
+            _builder.SetInitialSize(new DatabaseTypeRequest(typeof(string), 10, new DecimalSize(5, 5)) { Unicode = true });
+
+            // Act
+            _builder.Reset();
+
+            // Assert
+            var result = _builder.Build();
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Width, Is.Null);
+                Assert.That(result.DigitsBeforeDecimal, Is.EqualTo(0));
+                Assert.That(result.DigitsAfterDecimal, Is.EqualTo(0));
+                Assert.That(result.RequiresUnicode, Is.False);
+            });
+        }
+
+        [Test]
+        public void SetInitialSize_WithNull_ThrowsArgumentNullException()
+        {
+            Assert.Throws<ArgumentNullException>(() => _builder.SetInitialSize(null!));
+        }
+
+        [Test]
+        public void ProcessIntZeroAlloc_KeepsTheInitialDecimalSize()
+        {
+            // Arrange - decimal(10,5)
+            _builder.SetInitialSize(new DatabaseTypeRequest(typeof(decimal), null, new DecimalSize(5, 5)));
+
+            // Act
+            _builder.ProcessIntZeroAlloc(7);
+
+            // Assert
+            var result = _builder.Build();
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.DigitsBeforeDecimal, Is.EqualTo(5));
+                Assert.That(result.DigitsAfterDecimal, Is.EqualTo(5));
+            });
+        }
     }
 }

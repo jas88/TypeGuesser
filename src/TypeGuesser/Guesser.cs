@@ -31,11 +31,6 @@ public sealed class Guesser : IDisposable
     private readonly PooledBuilder _builder;
 
     /// <summary>
-    /// Cached reference to the builder's internal state for backward compatibility.
-    /// </summary>
-    private DatabaseTypeRequest? _lastGuess;
-
-    /// <summary>
     /// Flag to track if this instance has been disposed.
     /// </summary>
     private bool _disposed;
@@ -79,15 +74,7 @@ public sealed class Guesser : IDisposable
     /// The currently computed data type (including string length / decimal scale/precisione etc) that can store all values seen
     /// by <see cref="AdjustToCompensateForValue"/> so far.
     /// </summary>
-    public DatabaseTypeRequest Guess
-    {
-        get
-        {
-            var result = _builder.Build();
-            _lastGuess = ConvertToLegacyFormat(result);
-            return _lastGuess;
-        }
-    }
+    public DatabaseTypeRequest Guess => ConvertToLegacyFormat(_builder.Build());
 
     /// <summary>
     /// The culture to use for type deciders, determines what symbol decimal place is etc
@@ -118,9 +105,17 @@ public sealed class Guesser : IDisposable
     }
 
     /// <summary>
-    /// Creates a new <see cref="Guesser"/> primed with the size of the given <paramref name="request"/>.
+    /// Creates a new <see cref="Guesser"/> primed with the size of the given <paramref name="request"/>: until values are seen the
+    /// <see cref="Guess"/> has the <see cref="DatabaseTypeRequest.CSharpType"/> (if it is in <see cref="DatabaseTypeRequest.PreferenceOrder"/>),
+    /// <see cref="DatabaseTypeRequest.Width"/>, <see cref="DatabaseTypeRequest.Size"/> and <see cref="DatabaseTypeRequest.Unicode"/> of the
+    /// request.
     /// </summary>
-    /// <param name="request"></param>
+    /// <remarks>
+    /// Values seen afterwards can widen the width and decimal size of the <see cref="Guess"/> but never shrink them below those of the
+    /// request, and a Unicode request stays Unicode.  The request is not counted as a value seen, and its width, decimal size and Unicode
+    /// flag do not change which values are accepted.
+    /// </remarks>
+    /// <param name="request">The type to start from, e.g. that of an existing database column</param>
     public Guesser(DatabaseTypeRequest request)
     {
         // Note: Object initializers run AFTER this line but BEFORE constructor body
@@ -133,15 +128,7 @@ public sealed class Guesser : IDisposable
 
         ThrowIfNotSupported(request.CSharpType);
 
-        // If the request specifies a non-default type, prime the builder
-        if (request.CSharpType != DatabaseTypeRequest.PreferenceOrder[0])
-        {
-            // Prime the builder by processing a dummy value of the correct type
-            // This maintains backward compatibility with the old constructor behavior
-            PrimeBuilderWithType(request);
-        }
-
-        _lastGuess = request;
+        PrimeBuilderWithRequest(request);
     }
 
     /// <summary>
@@ -185,14 +172,14 @@ public sealed class Guesser : IDisposable
     }
 
     /// <summary>
-    /// Primes the builder with the type and size information from a DatabaseTypeRequest.
+    /// Primes the builder with the type, width, decimal size and Unicode flag of a DatabaseTypeRequest, without counting it as a
+    /// value seen.  This restores the v1.x behaviour, where the request was the initial <see cref="Guess"/>.
     /// </summary>
     /// <param name="request">The request to use for priming</param>
-    private void PrimeBuilderWithType(DatabaseTypeRequest request)
+    private void PrimeBuilderWithRequest(DatabaseTypeRequest request)
     {
-        // Set the initial type hint without processing values
-        // This maintains backward compatibility where the constructor sets an initial type preference
         _builder.SetInitialTypeHint(request.CSharpType);
+        _builder.SetInitialSize(request);
     }
 
     /// <summary>
@@ -242,9 +229,6 @@ public sealed class Guesser : IDisposable
 
         // Delegate to the pooled builder which handles all the logic
         _builder.Process(o);
-
-        // Clear cached guess so next access rebuilds from builder
-        _lastGuess = null;
     }
 
 
