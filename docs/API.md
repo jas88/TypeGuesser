@@ -94,7 +94,7 @@ var guess = guesser.Guess;
 
 ### Guesser(DatabaseTypeRequest)
 
-Creates a new `Guesser` primed with the given request, e.g. the type of an existing database column. Until values are seen, `Guess` has the request's `CSharpType` (if it is in `DatabaseTypeRequest.PreferenceOrder`), `Width`, decimal `Size` and `Unicode` flag. Values seen afterwards can widen the width and decimal size but never shrink them below the request, and a Unicode request stays Unicode. The request is not counted as a value seen, and its width, decimal size and Unicode flag do not change which values are accepted.
+Creates a new `Guesser` primed with the given request, e.g. the type of an existing database column. Until values are seen, `Guess` has the request's `CSharpType` (if it is in `DatabaseTypeRequest.PreferenceOrder`), `Width` (unless it is negative, as FAnsiSql uses -1 for types without a string length, in which case no width is set), decimal `Size` and `Unicode` flag. Values seen afterwards can widen the width and decimal size but never shrink them below the request, and a Unicode request stays Unicode. The request is not counted as a value seen, and its width, decimal size and Unicode flag do not change which values are accepted.
 
 ```csharp
 public Guesser(DatabaseTypeRequest request)
