@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.5] - 2026-11-16
+
+### Fixed
+
+- **Guesser(DatabaseTypeRequest)**: A `Guesser` starts from the width, decimal size and Unicode flag of its request again, as documented and as in v1.x
+  - Since v2.0.0 only the request's `CSharpType` was kept, because `Guess` is rebuilt from the values seen so far. Before seeing a value, the `Guesser` of an `nvarchar(10)` column guessed a non-Unicode string of no width, FAnsiSql turned the guess for an `nvarchar(max)` column into `varchar(4000)`, and a `decimal(10,5)` column started from an empty decimal size. Code that resizes columns to fit new data, such as RDMP's upload destination, could therefore try to shrink a decimal column or turn an `nvarchar` column into a `varchar`
+  - Values seen afterwards only widen the guess and never shrink it below the request, and a Unicode request stays Unicode. A hard typed `int` no longer resets the digits after the decimal point to 0
+  - The request is not counted as a value seen: the values seen, the mixed typing checks and which values are accepted are unchanged
+  - A negative request width (FAnsiSql uses -1 for types without a string length) is ignored
+  - Added `PooledBuilder.SetInitialSize(IDataTypeSize)`, which the constructor calls together with `SetInitialTypeHint`
+
 ## [2.0.4] - 2025-11-27
 
 ### Changed
@@ -264,7 +275,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial port of content from [FAnsiSql](https://github.com/jas88/FAnsiSql)
 
-[Unreleased]: https://github.com/jas88/TypeGuesser/compare/v2.0.4...main
+[Unreleased]: https://github.com/jas88/TypeGuesser/compare/v2.0.5...main
+[2.0.5]: https://github.com/jas88/TypeGuesser/compare/v2.0.4...v2.0.5
 [2.0.4]: https://github.com/jas88/TypeGuesser/compare/v2.0.3...v2.0.4
 [2.0.3]: https://github.com/jas88/TypeGuesser/compare/v2.0.2...v2.0.3
 [2.0.2]: https://github.com/jas88/TypeGuesser/compare/v2.0.1...v2.0.2
