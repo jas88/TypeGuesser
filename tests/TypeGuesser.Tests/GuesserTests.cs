@@ -9,7 +9,7 @@ namespace Tests;
 
 /// <summary>
 /// <para>These tests cover the systems ability to compute a final <see cref="DatabaseTypeRequest"/> from a set of mixed data types.</para>
-/// 
+///
 /// <para>Critically it covers fallback from one data type estimate to another based on new data e.g. if you see a "100" then a "1" then a "1.1"
 /// the final estimate should be decimal(4,1) to allow for both 100.0f and 1.1f.
 /// </para>

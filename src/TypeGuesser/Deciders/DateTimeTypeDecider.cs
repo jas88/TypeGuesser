@@ -57,7 +57,7 @@ public class DateTimeTypeDecider : DecideTypesForStrings<DateTime>
     /// <summary>
     /// Explicitly sets the culture to use for processing date times.  This suppresses <see cref="GuessDateFormat(IEnumerable{string})"/>.
     /// Set to null to restore the current environment culture (and re-enable guessing).
-    /// 
+    ///
     /// </summary>
     public override CultureInfo Culture
     {
@@ -191,7 +191,7 @@ public class DateTimeTypeDecider : DecideTypesForStrings<DateTime>
     /// Makes guess about whether to use MD or DM based on the <paramref name="samples"/>.
     /// Where no samples, or no matches or the same number of matches DM is used.
     /// the samples.
-    /// 
+    ///
     /// <para>If <see cref="Culture"/> has been set then this method is ignored.  If the static property <see cref="AllowCultureGuessing"/>
     /// is set then it is also ignored.</para>
     /// </summary>

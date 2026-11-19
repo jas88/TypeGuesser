@@ -34,7 +34,7 @@ namespace TypeGuesser.Tests
             Assert.That(ex.InnerException, Is.EqualTo(innerException));
         }
 
-  
+
         [Test]
         public void PooledBuilder_ProcessIntAfterString_ThrowsMixedTypingException()
         {
@@ -181,7 +181,7 @@ namespace TypeGuesser.Tests
             Assert.That(ex, Is.InstanceOf<Exception>());
         }
 
-    
+
         [Test]
         public void ExceptionHandling_PooledBuilderReset_ClearsMixedTypingState()
         {
