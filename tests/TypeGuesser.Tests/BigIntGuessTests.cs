@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using System.Globalization;
 using TypeGuesser;
 using TypeGuesser.Deciders;

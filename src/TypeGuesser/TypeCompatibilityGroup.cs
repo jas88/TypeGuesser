@@ -1,4 +1,4 @@
-﻿namespace TypeGuesser;
+namespace TypeGuesser;
 
 /// <summary>
 /// Describes the translation capability of an <see cref="Numerical"/> when assigning a proper C# Type to a collection of input strings.  For example "1" might be picked as a
