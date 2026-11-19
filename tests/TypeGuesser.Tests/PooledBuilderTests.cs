@@ -7,7 +7,7 @@ namespace TypeGuesser.Tests
     [TestFixture]
     public class PooledBuilderTests
     {
-        private PooledBuilder _builder;
+        private PooledBuilder _builder = new(CultureInfo.InvariantCulture);
 
         [SetUp]
         public void SetUp()

@@ -10,7 +10,7 @@ namespace TypeGuesser.Tests
     [TestFixture]
     public class TypeDeciderFactoryTests
     {
-        private TypeDeciderFactory _factory;
+        private TypeDeciderFactory _factory = new(CultureInfo.InvariantCulture);
 
         [SetUp]
         public void SetUp()
