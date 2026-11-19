@@ -46,8 +46,8 @@ public class TypeDeciderFactory
         };
 
         foreach (var decider in deciders)
-        foreach (var type in decider.TypesSupported)
-            Dictionary.Add(type, decider);
+            foreach (var type in decider.TypesSupported)
+                Dictionary.Add(type, decider);
     }
 
     /// <summary>

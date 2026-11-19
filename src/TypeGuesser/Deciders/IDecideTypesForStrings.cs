@@ -71,6 +71,6 @@ public partial interface IDecideTypesForStrings
     /// <returns></returns>
     IDecideTypesForStrings Clone();
 
-    [GeneratedRegex(@"^\s*-?0+[1-9]+\.?[0-9]*\s*$",RegexOptions.CultureInvariant)]
+    [GeneratedRegex(@"^\s*-?0+[1-9]+\.?[0-9]*\s*$", RegexOptions.CultureInvariant)]
     private static partial Regex ZeroPrefixedNumberRegex();
 }

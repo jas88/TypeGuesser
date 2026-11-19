@@ -34,8 +34,8 @@ public class DecimalSize : IEquatable<DecimalSize>
     /// <param name="numbersAfterDecimalPlace"></param>
     public DecimalSize(int numbersBeforeDecimalPlace, int numbersAfterDecimalPlace)
     {
-        NumbersBeforeDecimalPlace = Math.Max(0,numbersBeforeDecimalPlace);
-        NumbersAfterDecimalPlace = Math.Max(0,numbersAfterDecimalPlace);
+        NumbersBeforeDecimalPlace = Math.Max(0, numbersBeforeDecimalPlace);
+        NumbersAfterDecimalPlace = Math.Max(0, numbersAfterDecimalPlace);
     }
 
     /// <summary>
@@ -135,8 +135,10 @@ public class DecimalSize : IEquatable<DecimalSize>
     /// <returns>true if the specified DecimalSize is equal to the current DecimalSize; otherwise, false.</returns>
     public bool Equals(DecimalSize? other)
     {
-        if (other is null) return false;
-        if (ReferenceEquals(this, other)) return true;
+        if (other is null)
+            return false;
+        if (ReferenceEquals(this, other))
+            return true;
         return NumbersBeforeDecimalPlace == other.NumbersBeforeDecimalPlace &&
                NumbersAfterDecimalPlace == other.NumbersAfterDecimalPlace;
     }
@@ -144,8 +146,10 @@ public class DecimalSize : IEquatable<DecimalSize>
     /// <inheritdoc/>
     public override bool Equals(object? obj)
     {
-        if (obj is null) return false;
-        if (ReferenceEquals(this, obj)) return true;
+        if (obj is null)
+            return false;
+        if (ReferenceEquals(this, obj))
+            return true;
         // Use GetType() comparison to handle subclasses correctly
         return obj.GetType() == GetType() && Equals((DecimalSize)obj);
     }

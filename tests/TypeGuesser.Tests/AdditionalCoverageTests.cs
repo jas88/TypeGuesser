@@ -1,8 +1,8 @@
 using System;
 using System.Data;
 using System.Globalization;
-using NUnit.Framework;
 using System.Linq;
+using NUnit.Framework;
 
 namespace TypeGuesser.Tests
 {

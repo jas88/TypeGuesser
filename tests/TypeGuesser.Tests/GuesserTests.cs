@@ -17,48 +17,48 @@ namespace Tests;
 public sealed class GuesserTests
 {
 
-    [TestCase("5",typeof(int),"en-us",1,1,0,5)]
-    [TestCase("true",typeof(bool),"en-us",4,0,0,true)]
-    [TestCase("false",typeof(bool),"en-us",5,0,0,false)]
-    [TestCase("0"    ,typeof(bool),"en-us",1,0,0,false)]
-    [TestCase("1"    ,typeof(bool),"en-us",1,0,00,true)]
-    [TestCase("j"    ,typeof(bool),"en-us",1,0,0,true)]
-    [TestCase("y"    ,typeof(bool),"en-us",1,0,0,true)]
-    [TestCase("n"    ,typeof(bool),"en-us",1,0,0,false)]
-    [TestCase("0"    ,typeof(bool),"en-us",1,0,0,false)]
-    [TestCase("1"    ,typeof(bool),"en-us",1,0,0,true)]
-    [TestCase("T"    ,typeof(bool),"en-us",1,0,0,true)]
-    [TestCase("F"    ,typeof(bool),"en-us",1,0,0,false)]
-    [TestCase("x"    ,typeof(string),"en-us",1,0,0,"x")]
-    [TestCase("100"  ,typeof(int),"en-us",3,3,0,100)]
-    [TestCase("255"  ,typeof(int),"en-us",3,3,0,255)]
-    [TestCase("abc"  ,typeof(string),"en-us",3,0,0,"abc")]
-    [TestCase("ja"   ,typeof(bool),"de-de",2,0,0,true)]
-    [TestCase("yes"  ,typeof(bool),"en-us",3,0,0,true)]
-    [TestCase("n"    ,typeof(bool),"en-us",1,0,0,false)]
-    [TestCase("nein" ,typeof(bool),"en-us",4,0,0,false)]
-    [TestCase("no"   ,typeof(bool),"en-us",2,0,0,false)]
-    [TestCase("t"    ,typeof(bool),"en-us",1,0,0,true)]
-    [TestCase("f"    ,typeof(bool),"en-us",1,0,0,false)]
-    [TestCase(".t."  ,typeof(bool),"en-us",3,0,0,true)]
-    [TestCase(".f."  ,typeof(bool),"en-us",3,0,0,false)]
-    [TestCase("9223372036854775807",typeof(decimal),"en-us",19,19,0,9223372036854775807L)]
-    [TestCase("5000"  ,typeof(int),"en-us",4,4,0,5000)]
+    [TestCase("5", typeof(int), "en-us", 1, 1, 0, 5)]
+    [TestCase("true", typeof(bool), "en-us", 4, 0, 0, true)]
+    [TestCase("false", typeof(bool), "en-us", 5, 0, 0, false)]
+    [TestCase("0", typeof(bool), "en-us", 1, 0, 0, false)]
+    [TestCase("1", typeof(bool), "en-us", 1, 0, 00, true)]
+    [TestCase("j", typeof(bool), "en-us", 1, 0, 0, true)]
+    [TestCase("y", typeof(bool), "en-us", 1, 0, 0, true)]
+    [TestCase("n", typeof(bool), "en-us", 1, 0, 0, false)]
+    [TestCase("0", typeof(bool), "en-us", 1, 0, 0, false)]
+    [TestCase("1", typeof(bool), "en-us", 1, 0, 0, true)]
+    [TestCase("T", typeof(bool), "en-us", 1, 0, 0, true)]
+    [TestCase("F", typeof(bool), "en-us", 1, 0, 0, false)]
+    [TestCase("x", typeof(string), "en-us", 1, 0, 0, "x")]
+    [TestCase("100", typeof(int), "en-us", 3, 3, 0, 100)]
+    [TestCase("255", typeof(int), "en-us", 3, 3, 0, 255)]
+    [TestCase("abc", typeof(string), "en-us", 3, 0, 0, "abc")]
+    [TestCase("ja", typeof(bool), "de-de", 2, 0, 0, true)]
+    [TestCase("yes", typeof(bool), "en-us", 3, 0, 0, true)]
+    [TestCase("n", typeof(bool), "en-us", 1, 0, 0, false)]
+    [TestCase("nein", typeof(bool), "en-us", 4, 0, 0, false)]
+    [TestCase("no", typeof(bool), "en-us", 2, 0, 0, false)]
+    [TestCase("t", typeof(bool), "en-us", 1, 0, 0, true)]
+    [TestCase("f", typeof(bool), "en-us", 1, 0, 0, false)]
+    [TestCase(".t.", typeof(bool), "en-us", 3, 0, 0, true)]
+    [TestCase(".f.", typeof(bool), "en-us", 3, 0, 0, false)]
+    [TestCase("9223372036854775807", typeof(decimal), "en-us", 19, 19, 0, 9223372036854775807L)]
+    [TestCase("5000", typeof(int), "en-us", 4, 4, 0, 5000)]
     [TestCase("5000.010", typeof(decimal), "en-us", 8, 4, 2, 5000.01)]
-    [TestCase("5,123.001e-10", typeof(decimal), "en-us", 14, 0,13, 0.0000005123001)] //<=it's string length is 14 because this would be the string value we would need to represent
-    [TestCase("5,000"  ,typeof(int),"en-us",5,4,0,5000)]
-    [TestCase("5,000.01"  ,typeof(decimal),"en-us",8,4,2,5000.01)]
-    [TestCase("5,000.01000"  ,typeof(decimal),"en-us",11,4,2,5000.01)]
-    [TestCase("5.000,01000", typeof(decimal), "de-de", 11, 4, 2,5000.01)] //germans swap commas and dots
+    [TestCase("5,123.001e-10", typeof(decimal), "en-us", 14, 0, 13, 0.0000005123001)] //<=it's string length is 14 because this would be the string value we would need to represent
+    [TestCase("5,000", typeof(int), "en-us", 5, 4, 0, 5000)]
+    [TestCase("5,000.01", typeof(decimal), "en-us", 8, 4, 2, 5000.01)]
+    [TestCase("5,000.01000", typeof(decimal), "en-us", 11, 4, 2, 5000.01)]
+    [TestCase("5.000,01000", typeof(decimal), "de-de", 11, 4, 2, 5000.01)] //germans swap commas and dots
     [TestCase("5000010,000", typeof(int), "de-de", 11, 7, 0, 5000010)] //germans swap commas and dots
     [TestCase("5.000.000", typeof(string), "en-us", 9, 0, 0, "5.000.000")] //germans swap commas and dots so this is an illegal number
     [TestCase("5,000,000", typeof(string), "de-de", 9, 0, 0, "5,000,000")] //germans swap commas and dots so this is an illegal number
-    [TestCase("5,000", typeof(int), "de-de", 5, 1,0,5)] //germans swap commas and dots
+    [TestCase("5,000", typeof(int), "de-de", 5, 1, 0, 5)] //germans swap commas and dots
     public void Test_OneString_IsType(string guessFor, Type expectedGuess, string culture, int expectedStringLength,
         int expectedBefore, int expectedAfter, object expectedParseValue)
     {
         var cultureInfo = new CultureInfo(culture);
-        var guesser = new Guesser {Culture = cultureInfo};
+        var guesser = new Guesser { Culture = cultureInfo };
         guesser.AdjustToCompensateForValue(guessFor);
         Assert.Multiple(() =>
         {
@@ -77,17 +77,17 @@ public sealed class GuesserTests
     }
 
 #pragma warning disable CA1861
-    [TestCase("en-us",new []{"5","10"},
-        typeof(int),2,2,0)]
-    [TestCase("en-us", new []{"5","10.1"},
-        typeof(decimal),4,2,1)]
-    [TestCase("en-us", new []{"5.1","5.000000000"},
-        typeof(decimal),11,1,1)]
+    [TestCase("en-us", new[] { "5", "10" },
+        typeof(int), 2, 2, 0)]
+    [TestCase("en-us", new[] { "5", "10.1" },
+        typeof(decimal), 4, 2, 1)]
+    [TestCase("en-us", new[] { "5.1", "5.000000000" },
+        typeof(decimal), 11, 1, 1)]
 #pragma warning restore CA1861
-    public void Test_ManyString_IsType(string culture, string[] guessFor, Type expectedGuess,int expectedStringLength, int expectedBefore,int expectedAfter)
+    public void Test_ManyString_IsType(string culture, string[] guessFor, Type expectedGuess, int expectedStringLength, int expectedBefore, int expectedAfter)
     {
         var cultureInfo = new CultureInfo(culture);
-        var guesser = new Guesser {Culture = cultureInfo};
+        var guesser = new Guesser { Culture = cultureInfo };
         guesser.AdjustToCompensateForValues(guessFor);
 
         Assert.Multiple(() =>
@@ -129,7 +129,7 @@ public sealed class GuesserTests
         });
 
 
-        var someStrings = new []{"13:11:59", "9AM"};
+        var someStrings = new[] { "13:11:59", "9AM" };
         guesser = new Guesser();
         guesser.AdjustToCompensateForValues(someStrings);
 
@@ -312,9 +312,9 @@ public sealed class GuesserTests
     /// <param name="yy"></param>
     /// <param name="mm"></param>
     /// <param name="dd"></param>
-    [TestCase("20013001","yyyyddMM", 2001,1,30)]
-    [TestCase("01302020","MMddyyyy", 2020,1,30)]
-    public void DateTimeTypeDecider_ExplicitDateTimeFormat(string value,string format, int yy, int mm, int dd)
+    [TestCase("20013001", "yyyyddMM", 2001, 1, 30)]
+    [TestCase("01302020", "MMddyyyy", 2020, 1, 30)]
+    public void DateTimeTypeDecider_ExplicitDateTimeFormat(string value, string format, int yy, int mm, int dd)
     {
         var decider = new DateTimeTypeDecider(CultureInfo.InvariantCulture);
 
@@ -358,7 +358,7 @@ public sealed class GuesserTests
 
     //Tests system being happy to sign off in the orders bool=>int=>decimal but nothing else
     [TestCase("true", typeof(bool), "11", typeof(int))]
-    [TestCase("1", typeof(bool), "1.1",typeof(decimal))]
+    [TestCase("1", typeof(bool), "1.1", typeof(decimal))]
     [TestCase("true", typeof(bool), "1.1", typeof(decimal))]
     public void TestGuesser_FallbackCompatible(string input1, Type expectedTypeAfterFirstInput, string input2, Type expectedTypeAfterSecondInput)
     {
@@ -373,7 +373,7 @@ public sealed class GuesserTests
 
     //Tests system being angry at having signed off on a bool=>int=>decimal then seeing a valid non string type (e.g. DateTime)
     //under these circumstances it should go directly to System.String
-    [TestCase("1",typeof(bool),"2001-01-01")]
+    [TestCase("1", typeof(bool), "2001-01-01")]
     [TestCase("true", typeof(bool), "2001-01-01")]
     [TestCase("1.1", typeof(decimal), "2001-01-01")]
     [TestCase("1.1", typeof(decimal), "10:00am")]
@@ -404,9 +404,9 @@ public sealed class GuesserTests
         Assert.That(t.Guess.CSharpType, Is.EqualTo(typeof(string)));
     }
 
-    [TestCase("fish",32)]
+    [TestCase("fish", 32)]
     [TestCase(32, "fish")]
-    [TestCase("2001-01-01",2001)]
+    [TestCase("2001-01-01", 2001)]
     [TestCase(2001, "2001-01-01")]
     [TestCase("2001", 2001)]
     [TestCase(2001, "2001")]
@@ -488,7 +488,7 @@ public sealed class GuesserTests
         Assert.That(t.Guess.CSharpType, Is.EqualTo(typeof(DateTime)));
     }
 
-    [TestCase("01",2)]
+    [TestCase("01", 2)]
     [TestCase("01.1", 4)]
     [TestCase("01.10", 5)]
     [TestCase("-01", 3)]
@@ -556,7 +556,7 @@ public sealed class GuesserTests
     [TestCase(" 1.01", typeof(decimal))]
     [TestCase(" 1.01 ", typeof(decimal))]
     [TestCase(" 1", typeof(int))]
-    [TestCase(" true ",typeof(bool))]
+    [TestCase(" true ", typeof(bool))]
     public void TestGuesser_Whitespace(string input, Type expectedType)
     {
         var t = new Guesser();
@@ -604,7 +604,7 @@ public sealed class GuesserTests
     {
         var t = new Guesser();
         t.AdjustToCompensateForValue((short)5);
-        var ex = Assert.Throws<MixedTypingException>(()=>t.AdjustToCompensateForValue(1000));
+        var ex = Assert.Throws<MixedTypingException>(() => t.AdjustToCompensateForValue(1000));
 
         Assert.That(ex?.Message, Does.Contain("Cannot process int value when already primed with type System.Int16"));
     }
@@ -771,7 +771,7 @@ public sealed class GuesserTests
     public void TestGuesser_TimeObject()
     {
         var t = new Guesser();
-        t.AdjustToCompensateForValue(new TimeSpan(10,1,1));
+        t.AdjustToCompensateForValue(new TimeSpan(10, 1, 1));
 
         Assert.That(t.Guess.CSharpType, Is.EqualTo(typeof(TimeSpan)));
 
@@ -854,11 +854,11 @@ public sealed class GuesserTests
     }
 
 
-    [TestCase("0.01",typeof(decimal),"A",4)]
-    [TestCase("1234",typeof(int),"F",4)]
-    [TestCase("false",typeof(bool), "M", 5)]
-    [TestCase("2001-01-01",typeof(DateTime), "F", 27)]
-    [TestCase("2001-01-01",typeof(DateTime), "FingersMcNultyFishBonesdlsiea", 29)]
+    [TestCase("0.01", typeof(decimal), "A", 4)]
+    [TestCase("1234", typeof(int), "F", 4)]
+    [TestCase("false", typeof(bool), "M", 5)]
+    [TestCase("2001-01-01", typeof(DateTime), "F", 27)]
+    [TestCase("2001-01-01", typeof(DateTime), "FingersMcNultyFishBonesdlsiea", 29)]
     public void TestGuesser_FallbackOntoStringLength(string legitType, Type expectedLegitType, string str, int expectedLength)
     {
         var t = new Guesser();

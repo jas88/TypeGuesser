@@ -8,7 +8,7 @@ namespace TypeGuesser;
 /// guesser must be of a consistent format (either all typed or all untyped).
 /// </summary>
 [Serializable]
-public class MixedTypingException:Exception
+public class MixedTypingException : Exception
 {
     private readonly string? _message;
 
@@ -39,7 +39,7 @@ public class MixedTypingException:Exception
     /// </summary>
     /// <param name="message"></param>
     /// <param name="ex"></param>
-    public MixedTypingException(string message, Exception? ex):base(message,ex)
+    public MixedTypingException(string message, Exception? ex) : base(message, ex)
     {
         _message = message;
     }

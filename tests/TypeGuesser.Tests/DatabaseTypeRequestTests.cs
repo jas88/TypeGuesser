@@ -9,7 +9,7 @@ internal sealed class DatabaseTypeRequestTests
     public void Test_Max_WithUnicode()
     {
         var max = DatabaseTypeRequest.Max(
-            new DatabaseTypeRequest(typeof(string), 1){Unicode = true},
+            new DatabaseTypeRequest(typeof(string), 1) { Unicode = true },
             new DatabaseTypeRequest(typeof(string), 2)
         );
 

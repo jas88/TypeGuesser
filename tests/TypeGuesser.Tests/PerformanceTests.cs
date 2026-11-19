@@ -60,7 +60,7 @@ public sealed class PerformanceTests
 
         foreach (var s in inputs)
         {
-            decimal.TryParse(s,NumberStyles.Any,culture,out _ );
+            decimal.TryParse(s, NumberStyles.Any, culture, out _);
         }
 
         sw.Stop();

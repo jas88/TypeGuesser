@@ -225,7 +225,8 @@ public ref struct StackTypeAccumulator
 
         // Track string width
         var width = beforeDecimal + afterDecimal + (afterDecimal > 0 ? 1 : 0); // +1 for decimal point
-        if (value < 0) width++; // +1 for negative sign
+        if (value < 0)
+            width++; // +1 for negative sign
         _maxStringWidth = Math.Max(_maxStringWidth, width);
     }
 
