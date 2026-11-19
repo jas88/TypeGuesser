@@ -4,13 +4,13 @@
 		<PackageId>TypeGuesser</PackageId>
 		<Authors>Health Informatics Centre - University of Dundee</Authors>
 		<Company>Health Informatics Centre - University of Dundee</Company>
-		<PackageProjectUrl>https://github.com/HicServices/TypeGuesser</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/jas88/TypeGuesser</PackageProjectUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Description>Guess the C# Types for a untyped strings e.g. "12.123"</Description>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<IsTrimmable>true</IsTrimmable>
 		<IsAotCompatible>true</IsAotCompatible>
-		<RepositoryUrl>https://github.com/HicServices/TypeGuesser/</RepositoryUrl>
+		<RepositoryUrl>https://github.com/jas88/TypeGuesser</RepositoryUrl>
 		<NeutralLanguage>en-GB</NeutralLanguage>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
@@ -24,5 +24,5 @@
 		<PackageReference Include="Microsoft.Extensions.ObjectPool" />
 	</ItemGroup>
 
-	
+
 </Project>
