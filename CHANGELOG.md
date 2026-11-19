@@ -6,6 +6,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-11-17
+
+### Changed
+
+- **Target frameworks**: TypeGuesser now targets net10.0 and net11.0. net8.0 and net9.0 are no longer built, because both reached end of life on 2026-11-10. Consumers on net8.0 or net9.0 must stay on 2.0.4
+- **Microsoft.Extensions.ObjectPool**: Updated from 10.0.0 to 11.0.0
+- **Breaking: decider members renamed**: The protected abstract members of `DecideTypesForStrings<T>` are now `CloneCore`, `ParseCore` and `IsAcceptableAsTypeCore` (previously `CloneImpl`, `ParseImpl` and `IsAcceptableAsTypeImpl`). Custom deciders derived from it, or from `DateTimeTypeDecider`, must rename their overrides
+- **Breaking: fields are now properties**: `DecimalSize.NumbersBeforeDecimalPlace`, `DecimalSize.NumbersAfterDecimalPlace` and `TypeDeciderFactory.Dictionary`
+  - Code using them still compiles unless it passes them by `ref` or `out`, but an assembly compiled against 2.0.x that reads them throws `MissingFieldException` until it is rebuilt against this version. The assembly version is still 2.0.0.0, so nothing fails when it loads
+  - FAnsiSql 3.8.0 reads all three, so it must not be used with this version, although its dependency on TypeGuesser 2.0.4 or later allows it
+- **TimeSpan parsing culture**: `TimeSpanTypeDecider`, and so `Guesser.Parse` when the guess is `TimeSpan`, parses with the decider's `Culture` instead of the current thread culture. Whether a string is accepted as a `TimeSpan` is still decided with the current thread culture, so when the two differ a value can be guessed as a `TimeSpan` that `Parse` then rejects, e.g. `"13.30.00"` on a fi-FI thread with an en-US `Guesser`
+
+### Fixed
+
+- **Guesser(DatabaseTypeRequest)**: A `Guesser` starts from the width, decimal size and Unicode flag of its request again, as documented and as in v1.x
+  - Since v2.0.0 only the request's `CSharpType` was kept, because `Guess` is rebuilt from the values seen so far. Before seeing a value, the `Guesser` of an `nvarchar(10)` column guessed a non-Unicode string of no width, FAnsiSql turned the guess for an `nvarchar(max)` column into `varchar(4000)`, and a `decimal(10,5)` column started from an empty decimal size. Code that resizes columns to fit new data, such as RDMP's upload destination, could therefore try to shrink a decimal column or turn an `nvarchar` column into a `varchar`
+  - Values seen afterwards only widen the guess and never shrink it below the request, and a Unicode request stays Unicode. A hard typed `int` no longer resets the digits after the decimal point to 0
+  - The request is not counted as a value seen: the values seen, the mixed typing checks and which values are accepted are unchanged
+  - A negative request width (FAnsiSql uses -1 for types without a string length) is ignored
+  - Added `PooledBuilder.SetInitialSize(IDataTypeSize)`, which the constructor calls together with `SetInitialTypeHint`
+- **Digits of negative whole numbers**: `IntTypeDecider` counted the digits of a negative number from its string in the current thread culture, so it counted one digit too many where that culture's negative sign is not `-` (e.g. the U+2212 minus sign of sv-SE). It now uses the invariant culture
+
 ## [2.0.4] - 2025-11-27
 
 ### Changed
@@ -264,7 +286,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial port of content from [FAnsiSql](https://github.com/jas88/FAnsiSql)
 
-[Unreleased]: https://github.com/jas88/TypeGuesser/compare/v2.0.4...main
+[Unreleased]: https://github.com/jas88/TypeGuesser/compare/v2.1.0...main
+[2.1.0]: https://github.com/jas88/TypeGuesser/compare/v2.0.4...v2.1.0
 [2.0.4]: https://github.com/jas88/TypeGuesser/compare/v2.0.3...v2.0.4
 [2.0.3]: https://github.com/jas88/TypeGuesser/compare/v2.0.2...v2.0.3
 [2.0.2]: https://github.com/jas88/TypeGuesser/compare/v2.0.1...v2.0.2
