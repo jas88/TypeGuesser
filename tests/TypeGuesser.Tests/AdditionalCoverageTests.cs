@@ -183,13 +183,89 @@ namespace TypeGuesser.Tests
                 "unknown",
                 "2",
                 "onoff",
-                "yesno"
+                "yesno",
+                // Words of each length (2-4) that the parser checks for special values
+                "ok",
+                "nah",
+                "nope"
             };
 
             foreach (var input in invalidInputs)
             {
                 Assert.Throws<FormatException>(() => decider.Parse(input.AsSpan()));
             }
+        }
+
+        [Test]
+        public void BoolTypeDecider_Parse_MinusOneIsFalse()
+        {
+            var decider = new TypeGuesser.Deciders.BoolTypeDecider(CultureInfo.InvariantCulture);
+
+            Assert.That(decider.Parse("-1".AsSpan()), Is.EqualTo(false));
+        }
+
+        [Test]
+        public void DecimalTypeDecider_WithNullCulture_UsesCurrentCulture()
+        {
+            var decider = new TypeGuesser.Deciders.DecimalTypeDecider(null);
+
+            Assert.That(decider.Culture, Is.EqualTo(CultureInfo.CurrentCulture));
+        }
+
+        [Test]
+        public void DateTimeTypeDecider_DateTokenThenTimeToken_IsParsed()
+        {
+            // DateTime.TryParse rejects backslash date separators, so this needs the fallback
+            // that parses the first token as a date and the rest as a time
+            var decider = new TypeGuesser.Deciders.DateTimeTypeDecider(CultureInfo.InvariantCulture);
+            const string value = @"2019\02\13 21:34";
+
+            Assert.That(decider.IsAcceptableAsType(value.AsSpan(), null), Is.True);
+            Assert.That(decider.Parse(value.AsSpan()), Is.EqualTo(new DateTime(2019, 2, 13, 21, 34, 0)));
+        }
+
+        [Test]
+        public void DateTimeTypeDecider_DateTokenThenNonTime_IsNotADate()
+        {
+            var decider = new TypeGuesser.Deciders.DateTimeTypeDecider(CultureInfo.InvariantCulture);
+            const string value = @"2019\02\13 nonsense";
+
+            Assert.That(decider.IsAcceptableAsType(value.AsSpan(), null), Is.False);
+            Assert.Throws<FormatException>(() => decider.Parse(value.AsSpan()));
+        }
+
+        [Test]
+        public void DateTimeTypeDecider_EmptyString_IsNotADate()
+        {
+            var decider = new TypeGuesser.Deciders.DateTimeTypeDecider(CultureInfo.InvariantCulture);
+
+            Assert.That(decider.IsAcceptableAsType(ReadOnlySpan<char>.Empty, null), Is.False);
+        }
+
+        [Test]
+        public void Guesser_AdjustToCompensateForValues_ReadsEveryRowOfTheColumn()
+        {
+            using var table = new DataTable();
+            var column = table.Columns.Add("Values", typeof(string));
+            table.Rows.Add("1");
+            table.Rows.Add("2.5");
+
+            using var guesser = new Guesser();
+            guesser.AdjustToCompensateForValues(column);
+
+            Assert.That(guesser.Guess.CSharpType, Is.EqualTo(typeof(decimal)));
+        }
+
+        [Test]
+        public void Guesser_AdjustToCompensateForValues_IgnoresAColumnWithoutATable()
+        {
+            using var column = new DataColumn("Values", typeof(string));
+            using var guesser = new Guesser();
+            using var untouched = new Guesser();
+
+            guesser.AdjustToCompensateForValues(column);
+
+            Assert.That(guesser.Guess, Is.EqualTo(untouched.Guess));
         }
 
         [Test]

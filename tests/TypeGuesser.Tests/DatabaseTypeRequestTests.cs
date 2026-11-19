@@ -19,4 +19,12 @@ internal sealed class DatabaseTypeRequestTests
             Assert.That(max.Unicode, Is.True, "If either arg in a Max call is Unicode then the resulting maximum should be Unicode=true");
         });
     }
+
+    [Test]
+    public void Test_Equals_WithAnotherType()
+    {
+        var request = new DatabaseTypeRequest(typeof(string), 10);
+
+        Assert.That(request.Equals(new object()), Is.False, "A DatabaseTypeRequest should never equal an object of another type");
+    }
 }

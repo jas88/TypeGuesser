@@ -342,6 +342,26 @@ namespace TypeGuesser.Tests
         }
 
         [Test]
+        public void TypedEquals_WithNull_ReturnsFalse()
+        {
+            // Arrange
+            var size = new DecimalSize(5, 3);
+
+            // Act & Assert (IEquatable<DecimalSize>.Equals rather than object.Equals)
+            Assert.That(size.Equals((DecimalSize?)null), Is.False);
+        }
+
+        [Test]
+        public void ObjectEquals_WithSameReference_ReturnsTrue()
+        {
+            // Arrange
+            var size = new DecimalSize(5, 3);
+
+            // Act & Assert (object.Equals rather than IEquatable<DecimalSize>.Equals)
+            Assert.That(size.Equals((object)size), Is.True);
+        }
+
+        [Test]
         public void GetHashCode_WithSameProperties_ReturnsSameHashCode()
         {
             // Arrange
