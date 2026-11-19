@@ -6,10 +6,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
-
-- **CI/CD**: Tag builds publish to nuget.org with Trusted Publishing (OIDC) instead of a long-lived API key. A separate `publish` job, the only job allowed to request an OIDC token, pushes the package and its symbol package once the build and tests have passed
-
 ## [2.1.0] - 2026-11-17
 
 ### Changed
@@ -21,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Code using them still compiles unless it passes them by `ref` or `out`, but an assembly compiled against 2.0.x that reads them throws `MissingFieldException` until it is rebuilt against this version. The assembly version is still 2.0.0.0, so nothing fails when it loads
   - FAnsiSql 3.8.0 reads all three, so it must not be used with this version, although its dependency on TypeGuesser 2.0.4 or later allows it
 - **TimeSpan parsing culture**: `TimeSpanTypeDecider`, and so `Guesser.Parse` when the guess is `TimeSpan`, parses with the decider's `Culture` instead of the current thread culture. Whether a string is accepted as a `TimeSpan` is still decided with the current thread culture, so when the two differ a value can be guessed as a `TimeSpan` that `Parse` then rejects, e.g. `"13.30.00"` on a fi-FI thread with an en-US `Guesser`
+- **CI/CD**: Pushing a `v` tag publishes to nuget.org with Trusted Publishing (OIDC) instead of a long-lived API key. A separate `publish` job, the only job allowed to request an OIDC token, pushes the package and its symbol package once the build and tests have passed. Other tags no longer publish or attach packages to a GitHub release
 
 ### Fixed
 
