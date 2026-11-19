@@ -11,7 +11,7 @@ namespace TypeGuesser;
 /// </summary>
 public class DatabaseTypeRequest : IDataTypeSize
 {
-    private static readonly Type[] _preferenceOrderArray =
+    private static readonly Type[] PreferenceOrderArray =
     [
         typeof(bool),
         typeof(int),
@@ -33,13 +33,13 @@ public class DatabaseTypeRequest : IDataTypeSize
     /// Any input string of unknown Type will be assignable to one of the following C# data types.  The order denotes system wide which
     /// data types to try  converting the string into in order of preference.  For the implementation of this see <see cref="Guesser"/>.
     /// </summary>
-    public static readonly ReadOnlyCollection<Type> PreferenceOrder = new(_preferenceOrderArray);
+    public static readonly ReadOnlyCollection<Type> PreferenceOrder = new(PreferenceOrderArray);
 
     /// <summary>
     /// Fast O(1) lookup for type index in PreferenceOrder.
     /// </summary>
     public static readonly FrozenDictionary<Type, int> PreferenceOrderIndex =
-        _preferenceOrderArray.Select((type, index) => new { type, index })
+        PreferenceOrderArray.Select((type, index) => new { type, index })
             .ToFrozenDictionary(x => x.type, x => x.index);
 
     private int? _maxWidthForStrings;
