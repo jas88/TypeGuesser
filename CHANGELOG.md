@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **CI/CD**: Tag builds publish to nuget.org with Trusted Publishing (OIDC) instead of a long-lived API key. A separate `publish` job, the only job allowed to request an OIDC token, pushes the package and its symbol package once the build and tests have passed
+
 ## [2.1.0] - 2026-11-17
 
 ### Changed
