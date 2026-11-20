@@ -21,6 +21,7 @@ public sealed class BoolTypeDecider(CultureInfo culture) : DecideTypesForStrings
     /// <inheritdoc />
     protected override object? ParseCore(ReadOnlySpan<char> value)
     {
+        // Takes "true" and "false" in any case, trimming whitespace and '\0', so the switch below doesn't need them
         if (bool.TryParse(value, out var sysResult))
             return sysResult;
 
@@ -37,9 +38,7 @@ public sealed class BoolTypeDecider(CultureInfo culture) : DecideTypesForStrings
             3 => value.Equals("yes", StringComparison.OrdinalIgnoreCase) ||
                 value.Equals(".t.", StringComparison.OrdinalIgnoreCase) ? true :
                 value.Equals(".f.", StringComparison.OrdinalIgnoreCase) ? false : null,
-            4 => value.Equals("true", StringComparison.OrdinalIgnoreCase) ? true :
-                value.Equals("nein", StringComparison.OrdinalIgnoreCase) ? false : null,
-            5 => value.Equals("false", StringComparison.OrdinalIgnoreCase) ? false : null,
+            4 => value.Equals("nein", StringComparison.OrdinalIgnoreCase) ? false : null,
             _ => null
         };
         return b ?? throw new FormatException("Invalid bool");
@@ -63,6 +62,7 @@ public sealed class BoolTypeDecider(CultureInfo culture) : DecideTypesForStrings
         if (!Settings.CharCanBeBoolean && strippedString.Length == 1 && char.IsAsciiLetter(strippedString[0]))
             return false;
 
+        // As in ParseCore, bool.TryParse covers "true" and "false"
         return bool.TryParse(candidateString, out _) || candidateString.Length switch
         {
             1 => "1tTyYjJ0fFnN".Contains(candidateString[0]),
@@ -72,9 +72,7 @@ public sealed class BoolTypeDecider(CultureInfo culture) : DecideTypesForStrings
             3 => candidateString.Equals("yes", StringComparison.OrdinalIgnoreCase) ||
                  candidateString.Equals(".t.", StringComparison.OrdinalIgnoreCase) ||
                  candidateString.Equals(".f.", StringComparison.OrdinalIgnoreCase),
-            4 => candidateString.Equals("true", StringComparison.OrdinalIgnoreCase) ||
-                 candidateString.Equals("nein", StringComparison.OrdinalIgnoreCase),
-            5 => candidateString.Equals("false", StringComparison.OrdinalIgnoreCase),
+            4 => candidateString.Equals("nein", StringComparison.OrdinalIgnoreCase),
             _ => false
         };
     }

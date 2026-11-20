@@ -204,6 +204,43 @@ namespace TypeGuesser.Tests
             Assert.That(decider.Parse("-1".AsSpan()), Is.EqualTo(false));
         }
 
+        // bool.TryParse takes "true" and "false" in any case, trimming whitespace and '\0'; "nein" is the decider's own
+        [TestCase("true", true)]
+        [TestCase("false", false)]
+        [TestCase(" TRUE ", true)]
+        [TestCase("False\t", false)]
+        [TestCase("\0true", true)]
+        [TestCase("nein", false)]
+        public void BoolTypeDecider_TrueFalseOrNein_IsBool(string value, bool expected)
+        {
+            var decider = new TypeGuesser.Deciders.BoolTypeDecider(CultureInfo.InvariantCulture);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(decider.IsAcceptableAsType(value.AsSpan(), null), Is.True);
+                Assert.That(decider.Parse(value.AsSpan()), Is.EqualTo(expected));
+            });
+        }
+
+        // Includes "false" spelt with a long s (U+017F), which OrdinalIgnoreCase does not treat as an 's'
+        [TestCase("trux")]
+        [TestCase("fals")]
+        [TestCase("nain")]
+        [TestCase("truer")]
+        [TestCase("falsy")]
+        [TestCase("neinn")]
+        [TestCase("fal\u017Fe")]
+        public void BoolTypeDecider_OtherFourOrFiveLetterWord_IsNotBool(string value)
+        {
+            var decider = new TypeGuesser.Deciders.BoolTypeDecider(CultureInfo.InvariantCulture);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(decider.IsAcceptableAsType(value.AsSpan(), null), Is.False);
+                Assert.Throws<FormatException>(() => decider.Parse(value.AsSpan()));
+            });
+        }
+
         [Test]
         public void DecimalTypeDecider_WithNullCulture_UsesCurrentCulture()
         {

@@ -73,17 +73,7 @@ internal static class TypeGuesserBuilderPool
     /// <returns>A cached or newly created type decider factory</returns>
     internal static TypeDeciderFactory GetOrCreateDeciderFactory(CultureInfo culture)
     {
-        return DeciderFactoryCache.GetOrAdd(
-            culture ?? CultureInfo.CurrentCulture,
-            c => new TypeDeciderFactory(c));
-    }
-
-    /// <summary>
-    /// Clears all cached type decider factories. Useful for testing or memory cleanup.
-    /// </summary>
-    internal static void ClearCache()
-    {
-        DeciderFactoryCache.Clear();
+        return DeciderFactoryCache.GetOrAdd(culture, c => new TypeDeciderFactory(c));
     }
 
     /// <summary>
@@ -104,14 +94,9 @@ internal static class TypeGuesserBuilderPool
         /// Resets a <see cref="PooledBuilder"/> when it's returned to the pool.
         /// </summary>
         /// <param name="obj">The builder to reset</param>
-        /// <returns>True to return the object to the pool, false to discard it</returns>
+        /// <returns>Always true, so the pool may keep the builder</returns>
         public bool Return(PooledBuilder obj)
         {
-            if (obj == null)
-            {
-                return false;
-            }
-
             obj.Reset();
             return true;
         }
