@@ -16,7 +16,7 @@ TypeGuesser v2.0 introduces significant performance improvements and thread-safe
 
 TypeGuesser v2.0 offers three migration levels depending on your performance needs:
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │  Level 1: Zero Code Changes                                     │
 │  Just upgrade package - automatic optimizations applied         │
@@ -323,17 +323,17 @@ public void ProcessData(int[] data)
 
 ## API Compatibility Matrix
 
-| Feature                          | v1.x | v2.0 Level 1 | v2.0 Level 2 | v2.0 Level 3 |
-|----------------------------------|------|--------------|--------------|--------------|
-| String-based guessing            | ✓    | ✓            | ✓            | ✓*           |
-| Hard-typed value guessing        | ✓    | ✓            | ✓ (opt)      | ✓            |
-| Thread-safe operations           | ✗    | ✓            | ✓            | ✗**          |
-| Zero-allocation int processing   | ✗    | ✗            | ✓            | ✓            |
-| Zero-allocation decimal processing| ✗    | ✗            | ✓            | ✓            |
-| Object pooling                   | ✗    | ✓            | ✓            | N/A          |
-| Async/await support              | ✓    | ✓            | ✓            | ✗            |
-| Store across method boundaries   | ✓    | ✓            | ✓            | ✗            |
-| DataTable integration            | ✓    | ✓            | ✓            | ✗            |
+| Feature                            | v1.x | v2.0 Level 1 | v2.0 Level 2 | v2.0 Level 3 |
+| ---------------------------------- | ---- | ------------ | ------------ | ------------ |
+| String-based guessing              | ✓    | ✓            | ✓            | ✓*           |
+| Hard-typed value guessing          | ✓    | ✓            | ✓ (opt)      | ✓            |
+| Thread-safe operations             | ✗    | ✓            | ✓            | ✗**          |
+| Zero-allocation int processing     | ✗    | ✗            | ✓            | ✓            |
+| Zero-allocation decimal processing | ✗    | ✗            | ✓            | ✓            |
+| Object pooling                     | ✗    | ✓            | ✓            | N/A          |
+| Async/await support                | ✓    | ✓            | ✓            | ✗            |
+| Store across method boundaries     | ✓    | ✓            | ✓            | ✗            |
+| DataTable integration              | ✓    | ✓            | ✓            | ✗            |
 
 \* Via ReadOnlySpan overload
 \*\* Use separate instance per thread
@@ -375,7 +375,7 @@ All existing code will continue to work without modifications. The new features 
 
 ## Migration Decision Tree
 
-```
+```text
 Do you process hard-typed values (int/decimal/bool)?
 │
 ├─ YES ─→ Do you need async/await or cross-method storage?
@@ -582,7 +582,7 @@ public void VerifyStackTypeAccumulator()
   - `ZERO-ALLOCATION-GUIDE.md` - Deep dive into allocation-free design
   - `THREAD-SAFETY.md` - Thread-safety implementation details
   - `API-LAYERS.md` - Complete API reference for all three layers
-- **Issues**: Report problems at https://github.com/HicServices/TypeGuesser/issues
+- **Issues**: Report problems at <https://github.com/HicServices/TypeGuesser/issues>
 - **Benchmarks**: See `Tests/PerformanceTests.cs` for performance benchmarks
 - **Examples**: See `Tests/GuesserTests.cs` for usage examples
 

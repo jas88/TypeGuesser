@@ -338,18 +338,21 @@ public async Task ProcessAsync()
 
 ## When to Choose Each API
 
-### Use `ZeroAlloc.GuessIntegers/Decimals/Booleans` when:
+### Use `ZeroAlloc.GuessIntegers/Decimals/Booleans` when
+
 - ✅ Processing a single array of uniform type
 - ✅ Want simplest possible API
 - ✅ Don't need intermediate results
 
-### Use `StackTypeAccumulator` when:
+### Use `StackTypeAccumulator` when
+
 - ✅ Processing multiple batches
 - ✅ Need to check intermediate results
 - ✅ Processing mixed types that might upgrade
 - ✅ Want maximum control
 
-### Use Standard `Guesser` when:
+### Use Standard `Guesser` when
+
 - ✅ Processing strings from CSV/text files
 - ✅ Need to store state across methods
 - ✅ Working with async/await
@@ -422,6 +425,7 @@ var finalResult = accumulator.GetResult();
 ### Error: "Cannot use ref struct in async method"
 
 **Problem:**
+
 ```csharp
 public async Task ProcessAsync()
 {
@@ -431,6 +435,7 @@ public async Task ProcessAsync()
 ```
 
 **Solution:** Use synchronous processing or standard Guesser API
+
 ```csharp
 public Task<TypeGuessResult> ProcessAsync()
 {
@@ -446,11 +451,13 @@ public Task<TypeGuessResult> ProcessAsync()
 ### Error: "Cannot convert to interface"
 
 **Problem:**
+
 ```csharp
 IEnumerable<StackTypeAccumulator> list;  // ❌ Error
 ```
 
 **Solution:** Use TypeGuessResult instead (it's a normal struct)
+
 ```csharp
 IEnumerable<TypeGuessResult> results;  // ✅ OK
 ```

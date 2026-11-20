@@ -48,6 +48,7 @@ dotnet run -c Release --project benchmarks/TypeGuesser.Benchmarks.csproj -- quic
 **Purpose**: Prove zero-allocation performance claims for hard-typed inputs.
 
 **Key Tests**:
+
 - `ProcessHardTypedIntegers` - BASELINE, proves zero allocations
 - `ProcessIntegerStrings` - Comparison showing string parsing allocations
 - `ProcessHardTypedDecimals` - Proves zero allocations for decimals
@@ -59,7 +60,8 @@ dotnet run -c Release --project benchmarks/TypeGuesser.Benchmarks.csproj -- quic
 **Dataset Sizes**: 1K, 10K, 100K, 1M items
 
 **Expected Results**:
-```
+
+```text
 Method                              | Mean      | Allocated
 ----------------------------------- | --------- | ---------
 ProcessHardTypedIntegers (1M items) | 5.234 ms  | 96 B      ← ZERO allocations!
@@ -68,6 +70,7 @@ ProcessHardTypedDecimals (1M items) | 5.891 ms  | 96 B      ← ZERO allocations
 ```
 
 **Key Metrics**:
+
 - **Gen0/Gen1/Gen2 Collections**: Should be 0 for hard-typed paths
 - **Allocated Memory**: ~96 bytes (Guesser instance only)
 - **Speedup**: 2-3× faster than string processing
@@ -79,26 +82,31 @@ ProcessHardTypedDecimals (1M items) | 5.891 ms  | 96 B      ← ZERO allocations
 **Test Groups**:
 
 #### Throughput Tests
+
 - All data types (bool, int, decimal, TimeSpan, DateTime)
 - Both hard-typed and string versions
 - Demonstrates performance delta between typed/untyped processing
 
 #### Culture Comparison
+
 - InvariantCulture vs en-US vs de-DE
 - Shows culture impact on string parsing
 - Hard-typed inputs unaffected by culture
 
 #### Parse Performance
+
 - Converting strings to hard types after guessing
 - End-to-end CSV processing scenario
 - Parse throughput for all supported types
 
 #### GuessSettings Impact
+
 - Default settings vs custom configurations
 - CharCanBeBoolean option performance
 - Settings validation overhead
 
 #### Real-World Scenarios
+
 - `ScenarioDataTableWithNulls` - 90% valid data, 10% nulls
 - `ScenarioCsvWithWhitespace` - Whitespace-padded values
 - `ScenarioMixedWithFallback` - Type refinement and fallback
@@ -107,7 +115,8 @@ ProcessHardTypedDecimals (1M items) | 5.891 ms  | 96 B      ← ZERO allocations
 **Dataset Sizes**: 1K, 10K, 100K, 1M items
 
 **Expected Results**:
-```
+
+```text
 Method                          | Mean (1M items) | Ratio
 ------------------------------- | --------------- | -----
 ThroughputHardTypedIntegers     | 5.2 ms          | 1.00x (baseline)
@@ -124,31 +133,37 @@ ParseIntegerStrings             | 22.4 ms         | 4.31x
 **Patterns Tested**:
 
 #### ✅ Thread-Local Instances (RECOMMENDED)
+
 - Each thread creates its own Guesser
 - Zero contention, maximum parallelism
 - **Best performance** - baseline for comparison
 
 #### Object Pooling
+
 - ConcurrentBag-based pooling
 - Reduces allocation pressure
 - Shows pooling overhead vs benefits
 
 #### Partitioned Batch Processing
+
 - Process data in chunks
 - Each chunk gets its own Guesser
 - Simulates batch processing scenarios
 
 #### Work Stealing
+
 - Threads consume work from shared queue
 - Tests concurrent queue operations
 - Dynamic load balancing
 
 #### ⚠️ Shared Guesser with Lock (ANTI-PATTERN)
+
 - Shows why NOT to share Guesser instances
 - Demonstrates synchronization overhead
 - Included for educational comparison
 
 **Real-World Scenarios**:
+
 - `MultiColumnDataTable` - Parallel column processing
 - `ParallelCsvChunks` - Parallel file processing
 - `ProducerConsumer` - Streaming data pattern
@@ -157,7 +172,8 @@ ParseIntegerStrings             | 22.4 ms         | 4.31x
 **Items per Thread**: 10K, 100K
 
 **Expected Results**:
-```
+
+```text
 Method                              | Threads | Mean      | Ratio
 ----------------------------------- | ------- | --------- | -----
 ThreadLocalInstances                | 16      | 8.2 ms    | 1.00x (baseline)
@@ -169,6 +185,7 @@ SequentialProcessing                | 16      | 82.4 ms   | 10.05x
 ```
 
 **Key Findings**:
+
 - Thread-local instances scale linearly
 - Shared instance with lock is **15× slower**
 - Producer-consumer effective for streaming
@@ -190,6 +207,7 @@ BenchmarkDotNet reports several memory metrics:
 ### Zero-Allocation Proof
 
 For hard-typed processing, you should see:
+
 - **Allocated: 96 B** (just the Guesser instance)
 - **Gen0: 0** (no garbage collections)
 - **Gen1: 0** (no generation 1 collections)
@@ -200,6 +218,7 @@ This proves the zero-allocation claim for processing hard-typed values.
 ### Performance Comparison
 
 Hard-typed processing vs string processing typically shows:
+
 - **2-3× faster execution**
 - **99.9% less memory allocated**
 - **Zero GC pressure** vs continuous allocations
@@ -218,12 +237,14 @@ Benchmark results are saved to `BenchmarkDotNet.Artifacts/results/`:
 ### What to Look For
 
 ✅ **Good Signs**:
+
 - Hard-typed: Allocated ≈ 96 bytes
 - Hard-typed: Gen0/Gen1/Gen2 all zero
 - Hard-typed: 2-3× faster than string parsing
 - Thread-local: Scales linearly with thread count
 
 ❌ **Bad Signs**:
+
 - Hard-typed: Allocated > 1 KB
 - Hard-typed: Gen0 > 0
 - Thread-local: Doesn't scale with threads
@@ -232,6 +253,7 @@ Benchmark results are saved to `BenchmarkDotNet.Artifacts/results/`:
 ### Baseline Comparisons
 
 Each benchmark group includes baseline tests:
+
 - **AllocationBenchmarks**: `ProcessHardTypedIntegers` is baseline
 - **PerformanceBenchmarks**: Various baselines per test group
 - **ThreadSafetyBenchmarks**: `ThreadLocalInstances` is baseline
@@ -255,6 +277,7 @@ Based on v2.0 design goals:
 ### High Memory Usage
 
 If you see unexpectedly high allocations:
+
 1. Verify you're using hard-typed inputs (not strings)
 2. Check that `IsPrimedWithBonafideType` is true
 3. Ensure no boxing/unboxing in your code
@@ -263,6 +286,7 @@ If you see unexpectedly high allocations:
 ### Slow Performance
 
 If benchmarks run slower than expected:
+
 1. Ensure running in Release mode (`-c Release`)
 2. Close other applications (reduce CPU contention)
 3. Disable antivirus real-time scanning temporarily
@@ -271,6 +295,7 @@ If benchmarks run slower than expected:
 ### Build Errors
 
 If benchmarks won't compile:
+
 1. Verify .NET 8.0 or 9.0 SDK installed (`dotnet --version`)
 2. Restore packages (`dotnet restore`)
 3. Clean and rebuild (`dotnet clean && dotnet build`)
@@ -280,16 +305,19 @@ If benchmarks won't compile:
 ### Why These Tests?
 
 **Allocation Benchmarks**:
+
 - Directly tests the zero-allocation claim
 - Compares with string baseline to show improvement
 - Tests real-world scenarios (nulls, fallback)
 
 **Performance Benchmarks**:
+
 - Measures throughput across all type categories
 - Tests configuration impact
 - Validates performance across data sizes
 
 **Thread-Safety Benchmarks**:
+
 - Identifies optimal parallel patterns
 - Shows anti-patterns to avoid
 - Tests real-world concurrent scenarios
@@ -297,6 +325,7 @@ If benchmarks won't compile:
 ### Dataset Sizes
 
 We test with 1K, 10K, 100K, and 1M items:
+
 - **1K**: Quick validation, representative of small tables
 - **10K**: Typical CSV file size
 - **100K**: Large CSV/DataTable scenarios
@@ -305,6 +334,7 @@ We test with 1K, 10K, 100K, and 1M items:
 ### Accuracy
 
 BenchmarkDotNet provides:
+
 - Multiple warmup iterations (eliminates JIT bias)
 - Multiple measurement iterations (statistical significance)
 - Outlier detection and removal

@@ -22,17 +22,17 @@ TypeGuesser v2.0 delivers **10-50x performance improvements** for hard-typed val
 
 ### Key Improvements
 
-| Metric                        | v1.x Baseline | v2.0 Improvement | Best Case |
-|-------------------------------|---------------|------------------|-----------|
-| **Integer Processing Speed**  | 850 ms        | 18.9x faster     | 30.4x faster (Layer 3) |
-| **Decimal Processing Speed**  | 1,200 ms      | 10.0x faster     | 14.1x faster (Layer 3) |
-| **Memory Allocations**        | 76 MB         | 100% reduction   | 0 bytes allocated |
-| **GC Collections**            | 145/12/1      | 98% reduction    | 0/0/0 (Layer 3) |
-| **Thread Safety**             | Manual locks  | Built-in         | Zero overhead |
+| Metric                       | v1.x Baseline | v2.0 Improvement | Best Case              |
+| ---------------------------- | ------------- | ---------------- | ---------------------- |
+| **Integer Processing Speed** | 850 ms        | 18.9x faster     | 30.4x faster (Layer 3) |
+| **Decimal Processing Speed** | 1,200 ms      | 10.0x faster     | 14.1x faster (Layer 3) |
+| **Memory Allocations**       | 76 MB         | 100% reduction   | 0 bytes allocated      |
+| **GC Collections**           | 145/12/1      | 98% reduction    | 0/0/0 (Layer 3)        |
+| **Thread Safety**            | Manual locks  | Built-in         | Zero overhead          |
 
 ### Performance by Layer
 
-```
+```text
 Layer 1 (String):    1,650 ns/op  ████████████████
 Layer 2 (Typed):        45 ns/op  █
 Layer 3 (Stack):        28 ns/op  ▌
@@ -82,12 +82,12 @@ Processing 1 million values of each type.
 
 ### Integer Processing
 
-| Version/Layer | Time     | Ops/sec   | Speedup | Allocations |
-|---------------|----------|-----------|---------|-------------|
-| v1.x (string) | 850 ms   | 1.18 M/s  | 1.0x    | 76 MB       |
-| v2.0 Layer 1  | 700 ms   | 1.43 M/s  | 1.2x    | 38 MB       |
-| v2.0 Layer 2  | 45 ms    | 22.2 M/s  | **18.9x** | 0 bytes   |
-| v2.0 Layer 3  | 28 ms    | 35.7 M/s  | **30.4x** | 0 bytes   |
+| Version/Layer | Time   | Ops/sec  | Speedup   | Allocations |
+| ------------- | ------ | -------- | --------- | ----------- |
+| v1.x (string) | 850 ms | 1.18 M/s | 1.0x      | 76 MB       |
+| v2.0 Layer 1  | 700 ms | 1.43 M/s | 1.2x      | 38 MB       |
+| v2.0 Layer 2  | 45 ms  | 22.2 M/s | **18.9x** | 0 bytes     |
+| v2.0 Layer 3  | 28 ms  | 35.7 M/s | **30.4x** | 0 bytes     |
 
 **Winner:** Layer 3 - 30.4x faster, zero allocations
 
@@ -124,23 +124,23 @@ public void V2_Layer3_StackIntegers()
 
 ### Decimal Processing
 
-| Version/Layer | Time     | Ops/sec   | Speedup | Allocations |
-|---------------|----------|-----------|---------|-------------|
-| v1.x (string) | 1,200 ms | 833 K/s   | 1.0x    | 152 MB      |
-| v2.0 Layer 1  | 1,100 ms | 909 K/s   | 1.1x    | 76 MB       |
-| v2.0 Layer 2  | 120 ms   | 8.33 M/s  | **10.0x** | 0 bytes   |
-| v2.0 Layer 3  | 85 ms    | 11.8 M/s  | **14.1x** | 0 bytes   |
+| Version/Layer | Time     | Ops/sec  | Speedup   | Allocations |
+| ------------- | -------- | -------- | --------- | ----------- |
+| v1.x (string) | 1,200 ms | 833 K/s  | 1.0x      | 152 MB      |
+| v2.0 Layer 1  | 1,100 ms | 909 K/s  | 1.1x      | 76 MB       |
+| v2.0 Layer 2  | 120 ms   | 8.33 M/s | **10.0x** | 0 bytes     |
+| v2.0 Layer 3  | 85 ms    | 11.8 M/s | **14.1x** | 0 bytes     |
 
 **Winner:** Layer 3 - 14.1x faster, zero allocations
 
 ### Boolean Processing
 
-| Version/Layer | Time     | Ops/sec   | Speedup | Allocations |
-|---------------|----------|-----------|---------|-------------|
-| v1.x (string) | 650 ms   | 1.54 M/s  | 1.0x    | 48 MB       |
-| v2.0 Layer 1  | 550 ms   | 1.82 M/s  | 1.2x    | 24 MB       |
-| v2.0 Layer 2  | 35 ms    | 28.6 M/s  | **18.6x** | 0 bytes   |
-| v2.0 Layer 3  | 22 ms    | 45.5 M/s  | **29.5x** | 0 bytes   |
+| Version/Layer | Time   | Ops/sec  | Speedup   | Allocations |
+| ------------- | ------ | -------- | --------- | ----------- |
+| v1.x (string) | 650 ms | 1.54 M/s | 1.0x      | 48 MB       |
+| v2.0 Layer 1  | 550 ms | 1.82 M/s | 1.2x      | 24 MB       |
+| v2.0 Layer 2  | 35 ms  | 28.6 M/s | **18.6x** | 0 bytes     |
+| v2.0 Layer 3  | 22 ms  | 45.5 M/s | **29.5x** | 0 bytes     |
 
 **Winner:** Layer 3 - 29.5x faster, zero allocations
 
@@ -177,7 +177,7 @@ Single operation performance (microseconds and nanoseconds).
 
 Processing 1 million integers:
 
-```
+```text
 v1.x String Conversion:
 Mean:    850 ns
 Median:  820 ns
@@ -225,7 +225,7 @@ First operation after initialization:
 
 ### GC Collection Counts (1 million operations)
 
-```
+```text
                       Gen 0   Gen 1   Gen 2   Total
 ─────────────────────────────────────────────────────
 v1.x (integers)       145     12      1       158
@@ -242,7 +242,7 @@ Reduction:            98.6%   100%    100%    98.7%
 
 Processing 10 million integers:
 
-```
+```text
 v1.x Memory Usage:
 0s:      10 MB  ████
 5s:      760 MB ████████████████████████████████████████
@@ -262,7 +262,7 @@ Memory saved: 2.2 GB → 5 MB (99.8% reduction)
 
 ### Allocation Hotspots (v1.x Profiling)
 
-```
+```text
 Total allocations for 1M operations: 76 MB
 ├─ ToString() calls:           45 MB (59%)
 ├─ String parsing:             18 MB (24%)
@@ -291,11 +291,11 @@ v2.0 adds internal locking for thread safety. Overhead analysis:
 
 Processing 8 million operations across 8 threads:
 
-| Version       | Time   | Speedup | Efficiency |
-|---------------|--------|---------|------------|
-| v1.x (locked) | 7,200 ms | N/A   | N/A        |
-| v2.0 L2       | 360 ms   | 20x   | 100%       |
-| v2.0 L3 (per-thread) | 224 ms | 32x | 100%       |
+| Version              | Time     | Speedup | Efficiency |
+| -------------------- | -------- | ------- | ---------- |
+| v1.x (locked)        | 7,200 ms | N/A     | N/A        |
+| v2.0 L2              | 360 ms   | 20x     | 100%       |
+| v2.0 L3 (per-thread) | 224 ms   | 32x     | 100%       |
 
 **v2.0 scales linearly across threads with built-in safety.**
 
@@ -303,7 +303,7 @@ Processing 8 million operations across 8 threads:
 
 8 threads, 1M operations each:
 
-```
+```text
 v1.x (external lock):
 Lock wait time:      2,800 ms (38.9% of total)
 Productive time:     4,400 ms
@@ -323,7 +323,7 @@ Improvement: 20x faster, 186x less lock contention
 
 ### Scenario 1: CSV Import (10,000 rows × 20 columns)
 
-```
+```text
 v1.x Performance:
 Parse CSV:            450 ms
 Type detection:       2,800 ms
@@ -352,13 +352,13 @@ Analyzing 100 tables × 50 columns = 5,000 columns:
 | v2.0 Layer 1| 10.8 seconds  | 190 MB      | Schema DDL     |
 | v2.0 Layer 2| 0.65 seconds  | 5 MB        | Schema DDL     |
 
-**v2.0 Layer 2: 19.2x faster, 98.7% less memory**
+v2.0 Layer 2: 19.2x faster, 98.7% less memory
 
 ### Scenario 3: Real-Time Data Stream Processing
 
 Processing IoT sensor data (10,000 values/second):
 
-```
+```text
 v1.x:
 Throughput:       1,176 values/sec
 Lag:              Accumulates (falls behind)
@@ -387,13 +387,13 @@ Result: v1.x cannot keep up with stream.
 | v2.0 Layer 1 | 2.1s    | 7.0s      | 3.2s  | 12.3s  | 600 MB      |
 | v2.0 Layer 2 | 2.1s    | 0.45s     | 3.2s  | 5.75s  | 80 MB       |
 
-**v2.0 Layer 2: 2.4x faster pipeline, 93% less memory**
+v2.0 Layer 2: 2.4x faster pipeline, 93% less memory
 
 ### Scenario 5: JSON API Response Processing
 
 Processing 1,000 API responses (200 numeric fields each):
 
-```
+```text
 v1.x (parse to string, then guess):
 Deserialization:      120 ms
 Type guessing:        170 ms
@@ -479,14 +479,14 @@ private int[] GenerateIntegers(int count)
 
 ### Recommendations by Use Case
 
-| Use Case                    | Recommended Layer | Expected Improvement |
-|-----------------------------|-------------------|----------------------|
-| CSV/text file processing    | Layer 1           | 1.2x (modest)        |
-| Typed DataTable analysis    | Layer 2           | 10-20x               |
-| JSON API processing         | Layer 2           | 2-10x                |
-| Real-time data streams      | Layer 3           | 20-50x               |
+| Use Case                   | Recommended Layer | Expected Improvement |
+| -------------------------- | ----------------- | -------------------- |
+| CSV/text file processing   | Layer 1           | 1.2x (modest)        |
+| Typed DataTable analysis   | Layer 2           | 10-20x               |
+| JSON API processing        | Layer 2           | 2-10x                |
+| Real-time data streams     | Layer 3           | 20-50x               |
 | ETL pipelines              | Layer 2           | 2-5x end-to-end      |
-| Database schema generation  | Layer 2           | 10-20x               |
+| Database schema generation | Layer 2           | 10-20x               |
 
 ### When to Upgrade
 
@@ -499,6 +499,7 @@ private int[] GenerateIntegers(int count)
 - Real-time requirements demand low latency
 
 **Migration effort:** Minimal
+
 - Level 1: Zero code changes
 - Level 2: Replace `ToString()` with direct typed values
 - Level 3: Refactor to use `StackTypeAccumulator` for hot loops

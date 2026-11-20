@@ -1,4 +1,5 @@
 # Changelog
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
@@ -189,7 +190,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Performance Benchmarks (1 million operations)
 
 | Operation | v1.x | v2.0 | Improvement |
-|-----------|------|------|-------------|
+| ----------- | ------ | ------ | ------------- |
 | String decimals | 1,850 ms | 1,650 ms | 1.1x |
 | Hard-typed integers | 850 ms | 45 ms | **18.9x** |
 | Hard-typed decimals | 1,200 ms | 120 ms | **10.0x** |
@@ -272,6 +273,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.0.3] - 2019-09-10
 
 ### Changed
+
 - Improved performance of guessing decimals
 - Decimal guesser trims trailing zeros (after NumberDecimalSeparator) unless scientific notation is being used
 

@@ -31,7 +31,7 @@ TypeGuesser v2.0 achieves **true zero-allocation performance** for hard-typed in
 
 #### Proving Zero-Allocation Claims
 
-```
+```text
 BenchmarkDotNet v0.14.0
 Runtime: .NET 8.0 (8.0.x), X64 RyuJIT
 ```
@@ -64,7 +64,8 @@ Runtime: .NET 8.0 (8.0.x), X64 RyuJIT
 | ProcessMixedHardTyped               | 1000000 | 6310 μs  | 50 μs   | 47 μs   | 96 B      |
 
 **Memory Diagnostics**:
-```
+
+```text
 Gen0: 0.0000    Gen1: 0.0000    Gen2: 0.0000    ← All hard-typed scenarios
 Gen0: 62.5000   Gen1: 31.2500   Gen2: 0.0000    ← String scenarios (1M items)
 ```
@@ -80,7 +81,7 @@ Gen0: 62.5000   Gen1: 31.2500   Gen2: 0.0000    ← String scenarios (1M items)
 
 #### Throughput Comparison
 
-```
+```text
 Method                          | N       | Mean     | Ratio | RatioSD |
 ------------------------------- | ------- | -------- | ----- | ------- |
 ThroughputHardTypedIntegers     | 1000000 | 5.2 ms   | 1.00  | 0.00    |
@@ -94,6 +95,7 @@ ThroughputStringTimeSpans       | 1000000 | 21.5 ms  | 4.13  | 0.04    |
 ```
 
 **Speedup Factor**:
+
 - Booleans: 2.9× faster
 - Integers: 3.2× faster
 - Decimals: 3.3× faster
@@ -101,7 +103,7 @@ ThroughputStringTimeSpans       | 1000000 | 21.5 ms  | 4.13  | 0.04    |
 
 #### Culture Impact
 
-```
+```text
 Method                          | Mean     | Allocated |
 ------------------------------- | -------- | --------- |
 CultureInvariant                | 19.1 ms  | 32 MB     |
@@ -113,7 +115,7 @@ CultureDeDe (fallback)          | 5.8 ms   | 2 MB      |
 
 #### Parse Performance
 
-```
+```text
 Method                          | Mean     | Allocated |
 ------------------------------- | -------- | --------- |
 ParseIntegerStrings             | 22.4 ms  | 16 MB     |
@@ -125,7 +127,7 @@ ParseTimeSpanStrings            | 28.9 ms  | 20 MB     |
 
 #### Real-World Scenarios
 
-```
+```text
 Method                          | Mean     | Allocated |
 ------------------------------- | -------- | --------- |
 ScenarioDataTableWithNulls      | 5.4 ms   | 96 B      |
@@ -140,7 +142,7 @@ ScenarioProgressiveRefinement   | 2.1 ms   | 3 KB      |
 
 #### Parallel Processing Patterns
 
-```
+```text
 Method                          | Threads | Items/Thread | Mean     | Ratio | Allocated |
 ------------------------------- | ------- | ------------ | -------- | ----- | --------- |
 ThreadLocalInstances            | 4       | 10000        | 52.1 μs  | 1.00  | 384 B     |
@@ -169,24 +171,28 @@ SequentialProcessing            | 16      | 10000        | 835 μs   | 16.03 | 9
 #### Thread Scaling Analysis
 
 **Thread-Local Pattern** (recommended):
+
 - ✅ Near-linear scaling
 - ✅ Minimal allocation overhead
 - ✅ No contention
 - ✅ Best performance
 
 **Object Pooling**:
+
 - ⚠️ 8-22% slower than thread-local
 - ⚠️ Slightly higher allocations
 - ⚠️ ConcurrentBag overhead
 - ℹ️ Marginal benefit for this workload
 
 **Work Stealing**:
+
 - ⚠️ 31-50% slower than thread-local
 - ⚠️ Queue synchronization overhead
 - ⚠️ Higher allocations
 - ℹ️ Better for uneven workloads
 
 **Shared + Lock** (anti-pattern):
+
 - ❌ 6-24× slower than thread-local
 - ❌ Gets worse with more threads
 - ❌ Severe contention
@@ -194,7 +200,7 @@ SequentialProcessing            | 16      | 10000        | 835 μs   | 16.03 | 9
 
 #### Real-World Concurrent Scenarios
 
-```
+```text
 Method                          | Threads | Mean     | Allocated |
 ------------------------------- | ------- | -------- | --------- |
 MultiColumnDataTable            | 4       | 208 μs   | 384 B     |
@@ -254,6 +260,7 @@ ProducerConsumer                | 16      | 334 μs   | 8.4 KB    |
 ### 💡 Best Practices
 
 #### Single-Threaded Processing
+
 ```csharp
 var guesser = new Guesser();
 foreach (var value in hardTypedValues)
@@ -264,6 +271,7 @@ var result = guesser.Guess;
 ```
 
 #### Multi-Column DataTable Processing
+
 ```csharp
 var results = new ConcurrentDictionary<string, DatabaseTypeRequest>();
 
@@ -279,6 +287,7 @@ Parallel.ForEach(dataTable.Columns.Cast<DataColumn>(), column =>
 ```
 
 #### CSV Chunk Processing
+
 ```csharp
 var chunks = PartitionCsvFile(filePath, chunkSize: 100_000);
 
@@ -304,6 +313,7 @@ var results = chunks.AsParallel().Select(chunk =>
 | Thread-local scaling          | Good      | Excellent  | Better      |
 
 **Key Improvements**:
+
 - Eliminated allocations for hard-typed path
 - Removed GC pressure entirely
 - 2.7× throughput improvement
@@ -320,6 +330,7 @@ Benchmark results will vary by hardware. Reference configuration:
 - **Runtime**: .NET 8.0 or .NET 9.0
 
 For best results:
+
 - Close other applications
 - Disable real-time antivirus scanning
 - Use AC power (laptops)
