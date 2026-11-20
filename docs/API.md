@@ -137,6 +137,7 @@ public DatabaseTypeRequest Guess { get; }
 ```
 
 **Returns:** `DatabaseTypeRequest` containing:
+
 - `CSharpType` - The C# type (e.g., `typeof(int)`)
 - `Size` - Precision/scale information for decimals
 - `Width` - Maximum character width for strings

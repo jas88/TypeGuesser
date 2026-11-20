@@ -106,7 +106,7 @@ Parallel.ForEach(data, value =>
 
 v2.0 uses **per-instance fine-grained locking**:
 
-```
+```text
 ┌─────────────────────────────────────────┐
 │ Guesser Instance                        │
 │                                          │
@@ -200,16 +200,19 @@ internal sealed class PooledBuilder
 ### Why This Approach?
 
 **Correctness:**
+
 - All shared state access is protected
 - Consistent view of data at all times
 - No race conditions possible
 
 **Performance:**
+
 - Per-instance locks allow parallelism across instances
 - Fine-grained locking minimizes contention
 - Fast path for typed values reduces lock time
 
 **Simplicity:**
+
 - Users don't need to manage synchronization
 - Works correctly "out of the box"
 - No external locking required
@@ -281,7 +284,7 @@ Parallel.For(0, 100, i =>
 
 ### Pool Behavior Under Concurrency
 
-```
+```text
 Timeline with 8 concurrent threads:
 
 T0: Pool contains: [B1] [B2] [B3]
@@ -643,7 +646,7 @@ Parallel.ForEach(table.Columns.Cast<DataColumn>(), column =>
 
 ### 5. Consider Your Access Pattern
 
-```
+```text
 Access Pattern                  | Recommendation
 --------------------------------|----------------------------------------
 Single-threaded processing      | Use Guesser (Level 1 or 2)
@@ -661,17 +664,20 @@ Real-time processing            | Use StackTypeAccumulator (lock-free)
 ### What is Guaranteed
 
 ✅ **Guesser class:**
+
 - Safe for concurrent calls to `AdjustToCompensateForValue`
 - Safe for concurrent calls to `Guess` property
 - Safe for mixing reads and writes
 - All internal state is properly synchronized
 
 ✅ **TypeGuesserBuilderPool:**
+
 - Safe for concurrent `Rent()` calls
 - Safe for concurrent `Return()` calls
 - Safe for concurrent culture factory access
 
 ✅ **PooledBuilder:**
+
 - Safe for concurrent method calls on same instance
 - All methods are internally synchronized
 - State is always consistent
@@ -679,11 +685,13 @@ Real-time processing            | Use StackTypeAccumulator (lock-free)
 ### What is NOT Guaranteed
 
 ❌ **StackTypeAccumulator:**
+
 - NOT thread-safe
 - Must use separate instance per thread
 - Cannot share across threads
 
 ❌ **TypeDeciderFactory:**
+
 - Individual instances are NOT thread-safe for modification
 - Safe for concurrent reads only
 - Cache in TypeGuesserBuilderPool handles this correctly

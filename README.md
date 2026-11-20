@@ -20,7 +20,7 @@ TypeGuesser v2.0 delivers significant performance improvements and thread-safety
 ### Performance Improvements
 
 | Operation | v1.x | v2.0 | Speedup |
-|-----------|------|------|---------|
+| ----------- | ------ | ------ | --------- |
 | Hard-typed integers (1M) | 850ms | 45ms | **18.9x** |
 | Hard-typed decimals (1M) | 1,200ms | 120ms | **10.0x** |
 | Zero allocations for typed values | ❌ | ✅ | - |
@@ -42,16 +42,14 @@ var guess = guesser.Guess;
 
 The resulting guess in this case would be:
 
-|Property  | Value |
-|-------|----|
-|   `guess.CSharpType`| `typeof(decimal)` |
-|   `guess.Size.NumbersBeforeDecimalPlace` | 2 |
-|   `guess.Size.NumbersAfterDecimalPlace`| 3 |
-|   `guess.Width` | 7 |
-
+| Property                               | Value             |
+| -------------------------------------- | ----------------- |
+| `guess.CSharpType`                     | `typeof(decimal)` |
+| `guess.Size.NumbersBeforeDecimalPlace` | 2                 |
+| `guess.Size.NumbersAfterDecimalPlace`  | 3                 |
+| `guess.Width`                          | 7                 |
 
 Guesser also handles adjusting its guess based on multiple input strings e.g.
-
 
 ```csharp
 var guesser = new Guesser();
@@ -60,12 +58,12 @@ guesser.AdjustToCompensateForValue("0.001");
 var guess = guesser.Guess;
 ```
 
-|Property  | Value |
-|-------|----|
-|   `guess.CSharpType`| `typeof(decimal)` |
-|   `guess.Size.NumbersBeforeDecimalPlace` | 4 |
-|   `guess.Size.NumbersAfterDecimalPlace`| 3 |
-|   `guess.Width` | 8 |
+| Property                               | Value             |
+| -------------------------------------- | ----------------- |
+| `guess.CSharpType`                     | `typeof(decimal)` |
+| `guess.Size.NumbersBeforeDecimalPlace` | 4                 |
+| `guess.Size.NumbersAfterDecimalPlace`  | 3                 |
+| `guess.Width`                          | 8                 |
 
 ### v2.0: Optimized for Typed Values
 
@@ -142,20 +140,21 @@ var guess = guesser.Guess;
 ## Type Guessing Details
 
 ### Guess Order
+
 The order in which Types are tried is (`DatabaseTypeRequest.PreferenceOrder`):
 
 - Bool
 - Int
 - Decimal
 - TimeSpan
-- DateTime 
+- DateTime
 - String
 
 If a string has been accepted as one category e.g. "12" (`Int`) and an incompatible string arrived e.g. "0.1" then the `Guess` is changes to either the new Type (`Decimal`) or to String (i.e. untyped) based on whether the old and new Types are in the same `TypeCompatibilityGroup`
 
 For example `Bool` and `DateTime` are incompatible
 
-```
+```text
 "Y" => Bool
 "2001-01-01" => DateTime
 
@@ -165,9 +164,11 @@ Guess: String
 Guesses are never revised back up again (once you accept a `Decimal` you never get `Int` again but you might end up at `String`)
 
 ### Zero Prefixes
+
 If an input string is a number that starts with zero e.g. "01" then the estimate will be changed to `System.String`.  This is intended behaviour since some codes e.g. CHI / Barcodes have valid zero prefixes.  If this is to be accurately preserved in the database then it must be stored as string (See `TestGuesser_PrecedingZeroes`).  This also applies to values such as "-01"
 
 ### Whitespace
+
 Leading and trailing whitespace is ignored for the purposes of determining Type.  E.g. " 0.1" is a valid `System.Decimal`.  However it is recorded for the maximum Length required if we later fallback to `System.String` (See Test `TestGuesser_Whitespace`).
 
 ### Strong Typed Objects
@@ -188,6 +189,7 @@ The first time you pass a typed object (excluding DBNull.Value) then it will ass
 TypeGuesser v2.0 provides three API layers for different use cases:
 
 ### Layer 1: Compatible API (Guesser)
+
 Simple, thread-safe, works everywhere. Use for string-based processing.
 
 ```csharp
@@ -196,6 +198,7 @@ guesser.AdjustToCompensateForValue("12.45");
 ```
 
 ### Layer 2: Automatic Optimization
+
 Pass typed values for automatic zero-allocation processing.
 
 ```csharp
@@ -204,6 +207,7 @@ guesser.AdjustToCompensateForValue(42); // Auto-optimized!
 ```
 
 ### Layer 3: Advanced API (StackTypeAccumulator)
+
 Maximum performance for specialized scenarios. Stack-only, zero heap allocations.
 
 ```csharp
@@ -219,7 +223,7 @@ See [API Layers Reference](docs/API-LAYERS.md) for complete details.
 Processing 1 million integer values:
 
 | Approach | Time | Memory | GC Collections |
-|----------|------|--------|----------------|
+| ---------- | ------ | -------- | ---------------- |
 | v1.x (strings) | 850ms | 76 MB | 145/12/1 |
 | v2.0 Layer 2 (typed) | 45ms | 0 bytes | 2/0/0 |
 | v2.0 Layer 3 (stack) | 28ms | 0 bytes | 0/0/0 |

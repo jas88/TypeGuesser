@@ -17,7 +17,7 @@ TypeGuesser v2.0 provides a three-layer API architecture, each optimized for dif
 
 ## Layer Architecture
 
-```
+```text
 ┌────────────────────────────────────────────────────────────────┐
 │                        TypeGuesser v2.0                        │
 └────────────────────────────────────────────────────────────────┘
@@ -46,6 +46,7 @@ Each layer builds on the previous:
 3. **Layer 3 (Stack)**: Explicit ultra-high performance
 
 Users choose their layer based on requirements:
+
 - Need simplicity? → Layer 1
 - Have typed data? → Layer 2 (automatic)
 - Need maximum speed? → Layer 3
@@ -59,6 +60,7 @@ Users choose their layer based on requirements:
 The `Guesser` class provides the standard, user-friendly API with full backward compatibility to v1.x.
 
 **When to use:**
+
 - Processing string-formatted data
 - Need simplicity and ease of use
 - Require thread-safety
@@ -66,6 +68,7 @@ The `Guesser` class provides the standard, user-friendly API with full backward 
 - Storing guesser across method boundaries
 
 **Characteristics:**
+
 - Thread-safe operations
 - Handles all data types
 - Works with DataTable/DataColumn
@@ -243,6 +246,7 @@ Console.WriteLine($"Type: {guess.CSharpType}");
 Layer 2 is an internal optimization layer that automatically activates when you pass hard-typed values to `Guesser`. This layer uses `PooledBuilder` internally to achieve zero-allocation processing.
 
 **When to use:**
+
 - You have hard-typed data (int, decimal, bool)
 - Want zero-allocation performance
 - Still need thread-safety
@@ -250,6 +254,7 @@ Layer 2 is an internal optimization layer that automatically activates when you 
 - Want automatic optimization without API changes
 
 **Characteristics:**
+
 - Zero heap allocations for typed values
 - Automatic object pooling
 - Uses Math.Log10 for int digit counting
@@ -403,6 +408,7 @@ sw.Stop();
 `StackTypeAccumulator` is a ref struct that provides maximum performance through stack-only allocation and zero heap usage.
 
 **When to use:**
+
 - Ultra-high performance requirements
 - Processing large arrays of typed data
 - Real-time systems with strict latency requirements
@@ -410,6 +416,7 @@ sw.Stop();
 - Single-threaded or per-thread processing
 
 **Characteristics:**
+
 - Stack-only allocation (ref struct)
 - Zero heap allocations
 - 10-50x faster than Layer 1
@@ -685,7 +692,7 @@ Parallel.For(0, 8, threadId =>
 
 ### Latency Comparison (single operation)
 
-```
+```text
 Layer 1 (String):          1,650 ns  ████████████████
 Layer 2 (Typed):              45 ns  █
 Layer 3 (Stack):              28 ns  ▌
@@ -696,7 +703,7 @@ Layer 3 (Stack):              28 ns  ▌
 
 ### Memory Pressure (1 million operations)
 
-```
+```text
 Layer 1:  ████████████████████████  76 MB allocated
 Layer 2:                            0 bytes allocated
 Layer 3:                            0 bytes allocated
@@ -731,7 +738,7 @@ Layer 3:  0 / 0 / 0
 
 ### Decision Tree
 
-```
+```text
 What are you processing?
 │
 ├─ STRINGS (CSV, user input, text files)
@@ -761,18 +768,18 @@ What are you processing?
 
 ### Use Case Mapping
 
-| Use Case                           | Recommended Layer | Why                                    |
-|------------------------------------|-------------------|----------------------------------------|
-| CSV file import                    | Layer 1           | String data, need parsing              |
-| DataTable type detection           | Layer 1/2         | May have typed columns                 |
-| JSON deserialization               | Layer 2           | Typed values, automatic optimization   |
-| Database column analysis           | Layer 1           | String data from queries               |
-| Real-time sensor processing        | Layer 3           | Maximum speed, typed data              |
-| Parallel data processing           | Layer 1/2 or 3    | Thread-safe (1/2) or per-thread (3)    |
-| Web API validation                 | Layer 1           | String input, async processing         |
-| Machine learning data prep         | Layer 3           | Large typed arrays, performance critical|
-| ETL pipelines                      | Layer 1/2         | Mixed data, need flexibility           |
-| Embedded systems                   | Layer 3           | Memory constrained, typed data         |
+| Use Case                    | Recommended Layer | Why                                      |
+| --------------------------- | ----------------- | ---------------------------------------- |
+| CSV file import             | Layer 1           | String data, need parsing                |
+| DataTable type detection    | Layer 1/2         | May have typed columns                   |
+| JSON deserialization        | Layer 2           | Typed values, automatic optimization     |
+| Database column analysis    | Layer 1           | String data from queries                 |
+| Real-time sensor processing | Layer 3           | Maximum speed, typed data                |
+| Parallel data processing    | Layer 1/2 or 3    | Thread-safe (1/2) or per-thread (3)      |
+| Web API validation          | Layer 1           | String input, async processing           |
+| Machine learning data prep  | Layer 3           | Large typed arrays, performance critical |
+| ETL pipelines               | Layer 1/2         | Mixed data, need flexibility             |
+| Embedded systems            | Layer 3           | Memory constrained, typed data           |
 
 ### Quick Reference
 
@@ -811,6 +818,7 @@ TypeGuesser v2.0 provides three API layers:
    - Use for: Ultra-critical hot loops, typed data, specialized needs
 
 Choose based on your requirements:
+
 - **Simplicity** → Layer 1
 - **Typed data** → Layer 2 (automatic)
 - **Maximum speed** → Layer 3

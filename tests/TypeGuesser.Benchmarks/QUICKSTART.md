@@ -5,7 +5,8 @@ Get started with benchmarking TypeGuesser performance in 5 minutes.
 ## Prerequisites
 
 Install .NET 8.0 or .NET 9.0 SDK:
-- Download from https://dotnet.microsoft.com/download
+
+- Download from <https://dotnet.microsoft.com/download>
 - Verify: `dotnet --version`
 
 ## Quick Commands
@@ -18,7 +19,8 @@ dotnet build -c Release
 ```
 
 Expected output:
-```
+
+```text
 Build succeeded.
     0 Warning(s)
     0 Error(s)
@@ -43,7 +45,8 @@ dotnet run -c Release -- allocations
 ```
 
 Look for these key metrics:
-```
+
+```text
 ProcessHardTypedIntegers | 1000000 | 5.2 ms | 96 B      ← Only 96 bytes!
 ProcessIntegerStrings    | 1000000 | 16.8 ms| 24 MB     ← Baseline comparison
 ```
@@ -60,13 +63,14 @@ dotnet run -c Release
 
 ### Example Output
 
-```
+```text
 | Method                      | N       | Mean    | Allocated |
 | --------------------------- | ------- | ------- | --------- |
 | ProcessHardTypedIntegers    | 1000000 | 5.23 ms | 96 B      |
 ```
 
 **What this means**:
+
 - **Method**: Test being run
 - **N**: Number of items processed
 - **Mean**: Average execution time
@@ -75,6 +79,7 @@ dotnet run -c Release
 ### Zero-Allocation Proof
 
 Look for these values in hard-typed tests:
+
 - ✅ **Allocated: 96 B** (or close to it)
 - ✅ **Gen0: 0.0000** (no GC)
 - ✅ **Gen1: 0.0000** (no GC)
@@ -83,7 +88,8 @@ Look for these values in hard-typed tests:
 ### Performance Comparison
 
 Compare ratios:
-```
+
+```text
 ProcessHardTypedIntegers    | 1.00x  (baseline)
 ProcessIntegerStrings       | 3.23x  (3.2× slower)
 ```
@@ -94,7 +100,7 @@ This shows hard-typed processing is **3.2× faster** than string processing.
 
 After running benchmarks, find results in:
 
-```
+```text
 BenchmarkDotNet.Artifacts/
 └── results/
     ├── *.md      ← Markdown tables (easy to read)
@@ -180,6 +186,7 @@ Compare throughput and verify zero allocations across all hardware.
 **Problem**: `error CS0246: The type or namespace name 'BenchmarkDotNet' could not be found`
 
 **Solution**:
+
 ```bash
 dotnet restore
 dotnet build -c Release
@@ -190,11 +197,13 @@ dotnet build -c Release
 **Problem**: Benchmarks running for hours
 
 **Solution**: Use `quick` mode:
+
 ```bash
 dotnet run -c Release -- quick
 ```
 
 Or test specific methods:
+
 ```bash
 dotnet run -c Release -- quick --filter "*HardTypedIntegers*"
 ```
@@ -204,11 +213,13 @@ dotnet run -c Release -- quick --filter "*HardTypedIntegers*"
 **Problem**: Showing MB instead of bytes for hard-typed tests
 
 **Possible Causes**:
+
 1. Running Debug build (use `-c Release`)
 2. Testing string processing by mistake
 3. Benchmark setup converting to strings
 
 **Check**:
+
 ```bash
 # Verify Release build
 dotnet build -c Release
@@ -222,6 +233,7 @@ cat AllocationBenchmarks.cs | grep -A 10 "ProcessHardTypedIntegers"
 **Problem**: Results vary significantly between runs
 
 **Solutions**:
+
 1. Close other applications
 2. Disable real-time antivirus
 3. Use AC power (laptops)

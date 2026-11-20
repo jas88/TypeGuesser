@@ -11,7 +11,7 @@ The Advanced API provides two main components:
 
 ## When to Use
 
-### Use the Advanced API when:
+### Use the Advanced API when
 
 - Processing large arrays of strongly-typed numeric data (millions of values)
 - Working in hot loops where allocation overhead is critical
@@ -19,7 +19,7 @@ The Advanced API provides two main components:
 - Operating in memory-constrained or embedded environments
 - You need 10-50x performance improvement over the standard Guesser API
 
-### Use the Standard API when:
+### Use the Standard API when
 
 - Processing string-formatted data (CSV files, text input, etc.)
 - Need to store accumulator state across method boundaries
@@ -41,13 +41,13 @@ The Advanced API uses `ref struct` which has important restrictions:
 ## Performance Characteristics
 
 | Operation | Standard Guesser | Advanced API | Improvement |
-|-----------|-----------------|--------------|-------------|
+| ----------- | ----------------- | -------------- | ------------- |
 | Integer processing | ~1000 ns | ~50 ns | **20x faster** |
 | Decimal processing | ~1500 ns | ~80 ns | **18x faster** |
 | Boolean processing | ~800 ns | ~30 ns | **26x faster** |
 | Memory allocations | High (GC pressure) | **Zero** | Eliminates GC |
 
-*Benchmarks performed on .NET 8.0, typical workstation hardware*
+Benchmarks performed on .NET 8.0, typical workstation hardware
 
 ## API Documentation
 
@@ -64,6 +64,7 @@ public StackTypeAccumulator(TypeDeciderFactory factory)
 Creates a new stack-allocated accumulator. The factory reference must remain valid for the accumulator's lifetime.
 
 **Example:**
+
 ```csharp
 var factory = new TypeDeciderFactory(CultureInfo.InvariantCulture);
 var accumulator = new StackTypeAccumulator(factory);
@@ -82,6 +83,7 @@ public void Add(int value)
 Uses `Math.Log10` for digit counting instead of `ToString()` to avoid string allocations.
 
 **Example:**
+
 ```csharp
 accumulator.Add(42);
 accumulator.Add(-1234);
@@ -98,6 +100,7 @@ public void Add(decimal value)
 Uses `SqlDecimal` struct to extract precision/scale without heap allocations.
 
 **Example:**
+
 ```csharp
 accumulator.Add(1.99m);
 accumulator.Add(999.999m);
@@ -112,6 +115,7 @@ public void Add(bool value)
 ```
 
 **Example:**
+
 ```csharp
 accumulator.Add(true);
 accumulator.Add(false);
@@ -128,6 +132,7 @@ public void Add(ReadOnlySpan<char> value)
 **Warning:** This overload may allocate internally when type deciders parse the string, but overhead is still significantly lower than the standard API.
 
 **Example:**
+
 ```csharp
 accumulator.Add("123".AsSpan());
 accumulator.Add("45.67".AsSpan());
@@ -144,6 +149,7 @@ public TypeGuessResult GetResult()
 Can be called multiple times and returns consistent results. Does not reset state.
 
 **Example:**
+
 ```csharp
 var result = accumulator.GetResult();
 Console.WriteLine($"Type: {result.CSharpType}");
@@ -286,6 +292,7 @@ public static TypeGuessResult GuessIntegers(
 Determines the optimal type for an integer collection.
 
 **Example:**
+
 ```csharp
 var numbers = new int[] { 1, 42, 999 };
 var result = ZeroAlloc.GuessIntegers(numbers);
@@ -305,6 +312,7 @@ public static TypeGuessResult GuessDecimals(
 Determines the optimal type for a decimal collection.
 
 **Example:**
+
 ```csharp
 var prices = new decimal[] { 1.99m, 10.50m, 999.999m };
 var result = ZeroAlloc.GuessDecimals(prices);
@@ -324,6 +332,7 @@ public static TypeGuessResult GuessBooleans(
 Determines the optimal type for a boolean collection.
 
 **Example:**
+
 ```csharp
 var flags = new bool[] { true, false, true };
 var result = ZeroAlloc.GuessBooleans(flags);
@@ -339,6 +348,7 @@ public static StackTypeAccumulator CreateAccumulator(
 Creates a new accumulator for mixed numeric data.
 
 **Example:**
+
 ```csharp
 var accumulator = ZeroAlloc.CreateAccumulator();
 
@@ -448,6 +458,7 @@ var result = guesser.Guess;
 ```
 
 **Pros:**
+
 - Simple to use
 - Can store in fields
 - Works with async
@@ -455,6 +466,7 @@ var result = guesser.Guess;
 - Thread-safe with proper locking
 
 **Cons:**
+
 - Allocates memory for each value
 - Slower performance
 - Creates GC pressure
@@ -473,12 +485,14 @@ var result = accumulator.GetResult();
 ```
 
 **Pros:**
+
 - Zero heap allocations
 - 10-50x faster
 - No GC pressure
 - Maximum performance
 
 **Cons:**
+
 - Must use in same scope
 - Cannot cross async boundaries
 - Not thread-safe
@@ -533,6 +547,7 @@ public ref struct StackTypeAccumulator
 ### From Standard Guesser
 
 **Before:**
+
 ```csharp
 var guesser = new Guesser();
 foreach (var value in numbers)
@@ -543,6 +558,7 @@ var type = guesser.Guess.CSharpType;
 ```
 
 **After:**
+
 ```csharp
 var factory = new TypeDeciderFactory(CultureInfo.InvariantCulture);
 var accumulator = new StackTypeAccumulator(factory);

@@ -40,6 +40,7 @@ public void AdjustToCompensateForValue(object o)
 ```
 
 **Problem**: Every numeric value processed allocates strings on the heap:
+
 - 1 allocation for `ToString()`
 - 1 allocation for digit counting
 - Cumulative GC pressure for large datasets
@@ -67,7 +68,7 @@ for (int i = 0; i < 1_000_000; i++)
 
 To determine how many digits an integer has, we don't need its string representation. We can use logarithms:
 
-```
+```text
 Number of digits in |n| = floor(log₁₀(|n|)) + 1
 ```
 
@@ -203,7 +204,7 @@ public void ProcessDecimalZeroAlloc(decimal value)
 
 SqlDecimal stores decimal values in a compact binary format with metadata:
 
-```
+```text
 Decimal: 12.45m
 
 SqlDecimal representation:
@@ -328,7 +329,7 @@ public void ProcessString(ReadOnlySpan<char> value)
 
 ### How ReadOnlySpan Works
 
-```
+```text
 Original string: "  123.45  " (on heap)
                   ^         ^
                   0         9
@@ -427,7 +428,7 @@ sw.Stop();
 
 TypeGuesser v2.0 uses `Microsoft.Extensions.ObjectPool` to recycle `PooledBuilder` instances:
 
-```
+```text
 ┌──────────────────────────────────────────┐
 │ TypeGuesserBuilderPool (Static)          │
 │                                           │
@@ -532,7 +533,7 @@ for (int i = 0; i < 1000; i++)
 
 ### Pool Lifecycle
 
-```
+```text
 Request Builder
       ↓
 ┌──────────────────────────┐
@@ -603,7 +604,7 @@ Speedup from v1.x to Level 3: 30.4x
 
 ### Latency Percentiles (single operation)
 
-```
+```text
 v2.0 Level 2 (typed int processing):
 
 P50  (median):  42 ns
@@ -629,7 +630,7 @@ P99.99:         75 ns
 
 #### v1.x (High Pressure)
 
-```
+```text
 Processing 1 million integers:
 
 Gen 0 Collections: 145
@@ -649,7 +650,7 @@ Timeline:
 
 #### v2.0 Level 2 (Low Pressure)
 
-```
+```text
 Processing 1 million integers:
 
 Gen 0 Collections: 2
@@ -667,7 +668,7 @@ Timeline:
 
 #### v2.0 Level 3 (Zero Pressure)
 
-```
+```text
 Processing 1 million integers:
 
 Gen 0 Collections: 0
@@ -737,7 +738,7 @@ sw.Stop();
 
 ### Choosing the Right API Level
 
-```
+```text
 START: What type of data are you processing?
 │
 ├─ STRINGS (from CSV, database, user input, etc.)
@@ -779,7 +780,7 @@ START: What type of data are you processing?
 
 ### Performance vs. Complexity Trade-off
 
-```
+```text
                 Performance
                      ↑
                      │
@@ -804,7 +805,7 @@ START: What type of data are you processing?
 
 ### Memory-Constrained Environments
 
-```
+```text
 Available Memory?
 │
 ├─ < 50 MB (embedded/IoT)
