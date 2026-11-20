@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using TypeGuesser;
 
 namespace Tests;
@@ -53,7 +53,7 @@ internal sealed class DecimalSizeTests
     public void Test_DecimalSize_NoFraction()
     {
         //decimal(5,0)
-        var size = new DecimalSize(5,0);
+        var size = new DecimalSize(5, 0);
 
         Assert.Multiple(() =>
         {
@@ -67,7 +67,7 @@ internal sealed class DecimalSizeTests
     public void Test_DecimalSize_SomeFraction()
     {
         //decimal(7,2)
-        var size = new DecimalSize(5,2);
+        var size = new DecimalSize(5, 2);
 
         Assert.Multiple(() =>
         {
@@ -83,7 +83,7 @@ internal sealed class DecimalSizeTests
     public void Test_DecimalSize_Combine()
     {
         //decimal(3,0)
-        var size1 = new DecimalSize(3,0);
+        var size1 = new DecimalSize(3, 0);
         Assert.Multiple(() =>
         {
             Assert.That(size1.Precision, Is.EqualTo(3));
@@ -91,7 +91,7 @@ internal sealed class DecimalSizeTests
         });
 
         //decimal(5,4)
-        var size2 = new DecimalSize(1,4);
+        var size2 = new DecimalSize(1, 4);
         Assert.Multiple(() =>
         {
             Assert.That(size2.Precision, Is.EqualTo(5));
@@ -99,7 +99,7 @@ internal sealed class DecimalSizeTests
         });
 
 
-        var combined = DecimalSize.Combine(size1,size2);
+        var combined = DecimalSize.Combine(size1, size2);
 
         Assert.Multiple(() =>
         {

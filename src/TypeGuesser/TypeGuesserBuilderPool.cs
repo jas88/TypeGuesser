@@ -16,8 +16,8 @@ namespace TypeGuesser;
 /// </remarks>
 internal static class TypeGuesserBuilderPool
 {
-    private static readonly ObjectPool<PooledBuilder> _pool;
-    private static readonly ConcurrentDictionary<CultureInfo, TypeDeciderFactory> _deciderFactoryCache = new();
+    private static readonly ObjectPool<PooledBuilder> Pool;
+    private static readonly ConcurrentDictionary<CultureInfo, TypeDeciderFactory> DeciderFactoryCache = new();
 
     static TypeGuesserBuilderPool()
     {
@@ -25,7 +25,7 @@ internal static class TypeGuesserBuilderPool
         {
             MaximumRetained = Environment.ProcessorCount * 2
         };
-        _pool = provider.Create(new PooledBuilderPolicy());
+        Pool = provider.Create(new PooledBuilderPolicy());
     }
 
     /// <summary>
@@ -39,7 +39,7 @@ internal static class TypeGuesserBuilderPool
     /// </remarks>
     internal static PooledBuilder Rent(CultureInfo? culture = null)
     {
-        var builder = _pool.Get();
+        var builder = Pool.Get();
         var targetCulture = culture ?? CultureInfo.CurrentCulture;
 
         // Update culture if different from current
@@ -63,7 +63,7 @@ internal static class TypeGuesserBuilderPool
     {
         ArgumentNullException.ThrowIfNull(builder);
 
-        _pool.Return(builder);
+        Pool.Return(builder);
     }
 
     /// <summary>
@@ -73,7 +73,7 @@ internal static class TypeGuesserBuilderPool
     /// <returns>A cached or newly created type decider factory</returns>
     internal static TypeDeciderFactory GetOrCreateDeciderFactory(CultureInfo culture)
     {
-        return _deciderFactoryCache.GetOrAdd(
+        return DeciderFactoryCache.GetOrAdd(
             culture ?? CultureInfo.CurrentCulture,
             c => new TypeDeciderFactory(c));
     }
@@ -83,7 +83,7 @@ internal static class TypeGuesserBuilderPool
     /// </summary>
     internal static void ClearCache()
     {
-        _deciderFactoryCache.Clear();
+        DeciderFactoryCache.Clear();
     }
 
     /// <summary>

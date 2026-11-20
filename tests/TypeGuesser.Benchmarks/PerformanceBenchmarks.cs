@@ -1,7 +1,7 @@
 using System;
+using System.Globalization;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Engines;
-using System.Globalization;
 using TypeGuesser;
 
 namespace TypeGuesser.Benchmarks;

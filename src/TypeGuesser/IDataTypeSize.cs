@@ -20,5 +20,5 @@ public interface IDataTypeSize
     /// <summary>
     /// When creating a <see cref="string"/> column, describes whether it must support holding unicode characters (e.g. nvarchar vs varchar)
     /// </summary>
-    bool Unicode { get;set;}
+    bool Unicode { get; set; }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 
 namespace TypeGuesser.Deciders;
@@ -10,7 +10,7 @@ namespace TypeGuesser.Deciders;
 /// Creates a guesser which always returns false initialized with the default Types that should not be guessed (byte arrays / Guid etc)
 /// </remarks>
 /// <param name="culture"></param>
-public sealed class NeverGuessTheseTypeDecider(CultureInfo culture) : DecideTypesForStrings<object>(culture,TypeCompatibilityGroup.Exclusive, typeof(byte[]), typeof(Guid))
+public sealed class NeverGuessTheseTypeDecider(CultureInfo culture) : DecideTypesForStrings<object>(culture, TypeCompatibilityGroup.Exclusive, typeof(byte[]), typeof(Guid))
 {
     /// <inheritdoc/>
     protected override IDecideTypesForStrings CloneCore(CultureInfo culture) => new NeverGuessTheseTypeDecider(culture);

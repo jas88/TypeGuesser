@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -8,7 +8,7 @@ namespace TypeGuesser.Deciders;
 /// Guesses whether strings are <see cref="DateTime"/> and handles parsing approved strings according to the <see cref="DecideTypesForStrings{T}.Culture"/>
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public abstract class DecideTypesForStrings<T>:IDecideTypesForStrings
+public abstract class DecideTypesForStrings<T> : IDecideTypesForStrings
 {
     private CultureInfo _culture;
 
@@ -34,7 +34,7 @@ public abstract class DecideTypesForStrings<T>:IDecideTypesForStrings
     /// <param name="culture"></param>
     /// <param name="compatibilityGroup">How your Type interacts with other Guessers, e.g. can you fallback from one to another</param>
     /// <param name="typesSupported">All the Types your guesser supports e.g. multiple sizes of int (int32, int16 etc).  These should not overlap with other guessers in the app domain</param>
-    protected DecideTypesForStrings(CultureInfo culture,TypeCompatibilityGroup compatibilityGroup,params Type[] typesSupported)
+    protected DecideTypesForStrings(CultureInfo culture, TypeCompatibilityGroup compatibilityGroup, params Type[] typesSupported)
     {
         _culture = culture;
 
@@ -49,10 +49,10 @@ public abstract class DecideTypesForStrings<T>:IDecideTypesForStrings
     }
 
     /// <inheritdoc/>
-    public virtual bool IsAcceptableAsType(ReadOnlySpan<char> candidateString,IDataTypeSize? size)
+    public virtual bool IsAcceptableAsType(ReadOnlySpan<char> candidateString, IDataTypeSize? size)
     {
         //we must preserve leading zeroes if it's not actually 0 -- if they have 010101 then we have to use string but if they have just 0 we can use decimal
-        return !IDecideTypesForStrings.ZeroPrefixedNumber.IsMatch(candidateString) && IsAcceptableAsTypeCore(candidateString,size);
+        return !IDecideTypesForStrings.ZeroPrefixedNumber.IsMatch(candidateString) && IsAcceptableAsTypeCore(candidateString, size);
     }
 
     /// <summary>
@@ -64,7 +64,7 @@ public abstract class DecideTypesForStrings<T>:IDecideTypesForStrings
     {
         //if user has an explicit type format in mind and the candidate string is not null (which should hopefully be handled sensibly elsewhere)
         if (Settings.ExplicitDateFormats != null && !candidateString.IsEmpty && !candidateString.IsWhiteSpace())
-            return DateTime.TryParseExact(candidateString,Settings.ExplicitDateFormats,Culture,DateTimeStyles.None,out _);
+            return DateTime.TryParseExact(candidateString, Settings.ExplicitDateFormats, Culture, DateTimeStyles.None, out _);
 
         return false;
     }
@@ -82,7 +82,7 @@ public abstract class DecideTypesForStrings<T>:IDecideTypesForStrings
         catch (Exception ex) when (ex is FormatException or ArgumentException or OverflowException or NotSupportedException)
         {
             // Wrap parsing exceptions with additional context
-            throw new FormatException(ErrorFormatters.StringParseError(new string(value), GetType()),ex);
+            throw new FormatException(ErrorFormatters.StringParseError(new string(value), GetType()), ex);
         }
     }
 
@@ -114,5 +114,5 @@ public abstract class DecideTypesForStrings<T>:IDecideTypesForStrings
     /// <param name="candidateString"></param>
     /// <param name="size"></param>
     /// <returns></returns>
-    protected abstract bool IsAcceptableAsTypeCore(ReadOnlySpan<char> candidateString,IDataTypeSize? size);
+    protected abstract bool IsAcceptableAsTypeCore(ReadOnlySpan<char> candidateString, IDataTypeSize? size);
 }

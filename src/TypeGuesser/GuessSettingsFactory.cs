@@ -1,4 +1,4 @@
-﻿namespace TypeGuesser;
+namespace TypeGuesser;
 
 /// <summary>
 /// Factory for creating instances of <see cref="GuessSettings"/>.  Contains a static variable for the defaults

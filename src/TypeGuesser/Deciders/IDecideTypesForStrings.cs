@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -8,9 +8,9 @@ namespace TypeGuesser.Deciders;
 /// <summary>
 /// Class responsible for deciding whether a given string representation is likely to be for a given C# Type e.g.
 /// "2001-01-01" is likely to be a date.
-/// 
+///
 /// <para>Each IDecideTypesForStrings should be for a single Type although different sizes is allowed e.g. Int16, Int32, Int64</para>
-/// 
+///
 /// <para>Implementations should be as mutually exclusive with as possible.  Look also at <see cref="DatabaseTypeRequest.PreferenceOrder"/> and <see cref="Guesser"/></para>
 /// </summary>
 public partial interface IDecideTypesForStrings
@@ -21,10 +21,10 @@ public partial interface IDecideTypesForStrings
     /// but 0.01 wouldn't be matched (that's a legit float).  This is used to preserve leading zeroes in input (desired because it could
     /// be a serial number or otherwise important leading 0).  In this case the <see cref="Guesser"/> will use varchar(x) to represent the
     /// column instead of decimal(x,y).
-    /// 
+    ///
     /// <para>Also allows for starting with a negative sign e.g. -01.01 would be matched as a string</para>
     /// <para>Also allows for leading / trailing white space</para>
-    /// 
+    ///
     /// </summary>
     protected static readonly Regex ZeroPrefixedNumber = ZeroPrefixedNumberRegex();
 
@@ -71,6 +71,6 @@ public partial interface IDecideTypesForStrings
     /// <returns></returns>
     IDecideTypesForStrings Clone();
 
-    [GeneratedRegex(@"^\s*-?0+[1-9]+\.?[0-9]*\s*$",RegexOptions.CultureInvariant)]
+    [GeneratedRegex(@"^\s*-?0+[1-9]+\.?[0-9]*\s*$", RegexOptions.CultureInvariant)]
     private static partial Regex ZeroPrefixedNumberRegex();
 }

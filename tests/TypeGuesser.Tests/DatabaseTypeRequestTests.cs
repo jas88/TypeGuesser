@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using TypeGuesser;
 
 namespace Tests;
@@ -9,7 +9,7 @@ internal sealed class DatabaseTypeRequestTests
     public void Test_Max_WithUnicode()
     {
         var max = DatabaseTypeRequest.Max(
-            new DatabaseTypeRequest(typeof(string), 1){Unicode = true},
+            new DatabaseTypeRequest(typeof(string), 1) { Unicode = true },
             new DatabaseTypeRequest(typeof(string), 2)
         );
 
@@ -18,5 +18,13 @@ internal sealed class DatabaseTypeRequestTests
             Assert.That(max.Width, Is.EqualTo(2));
             Assert.That(max.Unicode, Is.True, "If either arg in a Max call is Unicode then the resulting maximum should be Unicode=true");
         });
+    }
+
+    [Test]
+    public void Test_Equals_WithAnotherType()
+    {
+        var request = new DatabaseTypeRequest(typeof(string), 10);
+
+        Assert.That(request.Equals(new object()), Is.False, "A DatabaseTypeRequest should never equal an object of another type");
     }
 }

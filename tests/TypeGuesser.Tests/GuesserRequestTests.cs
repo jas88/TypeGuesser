@@ -231,13 +231,13 @@ public sealed class GuesserRequestTests
         Assert.That(primed, Is.EqualTo(typeOnly));
     }
 
-    private static readonly Type[] _requestTypes =
+    private static readonly Type[] RequestTypes =
     [
         typeof(string), typeof(bool), typeof(int), typeof(decimal), typeof(long), typeof(TimeSpan), typeof(DateTime),
         typeof(byte), typeof(short), typeof(Guid), typeof(byte[])
     ];
 
-    private static readonly object?[][] _valueSequences =
+    private static readonly object?[][] ValueSequences =
     [
         [5],
         [5.5m],
@@ -260,8 +260,8 @@ public sealed class GuesserRequestTests
     ];
 
     private static IEnumerable<TestCaseData> AcceptanceCases() =>
-        from type in _requestTypes
-        from values in _valueSequences
+        from type in RequestTypes
+        from values in ValueSequences
         select new TestCaseData(type, values).SetArgDisplayNames(type.Name, Describe(values));
 
     private static string Describe(object?[] values) =>

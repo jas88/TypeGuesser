@@ -1,5 +1,5 @@
-﻿using NUnit.Framework;
 using System.Globalization;
+using NUnit.Framework;
 using TypeGuesser;
 using TypeGuesser.Deciders;
 

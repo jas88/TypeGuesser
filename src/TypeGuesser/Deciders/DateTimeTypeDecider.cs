@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -57,7 +57,7 @@ public class DateTimeTypeDecider : DecideTypesForStrings<DateTime>
     /// <summary>
     /// Explicitly sets the culture to use for processing date times.  This suppresses <see cref="GuessDateFormat(IEnumerable{string})"/>.
     /// Set to null to restore the current environment culture (and re-enable guessing).
-    /// 
+    ///
     /// </summary>
     public override CultureInfo Culture
     {
@@ -73,42 +73,42 @@ public class DateTimeTypeDecider : DecideTypesForStrings<DateTime>
     {
         //all dates on their own
         var dateFormatsMd = (from y in YearFormats
-                            from m in MonthFormats
-                            from d in DayFormats
-                            from dateSeparator in DateSeparators
-                            from format in new[] {
+                             from m in MonthFormats
+                             from d in DayFormats
+                             from dateSeparator in DateSeparators
+                             from format in new[] {
                                 string.Join(dateSeparator, m, d, y),
                                 string.Join(dateSeparator, y, m, d)
                             }
-                            select format).ToArray();
+                             select format).ToArray();
 
         var dateFormatsDm = (from y in YearFormats
-                            from m in MonthFormats
-                            from d in DayFormats
-                            from dateSeparator in DateSeparators
-                            from format in new[] {
+                             from m in MonthFormats
+                             from d in DayFormats
+                             from dateSeparator in DateSeparators
+                             from format in new[] {
                                 string.Join(dateSeparator, d, m, y),
                                 string.Join(dateSeparator, y, m, d)
                             }
-                            select format).ToArray();
+                             select format).ToArray();
 
         //then all the times
         var timeFormats = (from timeSeparator in TimeSeparators
-                          from suffix in Suffixes
-                          from h in HourFormats
-                          from m in MinuteFormats
-                          from format in new[] {
+                           from suffix in Suffixes
+                           from h in HourFormats
+                           from m in MinuteFormats
+                           from format in new[] {
                               string.Join(timeSeparator, h, m),
                               $"{string.Join(timeSeparator, h, m)} {suffix}"
                           }.Concat(
-                              from s in SecondFormats
-                              from fmt in new[] {
+                               from s in SecondFormats
+                               from fmt in new[] {
                                   string.Join(timeSeparator, h, m, s),
                                   $"{string.Join(timeSeparator, h, m, s)} {suffix}"
-                              }
-                              select fmt
-                          )
-                          select format).ToArray();
+                               }
+                               select fmt
+                           )
+                           select format).ToArray();
 
         DateFormatsDM = dateFormatsDm;
         DateFormatsMD = dateFormatsMd;
@@ -191,7 +191,7 @@ public class DateTimeTypeDecider : DecideTypesForStrings<DateTime>
     /// Makes guess about whether to use MD or DM based on the <paramref name="samples"/>.
     /// Where no samples, or no matches or the same number of matches DM is used.
     /// the samples.
-    /// 
+    ///
     /// <para>If <see cref="Culture"/> has been set then this method is ignored.  If the static property <see cref="AllowCultureGuessing"/>
     /// is set then it is also ignored.</para>
     /// </summary>
@@ -259,7 +259,7 @@ public class DateTimeTypeDecider : DecideTypesForStrings<DateTime>
         //if there are no tokens
         if (s.IsEmpty)
         {
-            dt=DateTime.MinValue;
+            dt = DateTime.MinValue;
             return false;
         }
 
@@ -274,7 +274,7 @@ public class DateTimeTypeDecider : DecideTypesForStrings<DateTime>
         //if there are 2+ tokens then first token should be a date then the rest (concatenated) should be a time
         //e.g. "28/2/1993 5:36:27 AM" gets evaluated as "28/2/1993" and then "5:36:27 AM"
 
-        if (TryGetDate(s[..sPoint], out dt) && TryGetTime(s[(sPoint+1)..], out var time))
+        if (TryGetDate(s[..sPoint], out dt) && TryGetTime(s[(sPoint + 1)..], out var time))
         {
             dt = new DateTime(dt.Year, dt.Month, dt.Day, time.Hour, time.Minute, time.Second, time.Millisecond);
             return true;

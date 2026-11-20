@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using NUnit.Framework;
 using TypeGuesser;
 using TypeGuesser.Deciders;
@@ -17,7 +17,7 @@ internal sealed class GuessSettingsTests
         //default is true
         Assert.That(GuessSettingsFactory.Defaults.CharCanBeBoolean, Is.True);
 
-        var decider =  new BoolTypeDecider(CultureInfo.CurrentCulture);
+        var decider = new BoolTypeDecider(CultureInfo.CurrentCulture);
 
         Assert.Multiple(() =>
         {
@@ -42,7 +42,7 @@ internal sealed class GuessSettingsTests
         //default is true
         Assert.That(GuessSettingsFactory.Defaults.CharCanBeBoolean, Is.True);
 
-        var factory =  new TypeDeciderFactory(CultureInfo.CurrentCulture);
+        var factory = new TypeDeciderFactory(CultureInfo.CurrentCulture);
         var deciderOld = factory.Create(typeof(bool));
 
         Assert.Multiple(() =>
@@ -74,7 +74,7 @@ internal sealed class GuessSettingsTests
         Assert.That(GuessSettingsFactory.Defaults.CharCanBeBoolean, Is.True);
 
         //start with a guesser
-        var guesser =  new Guesser();
+        var guesser = new Guesser();
 
         //give the guesser "Y" which is acceptable as bool
         guesser.AdjustToCompensateForValue(candidate);

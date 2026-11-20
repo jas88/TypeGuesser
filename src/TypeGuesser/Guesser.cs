@@ -191,7 +191,8 @@ public sealed class Guesser : IDisposable
         ObjectDisposedException.ThrowIf(_disposed, this);
 
         var dt = column.Table;
-        if (dt == null) return;
+        if (dt == null)
+            return;
 
         foreach (DataRow row in dt.Rows)
             AdjustToCompensateForValue(row[column]);
@@ -246,7 +247,8 @@ public sealed class Guesser : IDisposable
         ObjectDisposedException.ThrowIf(_disposed, this);
 
         //it's not a string or an object, user probably has a type in mind for his DataColumn, let's not change that
-        if (col.DataType != typeof(object) && col.DataType != typeof(string)) return false;
+        if (col.DataType != typeof(object) && col.DataType != typeof(string))
+            return false;
 
         var indexOfCurrentPreference = DatabaseTypeRequest.PreferenceOrder.IndexOf(Guess.CSharpType);
         var indexOfCurrentColumn = DatabaseTypeRequest.PreferenceOrder.IndexOf(typeof(string));

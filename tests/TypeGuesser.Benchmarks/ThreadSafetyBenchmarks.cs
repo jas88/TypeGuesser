@@ -1,9 +1,9 @@
 using System;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Engines;
-using System.Collections.Concurrent;
 using TypeGuesser;
 
 namespace TypeGuesser.Benchmarks;
@@ -158,7 +158,8 @@ public class ThreadSafetyBenchmarks
             var startIndex = range.Item1 % ItemsPerThread;
             var endIndex = Math.Min(range.Item2 % ItemsPerThread, ItemsPerThread);
 
-            if (threadIndex >= ThreadCount) return;
+            if (threadIndex >= ThreadCount)
+                return;
 
             for (var i = startIndex; i < endIndex; i++)
             {
