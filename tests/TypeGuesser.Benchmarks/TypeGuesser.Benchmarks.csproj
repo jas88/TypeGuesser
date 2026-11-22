@@ -7,9 +7,9 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <ServerGarbageCollection>true</ServerGarbageCollection>
     <IsPackable>false</IsPackable>
-    <!-- Not a test project - exclude from test runner -->
+    <!-- Not a test project, although build-standards marks everything under tests/ as one. The root
+         Directory.Build.props keeps the Microsoft Testing Platform settings away from this project. -->
     <IsTestProject>false</IsTestProject>
-    <EnableNUnitRunner>false</EnableNUnitRunner>
   </PropertyGroup>
 
   <ItemGroup>
