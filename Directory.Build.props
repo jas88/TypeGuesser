@@ -1,5 +1,16 @@
 <Project>
-  <!-- Import shared build standards -->
+  <!--
+    Benchmark projects live under tests/, which build-standards takes to mean a test project. They are
+    BenchmarkDotNet console applications, so keep its Microsoft Testing Platform settings (NUnit runner,
+    OutputType=Exe, code coverage extension) away from them. The coverage extension alone marks a project
+    as a testing platform application, and `dotnet test` then starts the benchmarks as if they were tests.
+    This must come before the shared import: IsTestProject=false in the csproj is evaluated too late.
+  -->
+  <PropertyGroup Condition="$(MSBuildProjectName.EndsWith('.Benchmarks'))">
+    <UseMicrosoftTestingPlatform>false</UseMicrosoftTestingPlatform>
+  </PropertyGroup>
+
+  <!-- Import shared build standards AFTER opting the benchmarks out -->
   <Import Project="build-standards/Directory.Build.props.shared" />
 
   <!-- Repository-specific settings -->
